@@ -80,8 +80,12 @@ function detectAnimation( precisionDegree , toleranceDegree ){
             //Checking if there is any effects on the layer.
             if( layerSelection[i].property( "ADBE Effect Parade" ).numProperties > 0 ){
                 for( var j = 1 ; j <= layerSelection[i].property( "ADBE Effect Parade" ).numProperties ; j++ ){
-                    if( layerSelection[i].property( "ADBE Effect Parade" ).property(j).active && !CTchoiceDlg( { en: "So..." , fr: "Alors..."} , { en: "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , fr: "   Cette action est lourde à éxécuter.\n   Mieux vaut désactiver tes effets non-nécessaires à cette détection d'abord\n\n   On Continue ou tu modifies?" } , { en: "Continue" , fr: "Continuer" } , { en: "Modify" , fr: "Modifier" } ) ){
-                        return false ;
+                    if( layerSelection[i].property( "ADBE Effect Parade" ).property(j).active ){
+                        if( !CTchoiceDlg( { en: "So..." , fr: "Alors..."} , { en: "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , fr: "   Cette action est lourde à éxécuter.\n   Mieux vaut désactiver tes effets non-nécessaires à cette détection d'abord\n\n   On Continue ou tu modifies?" } , { en: "Continue" , fr: "Continuer" } , { en: "Modify" , fr: "Modifier" } ) ){
+                            return false ;
+                        } else {
+                            break ;
+                        }
                     }
                 }
             }

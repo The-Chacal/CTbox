@@ -265,6 +265,8 @@ function CTversioning( type ){
                 mainCompRender.outputModules[1].file = new File( oldExportFolderPath + "/" + newName + ".mov" );
             }
         }
+        //Focusing on the Main Comp.
+        mainCompItem.openInViewer()
         //Moving the old File in a "XX - AEP Older Versions".
         var oldVersionsFolderPath = oldVersionFolderPath + "/XX - AEP Older Versions" ;
         var oldVersionsFolder = new Folder( oldVersionsFolderPath );

@@ -16,7 +16,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
     if( !Folder.current.exists ){ Folder.current = Folder.appPackage.fsName + "/Scripts/ScriptUI Panels/" ; }
     //Starting the true work.
     var layerSelection = CTcheckSelectedLayers() ;
-    if( layerSelection.length >= 1 ){
+    if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Check if the Content lowest point has already been detected or not.
             if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null && !CTchoiceDlg( "Arg..." , { en: "   It seems like you have already detected the content lowest point for the layer \"" + layerSelection[i].name + "\".\n\n   Are you sure that you want to do it again?" , fr: "   Il semblerait que tu ais déjà détecté le point le plus bas de ce calque \"" + layerSelection[i].name + "\".\n\n   Es-tu sûr de vouloir le refaire?" })){
@@ -227,6 +227,10 @@ X";
             layerSelection[i].property("ADBE Effect Parade").property( "DetectedXright" ).remove();
             //Closing the UndoGroup
             if( hasUndoGroup ){ app.endUndoGroup(); }
+        }
+        //Recreating the original layer selection.
+        for( var i = 0 ; i < layerSelection.length ; i++ ){
+            layerSelection[i].selected = true ;
         }
         if( promptEndAlert ){
             CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished detecting the lowest point of your layer(s)." , fr: "J'ai fini de detecter le bas de ton/tes calque(s)." } );
