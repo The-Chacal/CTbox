@@ -8,9 +8,15 @@
 function createCastShadow(){
     
     //Making sure that the Folder.current is the right one for the relative path of the Preset.
-    Folder.current = new Folder( "F:/AE - Scripts/CTbox" );
-    if( !Folder.current.exists ){ Folder.current = Folder.userData.fsName + "/Adobe/After Effects/ " + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels/" ; }
-    if( !Folder.current.exists ){ Folder.current = Folder.appPackage.fsName + "/Scripts/ScriptUI Panels/" ; }
+    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
+    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
+	if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
+        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
+    }
+    if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
+    }
     //Starting the true work.
     var LayerSelection = CTcheckSelectedLayers ()
     if( LayerSelection.length > 0 ){
@@ -29,7 +35,7 @@ function createCastShadow(){
             LayerSelection[i].selected = false ;
             SilhouetteShadowLayer.selected = true ;
             cleanLayerChoiceDialog( false , false , false );
-            SilhouetteShadowLayer.applyPreset( new File( "CTboxElements/PseudoEffects/SilhouetteCastShadow v1.ffx" ) );
+            SilhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/SilhouetteCastShadow v1.ffx" ) );
             SilhouetteShadowLayer.selected = false ;
             //Closing the UndoGroup.
             app.endUndoGroup();

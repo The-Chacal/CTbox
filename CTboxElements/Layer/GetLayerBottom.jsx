@@ -11,9 +11,15 @@
 function getLayerBottom( promptEndAlert , hasUndoGroup ){
 
     //Making sure that the Folder.current is the right one for the relative path of the Preset.
-    Folder.current = new Folder( "F:/AE - Scripts/CTbox" );
-    if( !Folder.current.exists ){ Folder.current = Folder.userData.fsName + "/Adobe/After Effects/ " + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels/" ; }
-    if( !Folder.current.exists ){ Folder.current = Folder.appPackage.fsName + "/Scripts/ScriptUI Panels/" ; }
+    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
+    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
+	if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
+        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
+    }
+    if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
+    }
     //Starting the true work.
     var layerSelection = CTcheckSelectedLayers() ;
     if( layerSelection.length > 0 ){
@@ -199,7 +205,7 @@ function preciseX( searchedX , Y , Step , StartX, direction ){\
 \
 X";
             //Applying the final preset.
-            layerSelection[i].applyPreset( new File( "CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) );
+            layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) );
             var lowestPoint = layerSelection[i].property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
             lowestPoint.property(2).expression = "//---------- Links ----------\
             var DetectedY = effect(\"DetectedY\")(1);\

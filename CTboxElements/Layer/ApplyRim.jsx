@@ -8,9 +8,15 @@
 function applyRim(){
 
     //Making sure that the Folder.current is the right one for the relative path of the Preset.
-    Folder.current = new Folder( "F:/AE - Scripts/CTbox" );
-    if( !Folder.current.exists ){ Folder.current = Folder.userData.fsName + "/Adobe/After Effects/ " + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels/" ; }
-    if( !Folder.current.exists ){ Folder.current = Folder.appPackage.fsName + "/Scripts/ScriptUI Panels/" ; }
+    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
+    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
+	if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
+        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
+    }
+    if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
+    }
     //Starting the true work.
     var layerSelection = CTcheckSelectedLayers();
     if( layerSelection.length > 0 ){
@@ -26,12 +32,12 @@ function applyRim(){
             rimLayer.shy = true ;
             rimLayer.blendingMode = BlendingMode.OVERLAY ;
             //Applying the settings preset on the Reference layer.
-            layerSelection[i].applyPreset( new File( "CTboxElements/PseudoEffects/CharacterRimSettings v1.ffx" ) );
+            layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRimSettings v1.ffx" ) );
             layerSelection[i].selected = false ;
             //Applying the gradient preset on the Rim layer.
             rimLayer.selected = true ;
             cleanLayerChoiceDialog( false , false , false );
-            rimLayer.applyPreset( new File( "CTboxElements/PseudoEffects/CharacterRim v1.ffx" ) );
+            rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRim v1.ffx" ) );
             rimLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             rimLayer.selected = false ;
             //Closing the UndoGroup

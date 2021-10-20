@@ -30,7 +30,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.0"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.1"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Creating the UI
     var CTpanel = thisObj ;
     if( CTpanel instanceof Panel == false ){
@@ -41,7 +41,7 @@ function CTbuildUI( thisObj ){
     var globalGroup = CTpanel.add( "group" );
     globalGroup.spacing = 2 ;
     globalGroup.orientation = "column" ;
-    globalGroup.alignment = [ "center" , "top" ];
+    globalGroup.alignment = [ "left" , "top" ];
         //Creating the Panel Selection Buttons Block.
         var Block0 = globalGroup.add( "group" );
         Block0.spacing = 0 ;
