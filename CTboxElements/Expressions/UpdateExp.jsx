@@ -56,8 +56,12 @@ function updateExpChoice(){
  * @param { string } textA Text to Replace.
  * @param { string } textB Text to Use.
  * @param { boolean } worksOnLayers Works on Layers or Properties.
+ * @param { boolean } [ showEndAlert = true] Does the script alerts when it's done.
+ * @param { boolean } [ createUndoGroup = true ] Does the script creates an UndoGroup.
  */
-function updateExp( textA , textB , worksOnLayers ){
+function updateExp( textA , textB , worksOnLayers , showEndAlert , createUndoGroup ){
+    if( typeof showEndAlert === "undefined" ){ showEndAlert = true ; }
+    if( typeof createUndoGroup === "undefined" ){ createUndoGroup = true ; }
     
     //Checking if the inputs are usable.
     if( textA == { en: "Text to Replace" , fr: "Texte à Remplacer" } || textA == "" ){
@@ -73,13 +77,15 @@ function updateExp( textA , textB , worksOnLayers ){
         if( layersToUpdate.length > 0 ){
             for( var i = 0 ; i < layersToUpdate.length ; i++ ){
                 //Opening the UndoGroup.
-                app.beginUndoGroup( { en: "Expression Modification" , fr: "Modification de l'Expression" } );
+                if( createUndoGroup ){ app.beginUndoGroup( { en: "Expression Modification" , fr: "Modification de l'Expression" } ); }
                 //Correcting the Expressions.
                 applyExpUpdate( layersToUpdate[i] , textA , textB ) ;
                 //Closing the UndoGroup.
-                app.endUndoGroup() ;
+                if( createUndoGroup ){ app.endUndoGroup(); }
             }
-            CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished updating your expressions" , fr: "   J'ai fini de mettre à jour tes expressions." } );
+            if( showEndAlert ){
+                CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished updating your expressions" , fr: "   J'ai fini de mettre à jour tes expressions." } );
+            }
         }
     } else {
         var propertiesToTreat = CTcheckSelectedProperties();
@@ -88,15 +94,17 @@ function updateExp( textA , textB , worksOnLayers ){
                 var currentProperty = CTgetProperty( propertiesToTreat[i] );
                 if( currentProperty.canSetExpression ){
                     //Opening the UndoGroup.
-                    app.beginUndoGroup( {en: "Expression Modification" , fr: "Modification de l'Expression" } );
+                    if( createUndoGroup ){ app.beginUndoGroup( {en: "Expression Modification" , fr: "Modification de l'Expression" } ); }
                     //Correcting the Expressions.
                     var reg = new RegExp( textA.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&'), "g");//"$&", in the regExp, means "the String found". So, in our case, it means one of the special characters in the list will be replaced by himself preceeded by a "\".
                     currentProperty.expression = currentProperty.expression.replace( reg , textB );
                     //Closing the UndoGroup.
-                    app.endUndoGroup() ;
+                    if( createUndoGroup ){ app.endUndoGroup(); }
                 }
             }
-            CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished updating your expressions" , fr: "   J'ai fini de mettre à jour tes expressions." } );
+            if( showEndAlert ){
+                CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished updating your expressions" , fr: "   J'ai fini de mettre à jour tes expressions." } );
+            }
         }
     }
     

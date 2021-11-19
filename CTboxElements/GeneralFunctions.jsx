@@ -1,5 +1,5 @@
 //****************************************//
-//  General Functions v1.1
+//  General Functions v1.2
 //****************************************//
 
 //========== CTbox dialogs ==========
@@ -216,6 +216,8 @@ function CTversioning( type ){
             CTalertDlg( { en: "Saaaaaaaave!" , fr: "Sauvegaaaarde!" } , { en: "I need you to save this project a first time to be able to work." , fr: "J'ai besoin que ce projet soit sauvegardé une première fois pour travailler." } );
             return ;
         }
+        //Saving which item was the active one at the start of the script.
+        var currentItem = app.project.activeItem ;
         var oldProjectFile = app.project.file ;
         //Saving the old project file name minus ".aep".
         var oldName = oldProjectFile.name.slice( 0 , oldProjectFile.name.length - 4 ).replace( /%20/gm , " ");
@@ -260,13 +262,13 @@ function CTversioning( type ){
                     app.project.renderQueue.items[1].remove();
                 }
                 var mainCompRender = app.project.renderQueue.items.add( mainCompItem );
-                mainCompRender.applyTemplate( "MySettings - WorkAreaLength" );
+                mainCompRender.applyTemplate( "MySettings - CompLength" );
                 mainCompRender.outputModules[1].applyTemplate( "AppleProRes 422 HQ" );
                 mainCompRender.outputModules[1].file = new File( oldExportFolderPath + "/" + newName + ".mov" );
             }
         }
-        //Focusing on the Main Comp.
-        mainCompItem.openInViewer()
+        //Restoring the active item.
+        currentItem.openInViewer();
         //Moving the old File in a "XX - AEP Older Versions".
         var oldVersionsFolderPath = oldVersionFolderPath + "/XX - AEP Older Versions" ;
         var oldVersionsFolder = new Folder( oldVersionsFolderPath );

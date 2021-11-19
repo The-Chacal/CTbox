@@ -6,7 +6,7 @@
  * Overwrites the current CTbox Files with the ones found in the Software Ressources Folder.
  */
 function updateCTbox(){
-    var scriptFolder = new Folder( "//peps/studioPEP/TEAM SHARE/Sylvain LORENT/ScriptsAE" );
+    var scriptFolder = new Folder( "//peps/studioPEP/TEAM SHARE/Sylvain LORENT/ScriptsAE/CTbox" );
     var scriptFiles = scriptFolder.getFiles( "CTbox*" );
     var targetFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/18.4/Scripts/ScriptUI Panels" );
     targetFolder.create();

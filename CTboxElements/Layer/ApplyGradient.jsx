@@ -37,8 +37,17 @@ function applyGradient(){
             //Applying the gradient preset on the Gradient layer.
             gradientLayer.selected = true ;
             cleanLayerChoiceDialog( false , false , false );
-            gradientLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterGradient v1.ffx" ) );
+            gradientLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterGradient v2.ffx" ) );
             gradientLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
+            //Adjusting the expressions.
+            updateExp( "XXX" , app.project.activeItem.name , true , false , false );
+            updateExp( "YYY" , layerSelection[i].name , true , false , false );
+            //Checking if the reference layer has a bottom detected and linking the Gradient to it if so.
+            if( layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Content Lowest Point" ) != null ){
+                layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Gradient - Settings" )(1).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
+                layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Gradient - Settings" )(1).setValue( [ 0 , 0 ] );
+            }
+            //Unselecting the Gradient Layer.
             gradientLayer.selected = false ;
             //Closing the UndoGroup
             app.endUndoGroup();

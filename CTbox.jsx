@@ -30,7 +30,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.1"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.2"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Creating the UI
     var CTpanel = thisObj ;
     if( CTpanel instanceof Panel == false ){
@@ -106,13 +106,13 @@ function CTbuildUI( thisObj ){
             Block02.margins = [ 5 , 10 , 5 , 5 ] ;
             Block02.spacing = 2 ;
             Block02.visible = false ;
-                var B2Btn01row = Block02.add( "group" );
-                B2Btn01row.orientation = "row" ;
-                B2Btn01row.spacing = 0 ;
-                    var B2Btn01 = B2Btn01row.add( "button" , undefined , { en: "Loc. Bot." , fr: "Def. Bas" } );
+                var B2Btn01Block = Block02.add( "group" );
+                B2Btn01Block.orientation = "row" ;
+                B2Btn01Block.spacing = 0 ;
+                    var B2Btn01 = B2Btn01Block.add( "button" , undefined , { en: "Loc. Bot." , fr: "Def. Bas" } );
                     B2Btn01.helpTip = { en: "   Locates the Content lowest point in the layer, for the length of the active layer.\n   Adds a point Effect to the layer." , fr: "   Définit le point le plus bas du contenu d'un calque sur la durée de ce dernier.\n   Ajoute un paramètre Point au calque." } ;
                     B2Btn01.size = btnsSize - [ 15 , 0 ] ;
-                    var B2Btn01optns = B2Btn01row.add( "button" , undefined , "Ω" );
+                    var B2Btn01optns = B2Btn01Block.add( "button" , undefined , "Ω" );
                     B2Btn01optns.helpTip = "Get lowest Layer Point options" ;
                     B2Btn01optns.size = [ 15 , btnsSize[1] ] ;
                 var B2Btn02 = Block02.add( "button" , undefined , "Det. Anim." );
@@ -121,9 +121,15 @@ function CTbuildUI( thisObj ){
                 var B2Btn03 = Block02.add( "button" , undefined , { en: "Add Grad." , fr: "Aj. Degradé" } );
                 B2Btn03.helpTip = { en: "   Creates a Gradient in Multiply Mode." , fr: "   Crée un dégradé en mode Produit." } ;
                 B2Btn03.size = btnsSize ;
-                var B2Btn04 = Block02.add( "button" , undefined , { en: "Add Rim" , fr : "Aj. Rim" } );
-                B2Btn04.helpTip = { en: "   Creates a Rim Light in Overlay Mode." , fr: "   Crée une Rim Light en mode Incrustation." } ;
-                B2Btn04.size = btnsSize ;
+                var B2Btn04Block = Block02.add( "Group" );
+                B2Btn04Block.orientation = "row" ;
+                B2Btn04Block.spacing = 0 ;
+                    var B2Btn04a = B2Btn04Block.add( "button" , undefined , { en: "Add Rim" , fr : "Aj. Rim" } );
+                    B2Btn04a.helpTip = { en: "   Creates an outside Rim Light in Overlay Mode." , fr: "   Crée une Rim Light externe en mode Incrustation." } ;
+                    B2Btn04a.size = [ btnsSize[0] / 2 , btnsSize[1] ];
+                    var B2Btn04b = B2Btn04Block.add( "button" , undefined , { en: "Add Rim" , fr : "Aj. Rim" } );
+                    B2Btn04b.helpTip = { en: "   Creates an inside Rim Light in Multiply Mode." , fr: "   Crée une Rim Light interne en mode Produit." } ;
+                    B2Btn04b.size = [ btnsSize[0] / 2 , btnsSize[1] ];
                 var B2Btn05 = Block02.add( "button" , undefined , { en: "Gro. Sha." , fr: "Omb. Sol" } );
                 B2Btn05.helpTip = { en: "   Creates a Shadow Layer of the selected layer." , fr: "   Crée une ombre au sol du calque selectionné." } ;
                 B2Btn05.size = btnsSize ;
@@ -220,7 +226,8 @@ function CTbuildUI( thisObj ){
     B2Btn01optns.onClick = getLayerBottomOptions ;
     B2Btn02.onClick = animDetectionDlg ;
     B2Btn03.onClick = applyGradient ;
-    B2Btn04.onClick = applyRim ;
+    B2Btn04a.onClick = function(){ applyRim( true ); };
+    B2Btn04b.onClick = function(){ applyRim( false ); };
     B2Btn05.onClick = addShadowLayer ;
     B2Btn06.onClick = createCastShadow ;
     B2Btn07.onClick = createMarkersForKeysChoice ;
