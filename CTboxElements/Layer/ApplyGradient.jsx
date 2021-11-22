@@ -1,5 +1,5 @@
 //****************************************//
-//  Apply Gradient v1.2
+//  Apply Gradient v1.3
 //****************************************//
 
 /**
@@ -39,9 +39,10 @@ function applyGradient(){
             cleanLayerChoiceDialog( false , false , false );
             gradientLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterGradient v2.ffx" ) );
             gradientLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
+            gradientLayer.property( "ADBE Transform Group" ).property( "ADBE Opacity" ).expression = "comp(\"XXX\").layer(\"YYY\").effect(\"CTbox - Gradient - Settings\")(5)";
             //Adjusting the expressions.
-            updateExp( "XXX" , app.project.activeItem.name , true , false , false );
-            updateExp( "YYY" , layerSelection[i].name , true , false , false );
+            app.project.autoFixExpressions( "XXX" , app.project.activeItem.name );
+            app.project.autoFixExpressions( "YYY" , layerSelection[i].name );
             //Checking if the reference layer has a bottom detected and linking the Gradient to it if so.
             if( layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Content Lowest Point" ) != null ){
                 layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Gradient - Settings" )(1).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";

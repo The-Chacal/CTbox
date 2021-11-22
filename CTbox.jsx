@@ -30,7 +30,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.2"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.3"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Creating the UI
     var CTpanel = thisObj ;
     if( CTpanel instanceof Panel == false ){

@@ -1,5 +1,5 @@
 //****************************************//
-//   Create Cast Shadow v1.2
+//   Create Cast Shadow v1.3
 //****************************************//
 
 /**
@@ -24,29 +24,29 @@ function createCastShadow(){
             //Opening the UndoGroup.
             app.beginUndoGroup( { en: "Creating Cast Shadow." , fr: "Creation de l'ombre projetée." } );
             //Creating the Shadow layer from the selected layer.
-            var SilhouetteShadowLayer = layerSelection[i].duplicate();
-            SilhouetteShadowLayer.moveAfter( layerSelection[i] );
-            SilhouetteShadowLayer.name = layerSelection[i].name + " - SilhouetteShadow";
-            SilhouetteShadowLayer.label = 8 ;
-            SilhouetteShadowLayer.parent = layerSelection[i];
-            SilhouetteShadowLayer.shy = true ;
-            SilhouetteShadowLayer.blendingMode = BlendingMode.MULTIPLY ;
+            var silhouetteShadowLayer = layerSelection[i].duplicate();
+            silhouetteShadowLayer.moveAfter( layerSelection[i] );
+            silhouetteShadowLayer.name = layerSelection[i].name + " - SilhouetteShadow";
+            silhouetteShadowLayer.label = 8 ;
+            silhouetteShadowLayer.parent = layerSelection[i];
+            silhouetteShadowLayer.shy = true ;
+            silhouetteShadowLayer.blendingMode = BlendingMode.MULTIPLY ;
             //Cleaning the layer and applying the preset.
             layerSelection[i].selected = false ;
-            SilhouetteShadowLayer.selected = true ;
+            silhouetteShadowLayer.selected = true ;
             cleanLayerChoiceDialog( false , false , false );
-            SilhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadowSettings v1.ffx" ) );
-            SilhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadow v2.ffx" ) );
+            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadowSettings v1.ffx" ) );
+            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadow v2.ffx" ) );
             //Adjusting the expressions.
             updateExp( "XXX" , app.project.activeItem.name , true , false , false );
-            updateExp( "YYY" , SilhouetteShadowLayer.name , true , false , false );
+            updateExp( "YYY" , silhouetteShadowLayer.name , true , false , false );
             //Checking if the reference layer has a bottom detected and linking the Cast Shadow to it if so.
             if( layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Content Lowest Point" ) != null ){
-                SilhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" )(1).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
-                SilhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" )(1).setValue( [ 0 , 0 ] );
+                silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" )(1).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
+                silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" )(1).setValue( [ 0 , 0 ] );
             }
             //Unselecting the Cast Shadow Layer.
-            SilhouetteShadowLayer.selected = false ;
+            silhouetteShadowLayer.selected = false ;
             //Closing the UndoGroup.
             app.endUndoGroup();
         }

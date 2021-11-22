@@ -1,5 +1,5 @@
 //****************************************//
-//  Apply Rim v1.2
+//  Apply Rim v1.3
 //****************************************//
 
 /**
@@ -46,8 +46,8 @@ function applyRim( outsideRim ){
             rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRim v2.ffx" ) );
             rimLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             //Adjusting the expressions.
-            updateExp( "XXX" , app.project.activeItem.name , true , false , false );
-            updateExp( "YYY" , layerSelection[i].name , true , false , false );
+            app.project.autoFixExpressions( "XXX" , app.project.activeItem.name );
+            app.project.autoFixExpressions( "YYY" , layerSelection[i].name );
             //Setting the Color.
             if( outsideRim ){
                 layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Rim - Settings" )(1).setValue( [ .835 , .788 , .725 ] );
