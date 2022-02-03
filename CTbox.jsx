@@ -30,7 +30,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.3"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.4"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Creating the UI
     var CTpanel = thisObj ;
     if( CTpanel instanceof Panel == false ){
@@ -111,12 +111,12 @@ function CTbuildUI( thisObj ){
                 B2Btn01Block.spacing = 0 ;
                     var B2Btn01 = B2Btn01Block.add( "button" , undefined , { en: "Loc. Bot." , fr: "Def. Bas" } );
                     B2Btn01.helpTip = { en: "   Locates the Content lowest point in the layer, for the length of the active layer.\n   Adds a point Effect to the layer." , fr: "   Définit le point le plus bas du contenu d'un calque sur la durée de ce dernier.\n   Ajoute un paramètre Point au calque." } ;
-                    B2Btn01.size = btnsSize - [ 15 , 0 ] ;
+                    B2Btn01.size = btnsSize - [ 15 , 0 ];
                     var B2Btn01optns = B2Btn01Block.add( "button" , undefined , "Ω" );
-                    B2Btn01optns.helpTip = "Get lowest Layer Point options" ;
-                    B2Btn01optns.size = [ 15 , btnsSize[1] ] ;
+                    B2Btn01optns.helpTip = "Get Lowest Layer Point Options" ;
+                    B2Btn01optns.size = [ 15 , btnsSize[1] ];
                 var B2Btn02 = Block02.add( "button" , undefined , "Det. Anim." );
-                B2Btn02.helpTip = { en: "   Adds a Marker on the layer if it \"moves\"." , fr: "   Ajoute un marqueur sur le calque quand l'animation evolue." } ;
+                B2Btn02.helpTip = { en: "   Adds a Marker on the Layer if it \"moves\"." , fr: "   Ajoute un marqueur sur le calque quand l'animation evolue." } ;
                 B2Btn02.size = btnsSize ;
                 var B2Btn03 = Block02.add( "button" , undefined , { en: "Add Grad." , fr: "Aj. Degradé" } );
                 B2Btn03.helpTip = { en: "   Creates a Gradient in Multiply Mode." , fr: "   Crée un dégradé en mode Produit." } ;
@@ -152,9 +152,15 @@ function CTbuildUI( thisObj ){
             Block03.margins = [ 5 , 10 , 5 , 5 ] ;
             Block03.spacing = 2 ;
             Block03.visible = false ;
-                var B3Btn01 = Block03.add( "button" , undefined , "Ext. Comp." );
-                B3Btn01.helpTip = { en: "   Change the lenght of a comp and its elements to the duration wanted." , fr: "   Mets la composition et tous ses composants à la durée souhaitée." } ;
-                B3Btn01.size = btnsSize ;
+                var B3Btn01Block = Block03.add( "Group" );
+                B3Btn01Block.orientation = "row" ;
+                B3Btn01Block.spacing = 0 ;
+                    var B3Btn01 = B3Btn01Block.add( "button" , undefined , "Comp. Dur." );
+                    B3Btn01.helpTip = "   Change the Duration of a Composition and its elements to the Duration wanted." ;
+                    B3Btn01.size = btnsSize - [ 15 , 0 ];
+                    var B3Btn01optns = B3Btn01Block.add( "button" , undefined , "Ω" );
+                    B3Btn01optns.helpTip = "   Change Composition Duration Options"
+                    B3Btn01optns.size = [ 15 , btnsSize[1] ];
                 var B3Btn02 = Block03.add( "button" , undefined , { en: "Col. Comp." , fr: "Rast. Comp." } );
                 B3Btn02.helpTip = { en: "Rasteurize the selected Composition and its elements.\n   Risky move to my opinion!" , fr: "   Rasteurise la composition et tous ses sous-compositions.\n   Pour gens ayant le goût du risque!"} ;
                 B3Btn02.size = btnsSize ;
@@ -236,6 +242,7 @@ function CTbuildUI( thisObj ){
     B2Btn10.onClick = function(){ cleanLayerChoiceDialog( true ) };
     //UI events for Bloc03.
     B3Btn01.onClick = choiceCompDuration ;
+    B3Btn01optns.onClick = choiceCompDurationOptions ;
     B3Btn02.onClick = collapseTransformationManager ;
     B3Btn10.onClick = updateCTbox ;
     //UI events for Versionning Block.
@@ -261,7 +268,8 @@ function CTbuildUI( thisObj ){
 function CTcheckScriptWriting( thisObj ){
 
     if ( app.preferences.getPrefAsLong("Main Pref Section","Pref_SCRIPTING_FILE_NETWORK_SECURITY") != 1 ){
-        var BugPanel = Param1.add( "panel" , undefined , { en: "Small Problem : " , fr: "Petit Problème :" } );
+        var BugDlg = thisObj ;
+        var BugPanel = BugDlg.add( "panel" , undefined , { en: "Small Problem : " , fr: "Petit Problème :" } );
         BugPanel.add( "StaticText" , undefined , { en: "You need to authorize the scripts to write files and access network in the Preferences.\n\n   You need to close this, make the change, then relaunch the Script." , fr: "   Vous devez autoriser les scripts à écrire des fichiers et accéder au réseau dans les préférences.\n\n   Fermez, modifiez puis relancez ce script." } , { multiline: true } );
         thisObj.layout.layout( true );
         return false ;

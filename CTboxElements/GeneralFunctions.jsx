@@ -1,5 +1,5 @@
 //****************************************//
-//  General Functions v1.2
+//  General Functions v1.3
 //****************************************//
 
 //========== CTbox dialogs ==========
@@ -159,8 +159,8 @@ function CTsaveString( saveFileName , stringCodename , stringToSave ){
         if( stringCodenameIndex >= 0 ){
             var StringStartIndex = stringCodenameIndex + stringCodename.length + 1 ;
             var StringEndIndex = saveFileString.search( "</Path" + stringCodename + ">" );
-            var OldString = saveFileString.slice( StringStartIndex , StringEndIndex );
-            saveFileString = saveFileString.replace( OldString , stringToSave );
+            var OldString = saveFileString.slice( stringCodenameIndex , StringEndIndex );
+            saveFileString = saveFileString.replace( OldString , stringCodename + ">" + stringToSave );
         } else {
             saveFileString = saveFileString.concat( "<Path" + stringCodename + ">" + stringToSave + "</Path" + stringCodename + ">\r\n" );
         }

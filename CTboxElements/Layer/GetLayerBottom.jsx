@@ -1,5 +1,5 @@
 //****************************************//
-//   Get Layer's Content Lowest Point v2.1
+//   Get Layer's Content Lowest Point v2.2
 //****************************************//
 
 /**
@@ -254,38 +254,38 @@ function getLayerBottomOptions(){
         var mainGroup = getLayerBottomOptionsDialog.add( "panel" , undefined , "Get Layer Bottom Options :" );
         mainGroup.orientation = "column" ;
         mainGroup.spacing = 2 ;
-        var optn01row = mainGroup.add( "group" );
-        optn01row.orientation = "row" ;
-            optn01row.add( "staticText{ text : 'Vrtl Step :' , justify : 'left' , characters : 6 }" );
-            var optn01value = optn01row.add( "editText{ justify : 'center' }" );
-            optn01value.characters = 3 ;
-            var optn01slider = optn01row.add( "slider" , undefined , 50 , 2 , 2160 );
-            optn01slider.size = [ 150 , 17.5 ];
-        var optn02row = mainGroup.add( "group" );
-        optn02row.orientation = "row" ;
-            optn02row.add( "staticText{ text : 'Hrzl Step :' , justify : 'left' , characters : 6 }" );
-            var optn02value = optn02row.add( "editText{ justify : 'center' }" );
-            optn02value.characters = 3 ;
-            var optn02slider = optn02row.add( "slider" , undefined , 20 , 2 , 3840 );
-            optn02slider.size = [ 150 , 17.5 ];
-        var optn03row = mainGroup.add( "group" );
-        optn03row.orientation = "row" ;
-            optn03row.add( "staticText{ text : 'Hrzl Size :' , justify : 'left' , characters : 6 }" );
-            var optn03value = optn03row.add( "editText{ justify : 'center' }" );
-            optn03value.characters = 3 ;
-            var optn03slider = optn03row.add( "slider" , undefined , 50 , 2 , 2160 );
-            optn03slider.size = [ 150 , 17.5 ];
-        var btnsRow = mainGroup.add( "group" );
-        btnsRow.orientation = "row" ;
-        btnsRow.spacing = 0 ;
-        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
-        var btnSize = [ 75 , 25 ];
-            var btnA = btnsRow.add( "button" , undefined , "Ok" );
-            btnA.size = btnSize ;
-            var btnB = btnsRow.add( "button" , undefined , "Default" );
-            btnB.size = btnSize ;
-            var btnC = btnsRow.add( "button" , undefined , "Cancel" );
-            btnC.size = btnSize ;
+            var optn01row = mainGroup.add( "group" );
+            optn01row.orientation = "row" ;
+                optn01row.add( "staticText{ text : 'Vrtl Step :' , justify : 'left' , characters : 6 }" );
+                var optn01value = optn01row.add( "editText{ justify : 'center' }" );
+                optn01value.characters = 3 ;
+                var optn01slider = optn01row.add( "slider" , undefined , 50 , 2 , 2160 );
+                optn01slider.size = [ 150 , 17.5 ];
+            var optn02row = mainGroup.add( "group" );
+            optn02row.orientation = "row" ;
+                optn02row.add( "staticText{ text : 'Hrzl Step :' , justify : 'left' , characters : 6 }" );
+                var optn02value = optn02row.add( "editText{ justify : 'center' }" );
+                optn02value.characters = 3 ;
+                var optn02slider = optn02row.add( "slider" , undefined , 20 , 2 , 3840 );
+                optn02slider.size = [ 150 , 17.5 ];
+            var optn03row = mainGroup.add( "group" );
+            optn03row.orientation = "row" ;
+                optn03row.add( "staticText{ text : 'Hrzl Size :' , justify : 'left' , characters : 6 }" );
+                var optn03value = optn03row.add( "editText{ justify : 'center' }" );
+                optn03value.characters = 3 ;
+                var optn03slider = optn03row.add( "slider" , undefined , 50 , 2 , 2160 );
+                optn03slider.size = [ 150 , 17.5 ];
+            var btnsRow = mainGroup.add( "group" );
+            btnsRow.orientation = "row" ;
+            btnsRow.spacing = 0 ;
+            btnsRow.margins = [ 0 , 2 , 0 , 0 ];
+            var btnSize = [ 60 , 20 ];
+                var btnA = btnsRow.add( "button" , undefined , "Ok" );
+                btnA.size = btnSize ;
+                var btnB = btnsRow.add( "button" , undefined , "Default" );
+                btnB.size = btnSize ;
+                var btnC = btnsRow.add( "button" , undefined , "Cancel" );
+                btnC.size = btnSize ;
     //Updating the UI with saved values.
     var savedVerticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
     if( savedVerticalOriginalStep == null ){ savedVerticalOriginalStep = 50 };
