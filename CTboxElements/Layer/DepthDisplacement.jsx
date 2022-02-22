@@ -1,5 +1,5 @@
 //****************************************//
-//  Move Layer in Depth v1.0
+//  Move Layer in Depth v1.1
 //****************************************//
 
 //  Script moving a layer along the Z axis keeping its visual size
@@ -8,18 +8,18 @@
  */
 function depthChoice (){
     
-    var DepthChoiceDlg = new Window( "palette" , { en: "Depth displacement" , fr: "Déplacement en Z" } );
-    DepthChoiceDlg.global = DepthChoiceDlg.add( "Panel" , undefined , { en: "Depth Setting : " , fr: "Choix de la valeur en Z :" } );
-    DepthChoiceDlg.global.orientation = "Column" ;
-        var DepthWanted = DepthChoiceDlg.global.add( "EditText{ justify : 'center' , characters : 10 , properties : { enabled : true } }" );
-        DepthWanted.text = { en: 'Z wanted' , fr: 'Z voulu' };
-        var MoveInDepth = DepthChoiceDlg.global.add( "Button" , undefined , { en:"Move" , fr: "Déplacer" } );
+    var depthChoiceDlg = new Window( "palette" , "Move in Depth" );
+    depthChoiceDlg.global = depthChoiceDlg.add( "Panel" , undefined , { en: "Depth Setting : " , fr: "Choix de la valeur en Z :" } );
+    depthChoiceDlg.global.orientation = "Column" ;
+        var depthWanted = depthChoiceDlg.global.add( "EditText{ justify : 'center' , characters : 10 , properties : { enabled : true } }" );
+        depthWanted.text = { en: 'Z wanted' , fr: 'Z voulu' };
+        var moveInDepth = depthChoiceDlg.global.add( "Button" , undefined , { en:"Move" , fr: "Déplacer" } );
     //UI Events.
-    DepthWanted.onActivate = function(){ if( DepthWanted.text == { en: "Z wanted" , fr: "Z voulu" } ) { DepthWanted.text = "" ; } } ;
-    DepthWanted.onChange = function(){ movingInDepth( DepthWanted.text ) } ;
-    MoveInDepth.onClick  = function(){ movingInDepth( DepthWanted.text ) } ;
+    depthWanted.onActivate = function(){ if( depthWanted.text == { en: "Z wanted" , fr: "Z voulu" } ) { depthWanted.text = "" ; } } ;
+    depthWanted.onChange = function(){ movingInDepth( depthWanted.text ) } ;
+    moveInDepth.onClick  = function(){ movingInDepth( depthWanted.text ) } ;
     //Showing UI
-    DepthChoiceDlg.show()
+    depthChoiceDlg.show()
 
 }
 /**
@@ -29,48 +29,62 @@ function depthChoice (){
 function movingInDepth( Depth ){
 
     if( !isNaN( Depth ) && app.project.activeItem != undefined ){
-        var LayerSelection = CTcheckSelectedLayers();
-        if( LayerSelection.length > 1 || LayerSelection.length == 1 && LayerSelection[0] != app.project.activeItem.activeCamera ){
+        var layerSelection = CTcheckSelectedLayers();
+        if( layerSelection.length > 1 || layerSelection.length == 1 && layerSelection[0] != app.project.activeItem.activeCamera ){
             //Checking that there is an active Camera. Creates one if not.
             if( app.project.activeItem.activeCamera == null ){
                 var NewCamera = app.project.activeItem.layers.addCamera( { en: "Forgotten Camera" , fr: "Caméra Oubliée" } , [ app.project.activeItem.width / 2 , app.project.activeItem.height / 2 ] );
                 NewCamera.property(2).property(2).setValue( [ app.project.activeItem.width / 2 , app.project.activeItem.height / 2 , NewCamera.property(2).property(2).value[2] ] );
             }
             //Moving layers.
-            for( var i = 0 ; i < LayerSelection.length ; i++ ){
-                if( LayerSelection[i] != app.project.activeItem.activeCamera ){
+            for( var i = 0 ; i < layerSelection.length ; i++ ){
+                if( layerSelection[i] != app.project.activeItem.activeCamera ){
                     //Opening the UndoGroup
                     app.beginUndoGroup( { en: "Layer Displacement" , fr: "Déplacement du Calque." } );
-                    var MovedLayer = LayerSelection[i] ;
+                    var MovedLayer = layerSelection[i] ;
                     //Checking if the layer has the 3D option active.
                     if( !MovedLayer.threeDLayer ){
-                        if( CTchoiceDlg( { en: "So..." , fr: "Alors..." } , { en: "The Layer \"" + LayerSelection[i].name + "\"  is not a 3D Layer.\r   Do you want me set it in 3D and Continue?" , fr: "Le Calque \"" + LayerSelection[i].name + "\"  n'est pas un calque 3D.\r   Je te le mets en 3D et on continue?" } ) ){
-                            LayerSelection[i].threeDLayer = true ;
+                        if( CTchoiceDlg( { en: "So..." , fr: "Alors..." } , { en: "The Layer \"" + layerSelection[i].name + "\"  is not a 3D Layer.\r   Do you want me set it in 3D and Continue?" , fr: "Le Calque \"" + layerSelection[i].name + "\"  n'est pas un calque 3D.\r   Je te le mets en 3D et on continue?" } ) ){
+                            layerSelection[i].threeDLayer = true ;
                         } else {
                             //Closing the UndoGroup if the user don't want the layer be 3D actived.
                             app.endUndoGroup();
                             continue ;
                         }
                     }
-                    var CurrentTime = app.project.activeItem.time ;
-                    var CurrentPosRel = MovedLayer.transform.position.value ;
-                    var CurrentPos = getCurrentPosition( MovedLayer );
-                    var CurrentSize = MovedLayer.transform.scale.value ;
-                    var ChosenZ = parseFloat( Depth );
-                    var CameraPos = getCurrentPosition ( app.project.activeItem.activeCamera );
+                    //Saving current time.
+                    var currentTime = app.project.activeItem.time ;
+                    //Unparenting the Layer.
+                    var layerParent = layerSelection[i].parent ;
+                    layerSelection[i].parent = null ;
+                    //Unparenting the Camera
+                    var camera = app.project.activeItem.activeCamera;
+                    var cameraParent = camera.parent ;
+                    camera.parent = null ;
+                    //Getting the properties needed for calculus.
+                    var currentPos = MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Position" ).value ;
+                    var currentScale = MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Scale" ).value ;
+                    var chosenZ = parseFloat( Depth );
+                    var cameraPos = camera.property( "ADBE Transform Group" ).property( "ADBE Position" ).value ;
                     //Calculating the ratio between the current position and the wanted one.
-                    var Ratio = ( ChosenZ - CameraPos[2] ) / ( CurrentPos[2] - CameraPos[2] ) ;
-                    //Calculating the new Size and Position.
-                    var newPos = CameraPos + ( CurrentPos - CameraPos ) * Ratio - CurrentPos + CurrentPosRel ;
-                    var newSize = CurrentSize * Ratio ;
+                    var ratio = ( chosenZ - cameraPos[2] ) / ( currentPos[2] - cameraPos[2] ) ;
+                    //Calculating the new Position and Scale.
+                    var newPos = cameraPos + ( currentPos - cameraPos ) * ratio ;
+                    var newScale = currentScale * ratio ;
                     //Applying the new values.
-                    if( MovedLayer.transform.position.numKeys == 0 && MovedLayer.transform.scale.numKeys == 0){
-                        MovedLayer.transform.position.setValue( newPos );
-                        MovedLayer.transform.scale.setValue( newSize );
+                    if( MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Position" ).numKeys == 0 ){
+                        MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Position" ).setValue( newPos );
                     } else {
-                        MovedLayer.transform.position.setValueAtTime( CurrentTime , newPos );
-                        MovedLayer.transform.scale.setValueAtTime( CurrentTime , newSize );
+                        MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Position" ).setValueAtTime( currentTime , newPos );
                     }
+                    if( MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Scale" ).numKeys == 0 ){
+                        MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Scale" ).setValue( newScale );
+                    } else {
+                        MovedLayer.property( "ADBE Transform Group" ).property( "ADBE Scale" ).setValueAtTime( currentTime , newScale );
+                    }
+                    //Restoring the parenting.
+                    layerSelection[i].parent = layerParent ;
+                    camera.parent = cameraParent ;
                     //Closing the UndoGroup.
                     app.endUndoGroup();
                 }
@@ -79,18 +93,4 @@ function movingInDepth( Depth ){
         }
     }
     
-}
-/**
- * Recursive function to get the absolute position of the layer in the comp.
- * @param { object } Layer Layer you want the absolute position of.
- * @returns { array } The position value of the Layer.
- */
-function getCurrentPosition( Layer ){
-
-    var CurrentPos = Layer.transform.position.value ;
-    if( Layer.parent != null ){
-        CurrentPos += getCurrentPosition( Layer.parent );
-    }
-    return CurrentPos ;
-
 }

@@ -23,10 +23,13 @@ function createCastShadow(){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
             app.beginUndoGroup( { en: "Creating Cast Shadow." , fr: "Creation de l'ombre projetée." } );
+            //Generating the unique Id for the CastShadow.
+            var castShadowLayerId = generateIdNb();
+            var castShadowSettingsName = "CTbox - Cast Shadow id" + castShadowLayerId + " - Settings";
             //Creating the Shadow layer from the selected layer.
             var silhouetteShadowLayer = layerSelection[i].duplicate();
             silhouetteShadowLayer.moveAfter( layerSelection[i] );
-            silhouetteShadowLayer.name = layerSelection[i].name + " - SilhouetteShadow";
+            silhouetteShadowLayer.name = layerSelection[i].name + " - SilhouetteShadow - id" + castShadowLayerId ;
             silhouetteShadowLayer.label = 8 ;
             silhouetteShadowLayer.parent = layerSelection[i];
             silhouetteShadowLayer.shy = true ;
@@ -36,14 +39,16 @@ function createCastShadow(){
             silhouetteShadowLayer.selected = true ;
             cleanLayerChoiceDialog( false , false , false );
             silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadowSettings v1.ffx" ) );
-            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadow v2.ffx" ) );
+            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadow v3.ffx" ) );
+            //Adding the id of the Rim to the Settings Effect name.
+            silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" ).name = castShadowSettingsName ;
             //Adjusting the expressions.
-            updateExp( "XXX" , app.project.activeItem.name , true , false , false );
-            updateExp( "YYY" , silhouetteShadowLayer.name , true , false , false );
+            app.project.autoFixExpressions( "XXX" , silhouetteShadowLayer.name );
+            app.project.autoFixExpressions( "CTbox - Cast Shadow - Settings" , castShadowSettingsName );
             //Checking if the reference layer has a bottom detected and linking the Cast Shadow to it if so.
             if( layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Content Lowest Point" ) != null ){
-                silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" )(1).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
-                silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" )(1).setValue( [ 0 , 0 ] );
+                silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( castShadowSettingsName )(1).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
+                silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( castShadowSettingsName )(1).setValue( [ 0 , 0 ] );
             }
             //Unselecting the Cast Shadow Layer.
             silhouetteShadowLayer.selected = false ;

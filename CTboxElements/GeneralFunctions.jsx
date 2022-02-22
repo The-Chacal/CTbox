@@ -281,3 +281,16 @@ function CTversioning( type ){
     }
 
 }
+/**
+ * Generates a 3 digits random ID for a layer.
+ */
+ function generateIdNb(){
+
+    var Id = JSON.stringify( Math.floor( Math.random() * 1000 ) )
+    while( Id.length < 3 )
+    {
+        Id = "0" + Id ;
+    }
+    return Id ;
+
+ }
