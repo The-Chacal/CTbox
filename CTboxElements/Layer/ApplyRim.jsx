@@ -24,6 +24,9 @@ function applyRim( outsideRim ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
             app.beginUndoGroup( { en: "Applying Rim." , fr: "Ajout de Liseré." } );
+            //Generating the unique Id for the Rim.
+            var rimLayerId = generateIdNb();
+            var rimSettingsName = "CTbox - Rim id" + rimLayerId + " - Settings";
             //Creating the Gradient layer from the selected layer.
             layerSelection[i].selected = true ;
             var rimLayer = layerSelection[i].duplicate();
@@ -31,34 +34,37 @@ function applyRim( outsideRim ){
             rimLayer.parent = layerSelection[i];
             rimLayer.shy = true ;
             if( outsideRim ){
-                rimLayer.name = layerSelection[i].name + " - OutsideRim";
+                rimLayer.name = layerSelection[i].name + " - OutsideRim - id" + rimLayerId ;
                 rimLayer.blendingMode = BlendingMode.OVERLAY ;
             } else {
-                rimLayer.name = layerSelection[i].name + " - InsideRim";
+                rimLayer.name = layerSelection[i].name + " - InsideRim - id" + rimLayerId ;
                 rimLayer.blendingMode = BlendingMode.MULTIPLY ;
             }
             //Applying the settings preset on the Reference layer.
             layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRimSettings v2.ffx" ) );
+            //Adding the id of the Rim to the Settings Effect name.
+            layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Rim - Settings" ).name = rimSettingsName;
+            //Unselecting the Rim Layer.
             layerSelection[i].selected = false ;
             //Applying the Rim preset on the Rim layer.
             rimLayer.selected = true ;
             cleanLayerChoiceDialog( false , false , false );
-            rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRim v2.ffx" ) );
+            rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRim v3.ffx" ) );
             rimLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             //Adjusting the expressions.
-            app.project.autoFixExpressions( "XXX" , app.project.activeItem.name );
-            app.project.autoFixExpressions( "YYY" , layerSelection[i].name );
+            app.project.autoFixExpressions( "XXX" , layerSelection[i].name );
+            app.project.autoFixExpressions( "CTbox - Rim - Settings" , rimSettingsName );
             //Setting the Color.
             if( outsideRim ){
-                layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Rim - Settings" )(1).setValue( [ .835 , .788 , .725 ] );
+                layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(1).setValue( [ .835 , .788 , .725 ] );
             } else {
-                layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Rim - Settings" )(1).setValue( [ .700 , .630 , .559 ] );
+                layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(1).setValue( [ .700 , .630 , .559 ] );
                 rimLayer.effect("CTbox - Fill")(4).setValue( 0 );
             }
             //Checking if the reference layer has a bottom detected and linking the Gradient to it if so.
             if( layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Content Lowest Point" ) != null ){
-                layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Rim - Settings" )(7).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
-                layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Rim - Settings" )(7).setValue( [ 0 , 0 ] );
+                layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(7).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
+                layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(7).setValue( [ 0 , 0 ] );
             }
             //Unselecting the Rim Layer.
             rimLayer.selected = false ;
