@@ -157,7 +157,6 @@ function CTsaveString( saveFileName , stringCodename , stringToSave ){
         //Updating the string if its codename is found, else writing it down.
         var stringCodenameIndex = saveFileString.search( stringCodename );
         if( stringCodenameIndex >= 0 ){
-            var StringStartIndex = stringCodenameIndex + stringCodename.length + 1 ;
             var StringEndIndex = saveFileString.search( "</Path" + stringCodename + ">" );
             var OldString = saveFileString.slice( stringCodenameIndex , StringEndIndex );
             saveFileString = saveFileString.replace( OldString , stringCodename + ">" + stringToSave );

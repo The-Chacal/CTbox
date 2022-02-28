@@ -14,7 +14,6 @@ function createCastShadow(){
         if( hasID == null ){ hasID = true ;}
         //Getting the path to the Script on the Computer.
         var scriptFolder = CTgetScriptFolder();
-        alert(scriptFolder)
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
             app.beginUndoGroup( { en: "Creating Cast Shadow." , fr: "Creation de l'ombre projetée." } );
