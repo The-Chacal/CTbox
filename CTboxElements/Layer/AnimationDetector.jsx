@@ -6,20 +6,17 @@
 /**
  * Creates the UI
  */
-function animDetectionDlg(){
+function getAnimDetectionOptions(){
     
-    var animDetectionDlg = new Window( "palette" , { en: "Detection Settings" , fr: "Paramètres de Detection"} );
-    animDetectionDlg.global = animDetectionDlg.add( "group" );
-    animDetectionDlg.global.preferredSize = [ 200 , -1 ];
-    animDetectionDlg.global.orientation = "Column" ;
-    animDetectionDlg.global.alignChildren = "fill" ;
-    animDetectionDlg.global.spacing = 0 ;
-        var presetLine = animDetectionDlg.global.add( "group" );
-        presetLine.alignChildren = [ "center" , "fill"];
+    var animDetectionDlg = new Window( "dialog" , undefined , undefined , { borderless :true } );
+    animDetectionDlg.alignChildren = "fill" ;
+    animDetectionDlg.spacing = 0 ;
+        var presetLine = animDetectionDlg.add( "group" );
+        presetLine.alignChildren = [ "center" , "fill" ];
             presetLine.add( "statictext{ text: 'Preset : ' , characters: 5 }" );
             var presetSelector = presetLine.add( "dropdownlist" , undefined , [ { en: "None" , fr: "Aucun" } , "Anim 2D/3D" , "Stopmotion" ] );
             presetSelector.selection = presetSelector.items[0];
-        var settings = animDetectionDlg.global.add( "panel" , undefined , { en: "Settings : " , fr: "Paramètres" } );
+        var settings = animDetectionDlg.add( "panel" , undefined , { en: "Settings : " , fr: "Paramètres" } );
         settings.alignChildren = "Fill" ;
         settings.spacing = 0 ;
             var settingsLine1 = settings.add( "group" );
@@ -34,44 +31,57 @@ function animDetectionDlg(){
                 settingsLine2.add( "statictext" , undefined , "Tolerance :" );
                 var toleranceValue = settingsLine2.add( "edittext{ text: '0' , justify: 'center' , characters: 4 }" );
             var toleranceSlider = settings.add( "slider" , undefined , 0 , 0 , 5 );
-        var buttons = animDetectionDlg.global.add( "group" );
-        buttons.alignChildren = [ "center" , "fill"];
-        buttons.margins = 5 ;
-            var BtnA = buttons.add( "button" , undefined , { en: "Continue" , fr: "Continuer" } );
-            var BtnB = buttons.add( "button" , undefined , { en: "Cancel" , fr: "Annuler" } );
-    //UI Parameters
-    animDetectionDlg.defaultElement = BtnA ;
-    animDetectionDlg.cancelElement = BtnB ;
-    //Getting saved settings.
-    var savedPrecisionDegree = CTgetSavedString( "CTboxSave" , "precisionDegree" );
-    var savedToleranceDegree = CTgetSavedString( "CTboxSave" , "toleranceDegree" );
+        var btnsRow = animDetectionDlg.add( "group" );
+        btnsRow.orientation = "row" ;
+        btnsRow.alignChildren = [ "center" , "fill" ];
+        btnsRow.spacing = 0 ;
+        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
+        var btnSize = [ 60 , 20 ];
+            var btnA = btnsRow.add( "button" , undefined , "Ok" );
+            btnA.size = btnSize ;
+            var btnB = btnsRow.add( "button" , undefined , "Cancel" );
+            btnB.size = btnSize ;
+    //Updating the UI with saved values.
+    var savedPrecisionDegree = CTgetSavedString( "CTboxSave" , "PrecisionDegree" );
+    if( savedPrecisionDegree == null ){ savedPrecisionDegree = 1 };
+    precisionValue.text = savedPrecisionDegree ;
+    precisionSlider.value = savedPrecisionDegree ;
+    var savedToleranceDegree = CTgetSavedString( "CTboxSave" , "ToleranceDegree" );
+    if( savedToleranceDegree == null ){ savedToleranceDegree = 0 };
+    toleranceValue.text = savedToleranceDegree ;
+    toleranceSlider.value = savedToleranceDegree ;
     //UI Events
     presetSelector.onChange = function(){ if( presetSelector.selection.text == "Anim 2D/3D"){ precisionValue.text = 1 , precisionSlider.value = 1 , toleranceValue.text = 0 , toleranceSlider.value = 0 } else if( presetSelector.selection.text == "Stopmotion"){ precisionValue.text = 4 , precisionSlider.value = 4 , toleranceValue.text = 1 , toleranceSlider.value = 1 } };
     precisionValue.onChange = function(){ precisionSlider.value = precisionValue.text };
     precisionSlider.onChanging = function(){ precisionValue.text = Math.round( precisionSlider.value ); };
     toleranceValue.onChange = function(){ toleranceSlider.value = toleranceValue.text };
     toleranceSlider.onChanging = function(){ toleranceValue.text = Math.round( toleranceSlider.value * 10 ) /10 ; };
-    BtnA.onClick = function(){ if( detectAnimation( precisionValue.text , toleranceValue.text ) ){ animDetectionDlg.close(); } };
-    BtnB.onClick = function(){ animDetectionDlg.close(); };
+    btnA.onClick = function(){ var precisionParameter = CTcleanNumberString( precisionValue.text , false ); var toleranceParameter = CTcleanNumberString( toleranceValue.text , false ); if(  precisionParameter != null && toleranceParameter != null ){ { CTsaveString( "CTboxSave" , "PrecisionDegree" , precisionValue.text ); CTsaveString( "CTboxSave" , "ToleranceDegree" , toleranceValue.text ); animDetectionDlg.close(); };};};
     //Showing UI
-    if( savedPrecisionDegree != null && savedToleranceDegree != null ){ precisionSlider.value = savedPrecisionDegree ; precisionValue.text = precisionSlider.value; toleranceSlider.value = savedToleranceDegree ; toleranceValue.text = toleranceSlider.value ; }
     animDetectionDlg.show();
 }
 /**
- * Detects the animation on the layer by using an expression, converting to keys, then to markers.
- * @param { number } precisionDegree The degree of precision expected.
- * @param { number } toleranceDegree The degree of tolerance wanted.
- * @returns { boolean } Success
+ * 
+ * @returns 
  */
-function detectAnimation( precisionDegree , toleranceDegree ){
-
-    //Saving the parameters if they are valid.
+    /*//Saving the parameters if they are valid.
     precisionDegree = CTcleanNumberString( precisionDegree , false );
     toleranceDegree = CTcleanNumberString( toleranceDegree , false );
     if( precisionDegree == null || toleranceDegree == null ){ return false ;}
-    CTsaveString( "CTboxSave" , "precisionDegree" , precisionDegree );
-    CTsaveString( "CTboxSave" , "toleranceDegree" , toleranceDegree );
+    
+    */
+/**
+ * Detects the animation on the layer by using an expression, converting to keys, then to markers.
+ * @returns { boolean } Success
+ */
+function detectAnimation(){
 
+    //Getting the saved parameters.
+    var precisionDegree = CTgetSavedString( "CTboxSave" , "PrecisionDegree" );
+    if( precisionDegree == null ){ precisionDegree = 1 };
+    var toleranceDegree = CTgetSavedString( "CTboxSave" , "ToleranceDegree" );
+    if( toleranceDegree == null ){ toleranceDegree = 0 };
+    //Getting to work.
     var layerSelection = CTcheckSelectedLayers();
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){

@@ -1,5 +1,5 @@
 //****************************************//
-//  General Functions v1.3
+//  General Functions v2.0
 //****************************************//
 
 //========== CTbox dialogs ==========
@@ -205,7 +205,7 @@ function CTgetSavedString( saveFileName , stringCodename ){
 }
 /**
  * Increments the version of a file AND its main comp (if their names are identical). Then moves the older file in a "XX - AEP Older Versions" folder.
- * @param { string } type - Code for the versioning: "X.0" to change the version, "0.X" to change the subversion.
+ * @param { string } type Code for the versioning: "X.0" to change the version, "0.X" to change the subversion.
  */
 function CTversioning( type ){
     
@@ -283,8 +283,9 @@ function CTversioning( type ){
 }
 /**
  * Generates a 3 digits random ID for a layer.
+ * @returns { string } A three digits string.
  */
- function generateIdNb(){
+ function CTgenerateIdNb(){
 
     var Id = JSON.stringify( Math.floor( Math.random() * 1000 ) )
     while( Id.length < 3 )
@@ -293,4 +294,22 @@ function CTversioning( type ){
     }
     return Id ;
 
- }
+}
+/**
+ * Gets the path to the CTbox Script on the Computer.
+ * @returns { object } The Folder in which the CTbox Script is located.
+ */
+function CTgetScriptFolder(){
+
+    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
+    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
+	if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
+        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
+    }
+    if( !testFile.exists ){
+        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
+    }
+    return scriptFolder ;
+
+}

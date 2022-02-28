@@ -1,5 +1,5 @@
 //****************************************//
-//  Clean Layer v2.0
+//  Clean Layer v2.1
 //****************************************//
 
 //Functions cleaning anything the user can have done on a layer.
@@ -147,9 +147,14 @@ function propertyCleaner( item , cleanProperties , cleanExpressions ){
         } else {
             //Removing keys on properties.
             if( cleanProperties && item.property(i) != item.property( "ADBE Marker" ) && item.property(i).numKeys > 0 ){
+                //Saving the Property Value at the current Time.
+                var currentValue = item.property(i).value ;
+                //Removing all keys on the Property.
                 while( item.property(i).numKeys > 0 ){
                     item.property(i).removeKey(1) ;
                 }
+                //Restoring the Value stored.
+                item.property(i).setValue( currentValue );
             }
             //Removing expressions on properties.
             if( cleanExpressions && item.property(i).expression != "" ){

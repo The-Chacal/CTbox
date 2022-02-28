@@ -1,5 +1,5 @@
 //****************************************//
-//   Get Layer's Content Lowest Point v2.2
+//   Get Layer's Content Lowest Point v2.3
 //****************************************//
 
 /**
@@ -10,16 +10,8 @@
  */
 function getLayerBottom( promptEndAlert , hasUndoGroup ){
 
-    //Making sure that the Folder.current is the right one for the relative path of the Preset.
-    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
-    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
-	if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
-        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
-    }
-    if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
-    }
+    //Getting the path to the Script on the Computer.
+    var scriptFolder = CTgetScriptFolder();
     //Starting the true work.
     var layerSelection = CTcheckSelectedLayers() ;
     if( layerSelection.length > 0 ){
@@ -251,6 +243,7 @@ X";
 function getLayerBottomOptions(){
 
     var getLayerBottomOptionsDialog = new Window( "dialog" , undefined , undefined , { borderless : true } );
+    getLayerBottomOptionsDialog.spacing = 0 ;
         var mainGroup = getLayerBottomOptionsDialog.add( "panel" , undefined , "Get Layer Bottom Options :" );
         mainGroup.orientation = "column" ;
         mainGroup.spacing = 2 ;
@@ -275,17 +268,17 @@ function getLayerBottomOptions(){
                 optn03value.characters = 3 ;
                 var optn03slider = optn03row.add( "slider" , undefined , 50 , 2 , 2160 );
                 optn03slider.size = [ 150 , 17.5 ];
-            var btnsRow = mainGroup.add( "group" );
-            btnsRow.orientation = "row" ;
-            btnsRow.spacing = 0 ;
-            btnsRow.margins = [ 0 , 2 , 0 , 0 ];
-            var btnSize = [ 60 , 20 ];
-                var btnA = btnsRow.add( "button" , undefined , "Ok" );
-                btnA.size = btnSize ;
-                var btnB = btnsRow.add( "button" , undefined , "Default" );
-                btnB.size = btnSize ;
-                var btnC = btnsRow.add( "button" , undefined , "Cancel" );
-                btnC.size = btnSize ;
+        var btnsRow = getLayerBottomOptionsDialog.add( "group" );
+        btnsRow.orientation = "row" ;
+        btnsRow.spacing = 0 ;
+        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
+        var btnSize = [ 60 , 20 ];
+            var btnA = btnsRow.add( "button" , undefined , "Ok" );
+            btnA.size = btnSize ;
+            var btnB = btnsRow.add( "button" , undefined , "Default" );
+            btnB.size = btnSize ;
+            var btnC = btnsRow.add( "button" , undefined , "Cancel" );
+            btnC.size = btnSize ;
     //Updating the UI with saved values.
     var savedVerticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
     if( savedVerticalOriginalStep == null ){ savedVerticalOriginalStep = 50 };

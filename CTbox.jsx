@@ -30,7 +30,9 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.5"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.6"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    //Getting the path to the Script on the Computer.
+    var scriptFolder = CTgetScriptFolder();
     //Creating the UI
     var CTpanel = thisObj ;
     if( CTpanel instanceof Panel == false ){
@@ -62,8 +64,8 @@ function CTbuildUI( thisObj ){
         var panelsBlock = globalGroup.add( "group" );
         panelsBlock.orientation = "Stack" ;
         panelsBlock.alignChildren = [ "center" , "top" ];
-        var btnsSize = [ 75 ,25 ];
-            var Block01 = panelsBlock.add( "panel" , undefined , "Expressions :" );
+        var btnsSize = [ 75 , 25 ];
+            var Block01 = panelsBlock.add( "panel" , undefined , "Expr. :" );
             Block01.margins = [ 5 , 10 , 5 , 5 ] ;
             Block01.spacing = 2 ;
                 var B1Btn01 = Block01.add( "button" , undefined , { en: "Fix Exp" , fr: "Cor. Exp." } );
@@ -112,12 +114,18 @@ function CTbuildUI( thisObj ){
                     var B2Btn01 = B2Btn01Block.add( "button" , undefined , { en: "Loc. Bot." , fr: "Def. Bas" } );
                     B2Btn01.helpTip = { en: "   Locates the Content lowest point in the layer, for the length of the active layer.\n   Adds a point Effect to the layer." , fr: "   Définit le point le plus bas du contenu d'un calque sur la durée de ce dernier.\n   Ajoute un paramètre Point au calque." } ;
                     B2Btn01.size = btnsSize - [ 15 , 0 ];
-                    var B2Btn01optns = B2Btn01Block.add( "button" , undefined , "Ω" );
+                    var B2Btn01optns = B2Btn01Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
                     B2Btn01optns.helpTip = "Get Lowest Layer Point Options" ;
                     B2Btn01optns.size = [ 15 , btnsSize[1] ];
-                var B2Btn02 = Block02.add( "button" , undefined , "Det. Anim." );
-                B2Btn02.helpTip = { en: "   Adds a Marker on the Layer if it \"moves\"." , fr: "   Ajoute un marqueur sur le calque quand l'animation evolue." } ;
-                B2Btn02.size = btnsSize ;
+                var B2Btn02Block = Block02.add( "group" );
+                B2Btn02Block.orientation = "row" ;
+                B2Btn02Block.spacing = 0 ;
+                    var B2Btn02 = B2Btn02Block.add( "button" , undefined , "Det. Anim." );
+                    B2Btn02.helpTip = { en: "   Adds a Marker on the Layer if it \"moves\"." , fr: "   Ajoute un marqueur sur le calque quand l'animation evolue." } ;
+                    B2Btn02.size = btnsSize - [ 15 , 0 ];
+                    var B2Btn02optns = B2Btn02Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
+                    B2Btn02optns.helpTip = "Get Lowest Layer Point Options" ;
+                    B2Btn02optns.size = [ 15 , btnsSize[1] ];
                 var B2Btn03 = Block02.add( "button" , undefined , { en: "Add Grad." , fr: "Aj. Degradé" } );
                 B2Btn03.helpTip = { en: "   Creates a Gradient in Multiply Mode." , fr: "   Crée un dégradé en mode Produit." } ;
                 B2Btn03.size = btnsSize ;
@@ -158,7 +166,7 @@ function CTbuildUI( thisObj ){
                     var B3Btn01 = B3Btn01Block.add( "button" , undefined , "Comp. Dur." );
                     B3Btn01.helpTip = "   Change the Duration of a Composition and its elements to the Duration wanted." ;
                     B3Btn01.size = btnsSize - [ 15 , 0 ];
-                    var B3Btn01optns = B3Btn01Block.add( "button" , undefined , "Ω" );
+                    var B3Btn01optns = B3Btn01Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
                     B3Btn01optns.helpTip = "   Change Composition Duration Options"
                     B3Btn01optns.size = [ 15 , btnsSize[1] ];
                 var B3Btn02 = Block03.add( "button" , undefined , { en: "Col. Comp." , fr: "Rast. Comp." } );
@@ -211,9 +219,12 @@ function CTbuildUI( thisObj ){
             CTboxVersionBlock.margins = [ 1 , 0 , 1 , 0 ];
             CTboxVersionBlock.alignment = "right";
             CTboxVersionBlock.spacing = 2 ;
-            CTboxVersionBlock.add( "staticText" , undefined , CTboxVersion );
-                var BXBtn03 = CTboxVersionBlock.add( "iconButton" , undefined , new File( Folder.appPackage.fsName + "/PNG/SP_ArrowNext_Sm_N_D.png") );
+                var BXBtn03 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
                 BXBtn03.size = [ 15 , 15 ];
+                var BXBtn04 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-notePad.png") );
+                BXBtn04.size = [ 15 , 15 ];
+            var versionText = BlockXX.add( "staticText" , undefined , CTboxVersion );
+            versionText.alignment = "right";
     //Updating the Layout.
     CTpanel.layout.layout( "true" );
     //UI Events.
@@ -230,7 +241,8 @@ function CTbuildUI( thisObj ){
     //UI events for Block02.
     B2Btn01.onClick = function(){ getLayerBottom( true , true ) };
     B2Btn01optns.onClick = getLayerBottomOptions ;
-    B2Btn02.onClick = animDetectionDlg ;
+    B2Btn02.onClick = detectAnimation ;
+    B2Btn02optns.onClick = getAnimDetectionOptions ;
     B2Btn03.onClick = applyGradient ;
     B2Btn04a.onClick = function(){ applyRim( true ); };
     B2Btn04b.onClick = function(){ applyRim( false ); };
@@ -248,7 +260,8 @@ function CTbuildUI( thisObj ){
     //UI events for Versionning Block.
     BXBtn01.onClick = function(){ CTversioning( "X.0" ) };
     BXBtn02.onClick = function(){ CTversioning( "0.X" ) };
-    BXBtn03.onClick = function(){ CTexpandNotepad( CTpanel ) };
+    BXBtn03.onClick = CTboxOptions;
+    BXBtn04.onClick = function(){ CTexpandNotepad( CTpanel ) };
     //Checking which Panel was the last actived and showing it.
     var ActivePanel = CTgetSavedString( "CTboxSave" , "VisiblePanel" );
     if( ActivePanel != null ){
@@ -300,4 +313,48 @@ function CTexpandNotepad( Dlg ){
     }
     Dlg.layout.layout(true)
     
+}
+/**
+ * Opens the CTbox options Panel.
+ */
+function CTboxOptions(){
+
+    var CTboxOptnsDlg = new Window( "dialog" , undefined , undefined , { borderless : true } );
+    CTboxOptnsDlg.spacing = 2 ;
+        var textPanel = CTboxOptnsDlg.add( "panel" , undefined , "Generate id : " );
+        textPanel.margins = [ 30 , 10 , 0 , 0 ];
+        textPanel.alignChildren = "fill" ;
+        textPanel.spacing = 0 ;
+        textPanel.preferredSize = [ 200 , -1 ];
+            var rimIdOptns = textPanel.add( "checkbox" , undefined , " - for the Rims." );
+            var gradientIdOptns = textPanel.add( "checkbox" , undefined , " - for the Gradients." );
+            var castShadowIdOptns = textPanel.add( "checkbox" , undefined , " - for the Cast Shadows." );
+        var btnsRow = CTboxOptnsDlg.add( "group" );
+        btnsRow.orientation = "row" ;
+        btnsRow.alignChildren = "center" ;
+        btnsRow.spacing = 0 ;
+        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
+        var btnSize = [ 60 , 20 ];
+            var btnA = btnsRow.add( "button" , undefined , "Ok" );
+            btnA.size = btnSize ;
+            var btnB = btnsRow.add( "button" , undefined , "Default" );
+            btnB.size = btnSize ;
+            var btnC = btnsRow.add( "button" , undefined , "Cancel" );
+            btnC.size = btnSize ;
+    //Updating the UI with saved values.
+    var savedRimIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "RimLightId" ) );
+    if( savedRimIdOptns == null ){ savedRimIdOptns.value = true };
+    rimIdOptns.value = savedRimIdOptns ;
+    var savedGradientIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "GradientId" ) );
+    if( savedGradientIdOptns == null ){ savedGradientIdOptns.value = true };
+    gradientIdOptns.value = savedGradientIdOptns ;
+    var savedCastShadowIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "CastShadowId" ) );
+    if( savedCastShadowIdOptns == null ){ savedCastShadowIdOptns.value = true };
+    castShadowIdOptns.value = savedCastShadowIdOptns ;
+    //UI Events.
+    btnA.onClick = function(){ CTsaveString( "CTboxSave" , "RimLightId" , JSON.stringify( rimIdOptns.value ) ); CTsaveString( "CTboxSave" , "GradientId" , JSON.stringify( gradientIdOptns.value ) ); CTsaveString( "CTboxSave" , "CastShadowId" , JSON.stringify( castShadowIdOptns.value ) ); CTboxOptnsDlg.close(); }
+    btnB.onClick = function(){ rimIdOptns.value = true ; gradientIdOptns.value = true ; castShadowIdOptns.value = true };
+    //Showing UI.
+    CTboxOptnsDlg.show();
+
 }

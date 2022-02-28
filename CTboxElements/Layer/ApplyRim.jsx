@@ -1,5 +1,5 @@
 //****************************************//
-//  Apply Rim v1.3
+//  Apply Rim v1.4
 //****************************************//
 
 /**
@@ -8,25 +8,22 @@
  */
 function applyRim( outsideRim ){
 
-    //Making sure that the Folder.current is the right one for the relative path of the Preset.
-    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
-    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
-	if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
-        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
-    }
-    if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
-    }
-    //Starting the true work.
     var layerSelection = CTcheckSelectedLayers();
     if( layerSelection.length > 0 ){
+        //Getting the id option status
+        var hasID = JSON.parse( CTgetSavedString( "CTboxSave" , "RimLightId" ) );
+        if( hasID == null ){ hasID = true ;}
+        //Getting the path to the Script on the Computer.
+        var scriptFolder = CTgetScriptFolder();
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
             app.beginUndoGroup( { en: "Applying Rim." , fr: "Ajout de Liseré." } );
-            //Generating the unique Id for the Rim.
-            var rimLayerId = generateIdNb();
-            var rimSettingsName = "CTbox - Rim id" + rimLayerId + " - Settings";
+            var rimSettingsName = "CTbox - Rim - Settings";
+            if( hasID ){
+                //Generating the unique Id for the Rim.
+                var rimLayerId = CTgenerateIdNb();
+                var rimSettingsName = "CTbox - Rim id" + rimLayerId + " - Settings";
+            }
             //Creating the Gradient layer from the selected layer.
             layerSelection[i].selected = true ;
             var rimLayer = layerSelection[i].duplicate();
@@ -34,10 +31,18 @@ function applyRim( outsideRim ){
             rimLayer.parent = layerSelection[i];
             rimLayer.shy = true ;
             if( outsideRim ){
-                rimLayer.name = layerSelection[i].name + " - OutsideRim - id" + rimLayerId ;
+                if( hasID ){
+                    rimLayer.name = layerSelection[i].name + " - OutsideRim - id" + rimLayerId ;
+                } else {
+                    rimLayer.name = layerSelection[i].name + " - OutsideRim";
+                }
                 rimLayer.blendingMode = BlendingMode.OVERLAY ;
             } else {
-                rimLayer.name = layerSelection[i].name + " - InsideRim - id" + rimLayerId ;
+                if( hasID ){
+                    rimLayer.name = layerSelection[i].name + " - InsideRim - id" + rimLayerId ;
+                } else {
+                    rimLayer.name = layerSelection[i].name + " - InsideRim";
+                }
                 rimLayer.blendingMode = BlendingMode.MULTIPLY ;
             }
             //Applying the settings preset on the Reference layer.

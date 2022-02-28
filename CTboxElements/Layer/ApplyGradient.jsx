@@ -1,5 +1,5 @@
 //****************************************//
-//  Apply Gradient v1.3
+//  Apply Gradient v1.4
 //****************************************//
 
 /**
@@ -7,29 +7,30 @@
  */
 function applyGradient(){
 
-    //Making sure that the Folder.current is the right one for the relative path of the Preset.
-    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
-    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
-	if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
-        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
-    }
-    if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
-    }
-    //Starting the true work.
     var layerSelection = CTcheckSelectedLayers ();
     if( layerSelection.length > 0 ){
+        //Getting the id option status
+        var hasID = JSON.parse( CTgetSavedString( "CTboxSave" , "GradientId" ) );
+        if( hasID == null ){ hasID = true ;}
+        //Getting the path to the Script on the Computer.
+        var scriptFolder = CTgetScriptFolder();
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup
             app.beginUndoGroup( { en: "Applying Gradient." , fr: "Ajout de Dégradé." } );
-            //Generating the unique Id for the Gradient.
-            var gradientLayerId = generateIdNb();
-            var gradientSettingsName = "CTbox - Gradient id" + gradientLayerId + " - Settings";
+            var gradientSettingsName = "CTbox - Gradient - Settings";
+            if( hasID ){
+                //Generating the unique Id for the Gradient.
+                var gradientLayerId = CTgenerateIdNb();
+                var gradientSettingsName = "CTbox - Gradient id" + gradientLayerId + " - Settings";
+            }
             //Creating the Gradient layer from the selected layer.
             layerSelection[i].selected = true ;
             var gradientLayer = layerSelection[i].duplicate();
-            gradientLayer.name = layerSelection[i].name + " - Gradient - id" + gradientLayerId ;
+            if( hasID ){
+                gradientLayer.name = layerSelection[i].name + " - Gradient - id" + gradientLayerId ;
+            } else {
+                gradientLayer.name = layerSelection[i].name + " - Gradient";
+            }
             gradientLayer.label = 11 ;
             gradientLayer.parent = layerSelection[i];
             gradientLayer.shy = true ;

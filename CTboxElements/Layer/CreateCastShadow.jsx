@@ -1,5 +1,5 @@
 //****************************************//
-//   Create Cast Shadow v1.3
+//   Create Cast Shadow v1.4
 //****************************************//
 
 /**
@@ -7,29 +7,31 @@
  */
 function createCastShadow(){
     
-    //Making sure that the Folder.current is the right one for the relative path of the Preset.
-    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox" );
-    var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
-	if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
-        testFile = new File( scriptFolder.fsName + "/CTbox.jsx" )
-    }
-    if( !testFile.exists ){
-        scriptFolder = new Folder( Folder.appPackage.fsName + "/Scripts/ScriptUI Panels" );
-    }
-    //Starting the true work.
     var layerSelection = CTcheckSelectedLayers ()
     if( layerSelection.length > 0 ){
+        //Getting the id option status
+        var hasID = JSON.parse( CTgetSavedString( "CTboxSave" , "CastShadowId" ) );
+        if( hasID == null ){ hasID = true ;}
+        //Getting the path to the Script on the Computer.
+        var scriptFolder = CTgetScriptFolder();
+        alert(scriptFolder)
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
             app.beginUndoGroup( { en: "Creating Cast Shadow." , fr: "Creation de l'ombre projetée." } );
-            //Generating the unique Id for the CastShadow.
-            var castShadowLayerId = generateIdNb();
-            var castShadowSettingsName = "CTbox - Cast Shadow id" + castShadowLayerId + " - Settings";
+            var castShadowSettingsName = "CTbox - Cast Shadow - Settings";
+            if( hasID ){
+                //Generating the unique Id for the CastShadow.
+                var castShadowLayerId = CTgenerateIdNb();
+                castShadowSettingsName = "CTbox - Cast Shadow id" + castShadowLayerId + " - Settings";
+            }
             //Creating the Shadow layer from the selected layer.
             var silhouetteShadowLayer = layerSelection[i].duplicate();
             silhouetteShadowLayer.moveAfter( layerSelection[i] );
-            silhouetteShadowLayer.name = layerSelection[i].name + " - SilhouetteShadow - id" + castShadowLayerId ;
+            if( hasID ){
+                silhouetteShadowLayer.name = layerSelection[i].name + " - SilhouetteShadow - id" + castShadowLayerId ;
+            } else {
+                silhouetteShadowLayer.name = layerSelection[i].name + " - SilhouetteShadow";
+            }
             silhouetteShadowLayer.label = 8 ;
             silhouetteShadowLayer.parent = layerSelection[i];
             silhouetteShadowLayer.shy = true ;
