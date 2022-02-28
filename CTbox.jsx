@@ -30,7 +30,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.6"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.7"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Getting the path to the Script on the Computer.
     var scriptFolder = CTgetScriptFolder();
     //Creating the UI
@@ -343,13 +343,13 @@ function CTboxOptions(){
             btnC.size = btnSize ;
     //Updating the UI with saved values.
     var savedRimIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "RimLightId" ) );
-    if( savedRimIdOptns == null ){ savedRimIdOptns.value = true };
+    if( savedRimIdOptns == null ){ savedRimIdOptns = true };
     rimIdOptns.value = savedRimIdOptns ;
     var savedGradientIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "GradientId" ) );
-    if( savedGradientIdOptns == null ){ savedGradientIdOptns.value = true };
+    if( savedGradientIdOptns == null ){ savedGradientIdOptns = true };
     gradientIdOptns.value = savedGradientIdOptns ;
     var savedCastShadowIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "CastShadowId" ) );
-    if( savedCastShadowIdOptns == null ){ savedCastShadowIdOptns.value = true };
+    if( savedCastShadowIdOptns == null ){ savedCastShadowIdOptns = true };
     castShadowIdOptns.value = savedCastShadowIdOptns ;
     //UI Events.
     btnA.onClick = function(){ CTsaveString( "CTboxSave" , "RimLightId" , JSON.stringify( rimIdOptns.value ) ); CTsaveString( "CTboxSave" , "GradientId" , JSON.stringify( gradientIdOptns.value ) ); CTsaveString( "CTboxSave" , "CastShadowId" , JSON.stringify( castShadowIdOptns.value ) ); CTboxOptnsDlg.close(); }
