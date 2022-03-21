@@ -1,5 +1,5 @@
 //****************************************//
-//   Composition Duration Manager v1.2
+//   Composition Duration Editor v1.2
 //****************************************//
 
 // Functions managing the length of a comp and all its components.
@@ -7,8 +7,11 @@
 /**
  * Creates the UI.
  */
-function choiceCompDuration(){
+function compDurationChoice(){
     
+    //Getting the path to the Script on the Computer.
+    var scriptFolder = CTgetScriptFolder();
+    //Creating the dialog.
     var choiceCompDurationDlg = new Window( "palette" , undefined , undefined , { borderless : true } );
     choiceCompDurationDlg.spacing = 2 ;
         var settingsGroup = choiceCompDurationDlg.add( "panel" , undefined , "Settings :" );
@@ -16,9 +19,8 @@ function choiceCompDuration(){
             var settingsRow01 = settingsGroup.add( "group" );
             settingsRow01.orientation = "row";
             settingsRow01.spacing = 5 ;
-            settingsRow01.alignChildren = [ "left" , "center" ];
                 settingsRow01.Selector = settingsRow01.add( "radioButton" , undefined , "Duration :" );
-                settingsRow01.Selector.characters = 8 ;
+                settingsRow01.Selector.characters = 6 ;
                 settingsRow01.Selector.value = true ;
                 var durationWanted = settingsRow01.add( "editText{ text : '' , justify : 'center' , characters : 10 , properties : { enabled : true } }" );
                 var durationUnitsA = settingsRow01.add( "radioButton" , undefined , "Fr");
@@ -27,14 +29,13 @@ function choiceCompDuration(){
             var settingsRow02 = settingsGroup.add( "group" , undefined );
             settingsRow02.orientation = "row";
             settingsRow02.spacing = 5 ;
-            settingsRow02.alignChildren = [ "Left" , "Center" ];
                 settingsRow02.Selector = settingsRow02.add( "radioButton" , undefined , "Ref Layer :");
-                settingsRow02.Selector.characters = 8 ;
+                settingsRow02.Selector.characters = 6 ;
                 var layerRefChoice = settingsRow02.add( "dropDownList" )
-                layerRefChoice.itemSize[0] = 71 ;
+                layerRefChoice.itemSize[0] = 120 ;
                 layerRefChoice.selection = layerRefChoice.items[0];
-                var refreshLayerList = settingsRow02.add( "button" , undefined , "Refresh" );
-                refreshLayerList.size = [ 75 , 25 ];
+                var refreshLayerList = settingsRow02.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Actualise.png") );
+                refreshLayerList.size = [ 16 , 16 ];
         var buttonsGroup = choiceCompDurationDlg.add( "group" );
         buttonsGroup.orientation = "row" ;
         buttonsGroup.spacing = 2 ;
@@ -50,7 +51,7 @@ function choiceCompDuration(){
     durationUnitsB.onClick = function(){ settingsRow01.Selector.value = true ; settingsRow02.Selector.value = false };
     layerRefChoice.onChange = function(){ settingsRow02.Selector.value = true ; settingsRow01.Selector.value = false };
     refreshLayerList.onClick = function(){ getListOfLayers( layerRefChoice ) };
-    changeDuration.onClick = function(){ if( editCompDuration( settingsRow02.Selector.value , durationWanted.text , durationUnitsA.value , layerRefChoice.selection.text ) ){ choiceCompDurationDlg.close(); } };
+    changeDuration.onClick = function(){ var newDuration = getNewDuration( settingsRow02.Selector.value , durationWanted.text , durationUnitsA.value , layerRefChoice.selection.text ); if( newDuration != null ){ compDurationEditorLauncher( newDuration ); } };
     cancelBtn.onClick = function(){ choiceCompDurationDlg.close() };
     //Updating the layers'list
     refreshLayerList.notify();
@@ -77,86 +78,112 @@ function getListOfLayers( dropdownlistToUpdate ){
     
 }
 /**
- * Gets all information needed.
+ * Gets the duration wanted in seconds.
  * @param { boolean } hasRefLayer Uses a Reference Layer.
  * @param { number } durationWanted  Duration wanted.
  * @param { boolean } isFrames Duration is in Frames.
  * @param { string } refLayer A string with the Index and Name of the layer selected as reference for duration.
- * @returns { boolean } Success.
+ * @returns { number } The duration chose in seconds.
  */
-function editCompDuration( hasRefLayer , durationWanted , isFrames , refLayer ){
+function getNewDuration( hasRefLayer , durationWanted , isFrames , refLayer ){
     
+    var durationSet = null ;
     if( app.project.activeItem != undefined ){
         if( !hasRefLayer ){
             if( isNaN( durationWanted ) ){
                 CTalertDlg( "Nope" , { en: "   The Duration entered is not a Number" , fr: "   La durée demandée n'est pas un nombre." } );
-                return false ;
             } else {
                 if( isFrames ){
-                        durationWanted = durationWanted * app.project.activeItem.frameDuration ;
+                    durationSet = durationWanted * app.project.activeItem.frameDuration ;
                 }
             }            
         } else {
             var refLayerIndex = parseFloat( refLayer.slice( 0 , refLayer.indexOf( " - " ) ) );
-            durationWanted = app.project.activeItem.layer( refLayerIndex ).outPoint - app.project.activeItem.layer( refLayerIndex ).inPoint ;
-        }
-        var selectedLayers = CTcheckSelectedLayers() ;
-        if( selectedLayers.length > 0 ){
-            for( var i = 0 ; i < selectedLayers.length ; i++ ){
-                app.beginUndoGroup( "Edit Comp Duration" );
-                editingCompDuration( selectedLayers[i] , durationWanted );
-                app.endUndoGroup();
-            }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished changing the duration of your Comps" , fr: "J'ai fini de retimer tes Compos." } );
-        return true ;
+            durationSet = app.project.activeItem.layer( refLayerIndex ).outPoint - app.project.activeItem.layer( refLayerIndex ).inPoint ;
         }
     }
-    
+    return durationSet ;
+        
 }
 /**
- * Recursive function that modifies the length of Comp.
- * @param { object } layer Layer to modify.
+ * Gather infos for the Comp Duration Editor.
  * @param { number } durationWanted Duration wanted in seconds.
  */
-function editingCompDuration( layer , durationWanted ){
+function compDurationEditorLauncher( durationWanted ){
 
     //Getting saved options strings and transforming them into booleans.
     var updateActiveComp = JSON.parse( CTgetSavedString( "CTboxSave" , "updateActiveComp" ) );
     if( updateActiveComp == null ){ updateActiveComp = true };
     var ignoreLockedLayers = JSON.parse( CTgetSavedString( "CTboxSave" , "ignoreLockedLayers" ) );
-    if( ignoreLockedLayers == null ){ ignoreLockedLayers = "true" };
+    if( ignoreLockedLayers == null ){ ignoreLockedLayers = true };
     //Updating the Active Composition
-    if( updateActiveComp ){
+    var selectedLayers = CTcheckSelectedLayers();
+    if( updateActiveComp && selectedLayers.length == 0 ){
+        app.beginUndoGroup( "Edit Comp Duration" ); 
         app.project.activeItem.duration = durationWanted ;
+        for( var i = 1 ; i <= app.project.activeItem.layers.length ; i++ ){
+            compDurationEditor( app.project.activeItem.layer(i) , durationWanted , ignoreLockedLayers );
+        }
+        app.endUndoGroup(); 
+    } else if( updateActiveComp && selectedLayers.length > 0 ){
+        app.beginUndoGroup( "Edit Comp Duration" );
+        app.project.activeItem.duration = durationWanted ;
+        for( var i = 0 ; i < selectedLayers.length ; i++ ){ 
+            compDurationEditor( selectedLayers[i] , durationWanted , ignoreLockedLayers );
+        } 
+        app.endUndoGroup(); 
+    } else if( !updateActiveComp && selectedLayers.length > 0 ){
+        for( var i = 0 ; i < selectedLayers.length ; i++ ){ 
+            app.beginUndoGroup( "Edit Comp Duration" );
+            compDurationEditor( selectedLayers[i] , durationWanted , ignoreLockedLayers );
+            app.endUndoGroup(); 
+        } 
     }
-    var item = layer.source ;
-    if( item.typeName == "Composition" && item.duration != durationWanted ){
-        var oldDuration = item.duration ;
-        item.duration = durationWanted ;
-        for( var i = 1 ; i <= item.layers.length ; i++ ){
-            //Checking if the current Layer is locked.
-            var isLocked = item.layers[i].locked ;
-            if( isLocked == true && ignoreLockedLayers == false ){ item.layers[i].locked = false ; }
-            if( !item.layers[i].locked ){
-                if( item.layers[i].source.typeName == "Composition" && item.layers[i].duration != durationWanted ){
-                    editingCompDuration( item.layers[i].source , durationWanted );
-                } else if( item.layers[i].outPoint >= durationWanted || item.layers[i].outPoint >= oldDuration ){
-                    item.layers[i].outPoint = durationWanted ;
+    CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished changing the duration of your Comps" , fr: "J'ai fini de retimer tes Compos." } ); 
+    return true ; 
+
+}
+/**
+ * Recursive function that modifies the length of Comp. 
+ * @param { Object } layer Layer to work on.
+ * @param { Number } durationWanted Duration wanted the footage to length in seconds.
+ * @param { Boolean } ignoreLockedLayers Does the script ignore or not the locked layers.
+ */
+function compDurationEditor( layer , durationWanted , ignoreLockedLayers ){
+
+    //Checking if the current Layer is locked.
+    var isLocked = layer.locked ;
+    if( isLocked == false || ( isLocked == true && ignoreLockedLayers == false ) ){
+        layer.locked = false ; 
+        if( layer.nullLayer == false && layer.source.typeName == "Composition" && layer.source.duration != durationWanted ){
+            var item = layer.source ;
+            var oldDuration = item.duration ;
+            item.duration = durationWanted ;
+            for( var i = 1 ; i <= item.layers.length ; i++ ){
+                var parsedLayerIsLocked = item.layers[i].locked ;
+                if( parsedLayerIsLocked == false || ( parsedLayerIsLocked == true && ignoreLockedLayers == false ) ){
+                    item.layers[i].locked = false ;
+                    if( item.layers[i].source.typeName == "Composition" && item.layers[i].duration != durationWanted ){
+                        compDurationEditor( item.layers[i] , durationWanted , ignoreLockedLayers );
+                    } else if( item.layers[i].outPoint >= durationWanted || item.layers[i].outPoint >= oldDuration ){
+                        item.layers[i].outPoint = durationWanted ;
+                    }
+                    if( parsedLayerIsLocked == true && ignoreLockedLayers == false ){ item.layers[i].locked = true ;}
                 }
             }
-            //Restoring locked status on the current Layer.
-            if( isLocked && ignoreLockedLayers == false ){ item.layers[i].locked = true ; }
         }
+        if( layer.outPoint >= durationWanted || layer.outPoint >= oldDuration ){
+            layer.outPoint = durationWanted ;
+        }
+        //Restoring locked status on the current Layer.
+        if( isLocked && ignoreLockedLayers == false ){ layer.locked = true ; }
     }
-    if( layer.outPoint >= durationWanted || layer.outPoint >= oldDuration ){
-        layer.outPoint = durationWanted ;
-    }
-    
+
 }
 /**
  * Opens a dialog allowing the user to set the options for the Composition Duration Editor.
  */
-function choiceCompDurationOptions(){
+function CompDurationEditorOptions(){
 
     var CompDurationEditorOptionsDialog = new Window( "dialog" , undefined , undefined , { borderless : true } );
         var mainGroup = CompDurationEditorOptionsDialog.add( "panel" , undefined , "Composition Duration Editor Options :" );

@@ -7,7 +7,7 @@
  */
 function createCastShadow(){
     
-    var layerSelection = CTcheckSelectedLayers ()
+    var layerSelection = CTcheckSelectedLayers();
     if( layerSelection.length > 0 ){
         //Getting the id option status
         var hasID = JSON.parse( CTgetSavedString( "CTboxSave" , "CastShadowId" ) );
@@ -38,7 +38,7 @@ function createCastShadow(){
             //Cleaning the layer and applying the preset.
             layerSelection[i].selected = false ;
             silhouetteShadowLayer.selected = true ;
-            cleanLayerChoiceDialog( false , false , false );
+            layerCleaner( false , false );
             silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadowSettings v1.ffx" ) );
             silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadow v3.ffx" ) );
             //Adding the id of the Rim to the Settings Effect name.
