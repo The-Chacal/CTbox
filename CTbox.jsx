@@ -11,14 +11,14 @@ if ( CTcheckScriptWriting( this ) ){
     //@include "CTboxElements/Layer/AnimationDetector.jsx";
     //@include "CTboxElements/Layer/ApplyGradient.jsx";
     //@include "CTboxElements/Layer/ApplyRim.jsx";
-    //@include "CTboxElements/Layer/CleanLayer.jsx";
     //@include "CTboxElements/Layer/CopyMarker.jsx";
     //@include "CTboxElements/Layer/CreateCastShadow.jsx";
     //@include "CTboxElements/Layer/CreateMarkersForKeys.jsx";
     //@include "CTboxElements/Layer/DepthDisplacement.jsx";
+    //@include "CTboxElements/Layer/LayerCleaner.jsx";
     //@include "CTboxElements/Layer/GetLayerBottom.jsx";
     //@include "CTboxElements/Misc/CollapseTransformationManager.jsx";
-    //@include "CTboxElements/Misc/EditCompDuration.jsx";
+    //@include "CTboxElements/Misc/CompDurationEditor.jsx";
     //@include "CTboxElements/Misc/UpdateCTbox.jsx";
     // Launching the creation of the toolbox UI.
     CTbuildUI( this );
@@ -30,7 +30,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.7"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.8"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Getting the path to the Script on the Computer.
     var scriptFolder = CTgetScriptFolder();
     //Creating the UI
@@ -113,19 +113,19 @@ function CTbuildUI( thisObj ){
                 B2Btn01Block.spacing = 0 ;
                     var B2Btn01 = B2Btn01Block.add( "button" , undefined , { en: "Loc. Bot." , fr: "Def. Bas" } );
                     B2Btn01.helpTip = { en: "   Locates the Content lowest point in the layer, for the length of the active layer.\n   Adds a point Effect to the layer." , fr: "   Définit le point le plus bas du contenu d'un calque sur la durée de ce dernier.\n   Ajoute un paramètre Point au calque." } ;
-                    B2Btn01.size = btnsSize - [ 15 , 0 ];
+                    B2Btn01.size = btnsSize - [ 16 , 0 ];
                     var B2Btn01optns = B2Btn01Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
                     B2Btn01optns.helpTip = "Get Lowest Layer Point Options" ;
-                    B2Btn01optns.size = [ 15 , btnsSize[1] ];
+                    B2Btn01optns.size = [ 16 , btnsSize[1] ];
                 var B2Btn02Block = Block02.add( "group" );
                 B2Btn02Block.orientation = "row" ;
                 B2Btn02Block.spacing = 0 ;
                     var B2Btn02 = B2Btn02Block.add( "button" , undefined , "Det. Anim." );
                     B2Btn02.helpTip = { en: "   Adds a Marker on the Layer if it \"moves\"." , fr: "   Ajoute un marqueur sur le calque quand l'animation evolue." } ;
-                    B2Btn02.size = btnsSize - [ 15 , 0 ];
+                    B2Btn02.size = btnsSize - [ 16 , 0 ];
                     var B2Btn02optns = B2Btn02Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
                     B2Btn02optns.helpTip = "Get Lowest Layer Point Options" ;
-                    B2Btn02optns.size = [ 15 , btnsSize[1] ];
+                    B2Btn02optns.size = [ 16 , btnsSize[1] ];
                 var B2Btn03 = Block02.add( "button" , undefined , { en: "Add Grad." , fr: "Aj. Degradé" } );
                 B2Btn03.helpTip = { en: "   Creates a Gradient in Multiply Mode." , fr: "   Crée un dégradé en mode Produit." } ;
                 B2Btn03.size = btnsSize ;
@@ -153,9 +153,15 @@ function CTbuildUI( thisObj ){
                 var B2Btn09 = Block02.add( "button" , undefined , { en: "Mov. Dep." , fr: "Dep. Prof" } );
                 B2Btn09.helpTip = { en: "   Moves the layer to the depth wanted" , fr: "   Déplace le calque selectionné à la profondeur indiquée." } ;
                 B2Btn09.size = btnsSize ;
-                var B2Btn10 = Block02.add( "button" , undefined , "Clean Layer" );
-                B2Btn10.helpTip = { en: "   Deletes selected properties on the selected layer." , fr: "   Supprime les priopriétés choisies du calques selectionné." } ;
-                B2Btn10.size = btnsSize ;
+                var B2Btn10Block = Block02.add( "group" );
+                B2Btn10Block.orientation = "row" ;
+                B2Btn10Block.spacing = 0 ;
+                    var B2Btn10 = B2Btn10Block.add( "button" , undefined , "Clean Layer" );
+                    B2Btn10.helpTip = { en: "   Deletes selected properties on the selected layer." , fr: "   Supprime les priopriétés choisies du calques selectionné." } ;
+                    B2Btn10.size = btnsSize - [ 16 , 0 ];
+                    var B2Btn10optns = B2Btn10Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
+                    B2Btn10optns.helpTip = "Clean Layer Options" ;
+                    B2Btn10optns.size = [ 16 , btnsSize[1] ];
             var Block03 = panelsBlock.add( "panel" , undefined , { en: "Misc. :" , fr: "Divers :" } );
             Block03.margins = [ 5 , 10 , 5 , 5 ] ;
             Block03.spacing = 2 ;
@@ -165,10 +171,10 @@ function CTbuildUI( thisObj ){
                 B3Btn01Block.spacing = 0 ;
                     var B3Btn01 = B3Btn01Block.add( "button" , undefined , "Comp. Dur." );
                     B3Btn01.helpTip = "   Change the Duration of a Composition and its elements to the Duration wanted." ;
-                    B3Btn01.size = btnsSize - [ 15 , 0 ];
+                    B3Btn01.size = btnsSize - [ 16 , 0 ];
                     var B3Btn01optns = B3Btn01Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
                     B3Btn01optns.helpTip = "   Change Composition Duration Options"
-                    B3Btn01optns.size = [ 15 , btnsSize[1] ];
+                    B3Btn01optns.size = [ 16 , btnsSize[1] ];
                 var B3Btn02 = Block03.add( "button" , undefined , { en: "Col. Comp." , fr: "Rast. Comp." } );
                 B3Btn02.helpTip = { en: "Rasteurize the selected Composition and its elements.\n   Risky move to my opinion!" , fr: "   Rasteurise la composition et tous ses sous-compositions.\n   Pour gens ayant le goût du risque!"} ;
                 B3Btn02.size = btnsSize ;
@@ -218,11 +224,11 @@ function CTbuildUI( thisObj ){
             var CTboxVersionBlock = BlockXX.add( "group" );
             CTboxVersionBlock.margins = [ 1 , 0 , 1 , 0 ];
             CTboxVersionBlock.alignment = "right";
-            CTboxVersionBlock.spacing = 2 ;
+            CTboxVersionBlock.spacing = 0 ;
                 var BXBtn03 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
-                BXBtn03.size = [ 15 , 15 ];
+                BXBtn03.size = [ 16 , 16 ];
                 var BXBtn04 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-notePad.png") );
-                BXBtn04.size = [ 15 , 15 ];
+                BXBtn04.size = [ 16 , 16 ];
             var versionText = BlockXX.add( "staticText" , undefined , CTboxVersion );
             versionText.alignment = "right";
     //Updating the Layout.
@@ -251,10 +257,11 @@ function CTbuildUI( thisObj ){
     B2Btn07.onClick = createMarkersForKeysChoice ;
     B2Btn08.onClick = copyMarkerChoice ;
     B2Btn09.onClick = depthChoice ;
-    B2Btn10.onClick = function(){ cleanLayerChoiceDialog( true ) };
+    B2Btn10.onClick = layerCleaner ;
+    B2Btn10optns.onClick = layerCleanerOptions ;
     //UI events for Bloc03.
-    B3Btn01.onClick = choiceCompDuration ;
-    B3Btn01optns.onClick = choiceCompDurationOptions ;
+    B3Btn01.onClick = compDurationChoice ;
+    B3Btn01optns.onClick = CompDurationEditorOptions ;
     B3Btn02.onClick = collapseTransformationManager ;
     B3Btn10.onClick = updateCTbox ;
     //UI events for Versionning Block.

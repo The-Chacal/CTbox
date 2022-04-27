@@ -1,5 +1,5 @@
 //****************************************//
-//  Copy Markers v1.0
+//  Copy Markers v1.1
 //****************************************//
 
 //  Functions copying markers from one to a selection of others.
@@ -9,59 +9,63 @@
 function copyMarkerChoice(){
 
     if( app.project.activeItem != undefined && app.project.activeItem.numLayers > 1 ){
-        //Saving the names of the active Composition layers.
-        var compActive = app.project.activeItem ;
-        var compLayersNames = [] ;
-        for( var i = 1 ; i <= compActive.layers.length ; i++ ){
-            compLayersNames.push( i + " - " + compActive.layer(i).name );
-        }
-        //Creating the UI.
+        //Getting the path to the Script on the Computer.
+        var scriptFolder = CTgetScriptFolder();
+        //Getting the names of the active Composition layers.
+        var compLayersNames = getLayersNames();
+        //Creating the dialog.
         var copyMarkerChoiceDlg = new Window( "palette" , { en: "Choose your Layers." , fr: "Choisis tes Calques." } );
-        copyMarkerChoiceDlg.global = copyMarkerChoiceDlg.add( "Group" );
-        copyMarkerChoiceDlg.global.preferredSize = [ 300 , -1 ];
-        copyMarkerChoiceDlg.global.orientation = "Column" ;
-        copyMarkerChoiceDlg.global.alignChildren = "fill" ;
-        copyMarkerChoiceDlg.global.spacing = 0 ;
-            var Bloc1 = copyMarkerChoiceDlg.global.add( "Panel" , undefined , { en: "Markers to Copy : " , fr: "Marqueurs à Copier : " } );
-            Bloc1.alignChildren = "Fill" ;
-                var refLayerSelector = Bloc1.add( "Dropdownlist" , undefined , compLayersNames );
+        copyMarkerChoiceDlg.preferredSize = [ 300 , -1 ];
+        copyMarkerChoiceDlg.alignChildren = "fill" ;
+        copyMarkerChoiceDlg.margins = [ 10 , 5 , 10 , 10 ];
+        copyMarkerChoiceDlg.spacing = 2 ;
+            var block01 = copyMarkerChoiceDlg.add( "panel" , undefined , { en: "Markers to Copy : " , fr: "Marqueurs à Copier : " } );
+            block01.alignChildren = "fill" ;
+            block01.margins = [ 5 , 10 , 5 , 5 ];
+                var refLayerSelector = block01.add( "dropdownlist" , undefined , compLayersNames );
                 refLayerSelector.title = { en: "Source Layer" , fr: "Calque Source : " } ;
                 refLayerSelector.titleLayout.characters = 10 ;
-            var Bloc2 = copyMarkerChoiceDlg.global.add( "Panel" , undefined , { en: "Layers to Modifiy" , fr: "Calque(s) à Modifier : " } );
-            Bloc2.alignChildren = "Fill" ;
-            Bloc2.spacing = 2 ;
-                Bloc2.rows = Bloc2.add( "Group" );
-                Bloc2.rows.alignChildren = "Fill" ;
-                Bloc2.rows.orientation = "Column" ;
-                Bloc2.rows.spacing = 2
+            var block02 = copyMarkerChoiceDlg.add( "panel" , undefined , { en: "Layers to Modifiy" , fr: "Calque(s) à Modifier : " } );
+            block02.alignChildren = "fill" ;
+            block02.margins = [ 5 , 10 , 5 , 5 ];
+            block02.spacing = 2 ;
+                block02.rows = block02.add( "group" );
+                block02.rows.alignChildren = "fill" ;
+                block02.rows.orientation = "column" ;
+                block02.rows.spacing = 2
                     var rows = {} ;
-                Bloc2.Btns = Bloc2.add( "Group" );
-                Bloc2.Btns.alignment = "Right" ;
-                Bloc2.Btns.spacing = 2 ;
-                Bloc2.Btns.margins = [ 0 , 2 , 0 , 0 ] ;
-                    var addRowBtn = Bloc2.Btns.add( "IconButton" , undefined , new File( Folder.appPackage.fsName + "/PNG/SP_Add_Sm_N_D.png") );
-                    addRowBtn.size = [ 20 , 20 ] ;
-                    var deleteRowBtn = Bloc2.Btns.add( "IconButton" , undefined , new File( Folder.appPackage.fsName + "/PNG/SP_Minus_Sm_N_D.png") );
-                    deleteRowBtn.size = [ 20 , 20 ] ;
-            var Bloc3 = copyMarkerChoiceDlg.global.add( "Group" );
-            Bloc3.orientation = "Row" ;
-            Bloc3.alignment = "Center" ;
-            Bloc3.margins = [ 5 , 5 , 5 , 0];
-                var B3Btn1 = Bloc3.add( "Button" , undefined , { en: "Copy" , fr: "Copier" } );
-                B3Btn1.size = [ 75 , 25 ] ;
-                var B3Btn2 = Bloc3.add( "Button" , undefined , { en: "Cancel" , fr: "Annuler" } );
-                B3Btn2.size = [ 75 , 25 ] ;
+                block02.Btns = block02.add( "group" );
+                block02.Btns.alignment = "right" ;
+                block02.Btns.spacing = 2 ;
+                block02.Btns.margins = [ 0 , 2 , 0 , 0 ] ;
+                    var btnSize = [ 16 , 16 ];
+                    var refreshLayersListBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Actualise.png") );
+                    refreshLayersListBtn.size = btnSize ;
+                    var addRowBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Plus.png") );
+                    addRowBtn.size = btnSize ;
+                    var deleteRowBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Minus.png") );
+                    deleteRowBtn.size = btnSize ;
+            var block03 = copyMarkerChoiceDlg.add( "group" );
+            block03.orientation = "row" ;
+            block03.alignment = "right" ;
+            block03.spacing = 0 ;
+            block03.margins = [ 0 , 0 , 0 , 0];
+                var B03BtnA = block03.add( "button" , undefined , { en: "Copy" , fr: "Copier" } );
+                B03BtnA.size = [ 75 , 25 ] ;
+                var B03BtnB = block03.add( "button" , undefined , { en: "Cancel" , fr: "Annuler" } );
+                B03BtnB.size = [ 75 , 25 ] ;
         //UI Events.
-        addRowBtn.onClick = function() { rowManager( Bloc2.rows , rows , 1 , compLayersNames ) ; };
-        deleteRowBtn.onClick = function() { rowManager( Bloc2.rows , rows , -1 , compLayersNames ) ; };
-        B3Btn1.onClick = function() { if( copyMarkers( refLayerSelector.selection.index + 1 , Bloc2.rows ) ) { copyMarkerChoiceDlg.close(); } };
-        B3Btn2.onClick = function() { copyMarkerChoiceDlg.close(); };
+        refreshLayersListBtn.onClick = function(){ refreshLayersList( refLayerSelector ); for( var i = 0 ; i < block02.rows.children.length ; i++ ){ refreshLayersList( block02.rows.children[i] ); } }
+        addRowBtn.onClick = function() { rowManager( block02.rows , rows , 1 ) ; };
+        deleteRowBtn.onClick = function() { rowManager( block02.rows , rows , -1 ) ; };
+        B03BtnA.onClick = function() { if( copyMarkers( refLayerSelector.selection.index + 1 , block02.rows ) ) { copyMarkerChoiceDlg.close(); } };
+        B03BtnB.onClick = function() { copyMarkerChoiceDlg.close(); };
         //Updating the UI according to the number of selected layers.
         var LayerSelection = CTcheckSelectedLayers() ;
         if( LayerSelection.length > 1 ){
-            rows = rowManager( Bloc2.rows , rows , LayerSelection.length - 1 , compLayersNames );
+            rows = rowManager( block02.rows , rows , LayerSelection.length - 1 , compLayersNames );
         } else {
-            rows = rowManager( Bloc2.rows , rows , 1 , compLayersNames );
+            rows = rowManager( block02.rows , rows , 1 , compLayersNames );
         }
         if( LayerSelection.length >= 1 ){
             refLayerSelector.selection = refLayerSelector.items[ LayerSelection[0].index - 1 ];
@@ -77,49 +81,88 @@ function copyMarkerChoice(){
             rows[ "Row1" ].selection = rows[ "Row1" ].items[1] ;
         }
         //UI Parameters.
-        copyMarkerChoiceDlg.defaultElement = B3Btn1 ;
-        copyMarkerChoiceDlg.cancelElement = B3Btn2 ;
+        copyMarkerChoiceDlg.defaultElement = B03BtnA ;
+        copyMarkerChoiceDlg.cancelElement = B03BtnB ;
         //Showing UI.
         copyMarkerChoiceDlg.show();
     }
 
 }
 /**
+ * Refresh the items of a dropdownlist.
+ * @param { Object } dropdownlist The dropdownlist to update.
+ */
+function refreshLayersList( dropdownlist ){
+
+    //Saving the selection of the dropdownlist.
+    var oldSelection = dropdownlist.selection.index ;
+    //Getting the new list of names.
+    var compLayersNames = getLayersNames();
+    if( compLayersNames.length > 0 ){
+        //Clearing all the items of the list.
+        dropdownlist.removeAll();
+        //Updating the list of items.
+        for( var i = 0 ; i < compLayersNames.length ; i++ )
+        {
+            dropdownlist.add( "item" , compLayersNames[i] );
+        }
+        //Checking if the old selection is now out of range.
+        if( oldSelection > dropdownlist.items.length ){ oldSelection = dropdownlist.items.length ;}
+        //Restoring selection.
+        dropdownlist.selection = dropdownlist.items[ oldSelection ];
+    }
+
+}
+/** 
+ * Gets the names of the layers in the active Composition.
+ * @returns { Array } The layers names.
+*/
+function getLayersNames(){
+
+    var compActive = app.project.activeItem ;
+    var compLayersNames = [] ;
+    for( var i = 1 ; i <= compActive.layers.length ; i++ ){
+        compLayersNames.push( i + " - " + compActive.layer(i).name );
+    }
+    return compLayersNames ;
+
+}
+/**
  * Adds/Removes rows from the UI. 
- * @param { string } DlgGroup Name of the concerned Container.
+ * @param { Object } dlgGroup Container.
  * @param { Object } rows Contains the Rows objects.
  * @param { number} nbRows Number of Rows to add/remove. 
- * @param { array} ItemList Contains the Names to display in the dropdownlists.
  * @returns { object } Contains the updated Rows.
  */
-function rowManager( DlgGroup, rows , nbRows , ItemList ){
+function rowManager( dlgGroup, rows , nbRows ){
 
-    if( nbRows > 0 && DlgGroup.children.length <= ItemList.length - 2 )//-2 pour ne pas compter l'item vide ni l'item utilisé comme référence.
+    var itemsList = getLayersNames();
+    if( nbRows > 0 && dlgGroup.children.length <= itemsList.length - 2 )//-2 pour ne pas compter l'item vide ni l'item utilisé comme référence.
     {
-        var NbExistingRows = DlgGroup.children.length ;
+        var NbExistingRows = dlgGroup.children.length ;
         for( var i = 1 ; i <= nbRows ; i++ )
         {
-            rows[ "Row" + ( NbExistingRows + i ) ] = DlgGroup.add( "Dropdownlist" , undefined , ItemList );
+            rows[ "Row" + ( NbExistingRows + i ) ] = dlgGroup.add( "dropdownlist" , undefined , itemsList );
             rows[ "Row" + ( NbExistingRows + i ) ].title = { en: "Layer " + parseFloat( NbExistingRows + i ) + " : " , fr: "Calque " + parseFloat( NbExistingRows + i ) + " : " } ;
             rows[ "Row" + ( NbExistingRows + i ) ].titleLayout.characters = 10 ;
             rows[ "Row" + ( NbExistingRows + i ) ].selection = rows[ "Row" + ( NbExistingRows + i ) ].items[ i - 1 ] ;
         }
-    } else if( nbRows < 0 && DlgGroup.children.length > 1) {
-        var NbRows = DlgGroup.children.length ;
-        DlgGroup.remove( DlgGroup.children[ NbRows - 1 ] );
+    } else if( nbRows < 0 && dlgGroup.children.length > 1) {
+        var NbRows = dlgGroup.children.length ;
+        dlgGroup.remove( dlgGroup.children[ NbRows - 1 ] );
     }
-    DlgGroup.window.preferredSize = [ 300 , -1 ];
-    DlgGroup.window.layout.layout( true );
+    dlgGroup.window.preferredSize = [ 300 , -1 ];
+    dlgGroup.window.layout.layout( true );
     return rows
 
 }
 /**
  * Copies the Markers from the Reference Layer to the selected Layers. 
  * @param { number } RefLayerIndex The index of the reference Layer.
- * @param { object } DlgGroup Contains the Rows.
+ * @param { object } dlgGroup Contains the Rows.
  * @returns { boolean } Success.
  */
-function copyMarkers( RefLayerIndex , DlgGroup ){
+function copyMarkers( RefLayerIndex , dlgGroup ){
 
     var compActive = app.project.activeItem ;
     var MarkersToCopy = [] ;
@@ -133,23 +176,25 @@ function copyMarkers( RefLayerIndex , DlgGroup ){
         return false ;
     }
     //Creating an array with the indexes of the target layers.
-    var LayersToModifyIndex = [] ;
-    for( i = 0 ; i < DlgGroup.children.length ; i++ ){
-        if( DlgGroup.children[i].selection.index + 1 != RefLayerIndex ){
-            for( var j = 0 ; j < LayersToModifyIndex.length ; j++ ){
-                if( DlgGroup.children[i].selection.index + 1 == LayersToModifyIndex[j] ){
-                    LayersToModifyIndex.push( DlgGroup.children[i].selection.index + 1 );
+    var layersToModifyIndexes = [] ;
+    for( i = 0 ; i < dlgGroup.children.length ; i++ ){
+        if( dlgGroup.children[i].selection.index + 1 != RefLayerIndex ){
+            var isSaved = false
+            for( var j = 0 ; j < layersToModifyIndexes.length ; j++ ){
+                if( dlgGroup.children[i].selection.index + 1 == layersToModifyIndexes[j] ){
+                    isSaved = true ;
                     break ;
                 }
             }
+            if( !isSaved ){ layersToModifyIndexes.push( dlgGroup.children[i].selection.index + 1 ); }
         }
     }
     //Copying the markers on the targeted layers
-    for( i = 0 ; i < LayersToModifyIndex.length ; i++ ){
+    for( i = 0 ; i < layersToModifyIndexes.length ; i++ ){
         //Opening the UndoGroup.
         app.beginUndoGroup( { en: "Markers Copy" , fr: "Copie de Marqueurs" } );
         for( var j = 0 ; j < MarkersToCopy.length ; j++ ){
-            compActive.layer( LayersToModifyIndex[i] ).property(1).addKey( MarkersToCopy[j] );
+            compActive.layer( layersToModifyIndexes[i] ).property(1).addKey( MarkersToCopy[j] );
         }
         //Closing the UndoGroup.
         app.endUndoGroup();

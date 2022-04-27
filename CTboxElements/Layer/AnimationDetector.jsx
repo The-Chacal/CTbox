@@ -1,10 +1,10 @@
 //****************************************//
-//  Animation Detector v1.1
+//  Animation Detector v1.2
 //****************************************//
 
 //  Functions adding a Marker on the layer as soon as there is some change in it.
 /**
- * Creates the UI
+ * Opens a dialog to choose options for the detection.
  */
 function getAnimDetectionOptions(){
     
@@ -60,16 +60,6 @@ function getAnimDetectionOptions(){
     //Showing UI
     animDetectionDlg.show();
 }
-/**
- * 
- * @returns 
- */
-    /*//Saving the parameters if they are valid.
-    precisionDegree = CTcleanNumberString( precisionDegree , false );
-    toleranceDegree = CTcleanNumberString( toleranceDegree , false );
-    if( precisionDegree == null || toleranceDegree == null ){ return false ;}
-    
-    */
 /**
  * Detects the animation on the layer by using an expression, converting to keys, then to markers.
  * @returns { boolean } Success
