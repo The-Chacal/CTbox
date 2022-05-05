@@ -32,11 +32,12 @@ function compDurationChoice(){
                 settingsRow02.Selector = settingsRow02.add( "radioButton" , undefined , "Ref Layer :");
                 settingsRow02.Selector.characters = 6 ;
                 var layerRefChoice = settingsRow02.add( "dropDownList" )
-                layerRefChoice.itemSize[0] = 120 ;
+                layerRefChoice.itemSize[0] = 130 ;
                 layerRefChoice.selection = layerRefChoice.items[0];
                 var refreshLayerList = settingsRow02.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Actualise.png") );
                 refreshLayerList.size = [ 16 , 16 ];
         var buttonsGroup = choiceCompDurationDlg.add( "group" );
+        buttonsGroup.alignment = "right"
         buttonsGroup.orientation = "row" ;
         buttonsGroup.spacing = 2 ;
             var changeDuration = buttonsGroup.add( "button" , undefined , "Modify" );
@@ -183,29 +184,31 @@ function compDurationEditor( layer , durationWanted , ignoreLockedLayers ){
 /**
  * Opens a dialog allowing the user to set the options for the Composition Duration Editor.
  */
-function CompDurationEditorOptions(){
+function compDurationEditorOptions(){
 
-    var CompDurationEditorOptionsDialog = new Window( "dialog" , undefined , undefined , { borderless : true } );
-        var mainGroup = CompDurationEditorOptionsDialog.add( "panel" , undefined , "Composition Duration Editor Options :" );
+    var compDurationEditorOptionsDialog = new Window( "dialog" , undefined , undefined , { borderless : true } );
+    compDurationEditorOptionsDialog.alignChildren = "fill"
+    compDurationEditorOptionsDialog.spacing = 0 ;
+        var mainGroup = compDurationEditorOptionsDialog.add( "panel" , undefined , "Composition Duration Editor Options :" );
         mainGroup.orientation = "column" ;
         mainGroup.alignChildren = "fill" ;
         mainGroup.spacing = 2 ;
             var updateActiveComp = mainGroup.add( "checkbox" , undefined , " - Update the Active Composition." );
             var ignoreLockedLayers = mainGroup.add( "checkbox" , undefined , " - Ignore Locked Layers." );
             ignoreLockedLayers.helpTip = "  If checked, the script will not change the length of a locked Layer."
-            var btnsRow = mainGroup.add( "group" );
-            btnsRow.orientation = "row" ;
-            btnsRow.alignment = "center" ;
-            btnsRow.spacing = 0 ;
-            btnsRow.margins = [ 0 , 2 , 0 , 0 ];
-            var btnSize = [ 60 , 20 ];
-                var btnA = btnsRow.add( "button" , undefined , "Ok" );
-                btnA.size = btnSize ;
-                var btnB = btnsRow.add( "button" , undefined , "Default" );
-                btnB.size = btnSize ;
-                var btnC = btnsRow.add( "button" , undefined , "Cancel" );
-                btnC.size = btnSize ;
-    //Updating the UI with saved values.
+        var btnsRow = compDurationEditorOptionsDialog.add( "group" );
+        btnsRow.orientation = "row" ;
+        btnsRow.alignment = "center" ;
+        btnsRow.spacing = 0 ;
+        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
+        var btnSize = [ 60 , 20 ];
+            var btnA = btnsRow.add( "button" , undefined , "Ok" );
+            btnA.size = btnSize ;
+            var btnB = btnsRow.add( "button" , undefined , "Default" );
+            btnB.size = btnSize ;
+            var btnC = btnsRow.add( "button" , undefined , "Cancel" );
+            btnC.size = btnSize ;
+            //Updating the UI with saved values.
     var savedUpdateActiveComp = JSON.parse( CTgetSavedString( "CTboxSave" , "updateActiveComp" ) );
     if( savedUpdateActiveComp == null ){ savedUpdateActiveComp = true };
     var savedIgnoreLockedLayers = JSON.parse( CTgetSavedString( "CTboxSave" , "ignoreLockedLayers" ) );
@@ -213,9 +216,9 @@ function CompDurationEditorOptions(){
     updateActiveComp.value = savedUpdateActiveComp ;
     ignoreLockedLayers.value = savedIgnoreLockedLayers ;
     //UI Events.
-    btnA.onClick = function(){ CTsaveString( "CTboxSave" , "updateActiveComp" , updateActiveComp.value ); CTsaveString( "CTboxSave" , "ignoreLockedLayers" , ignoreLockedLayers.value ); CompDurationEditorOptionsDialog.close(); };
+    btnA.onClick = function(){ CTsaveString( "CTboxSave" , "updateActiveComp" , updateActiveComp.value ); CTsaveString( "CTboxSave" , "ignoreLockedLayers" , ignoreLockedLayers.value ); compDurationEditorOptionsDialog.close(); };
     btnB.onClick = function(){ updateActiveComp.value = true ; ignoreLockedLayers.value = false ; };
     //Showing UI.
-    CompDurationEditorOptionsDialog.show();
+    compDurationEditorOptionsDialog.show();
 
 }
