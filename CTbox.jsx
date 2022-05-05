@@ -30,7 +30,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.2.8"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.2.9"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Getting the path to the Script on the Computer.
     var scriptFolder = CTgetScriptFolder();
     //Creating the UI
@@ -261,7 +261,7 @@ function CTbuildUI( thisObj ){
     B2Btn10optns.onClick = layerCleanerOptions ;
     //UI events for Bloc03.
     B3Btn01.onClick = compDurationChoice ;
-    B3Btn01optns.onClick = CompDurationEditorOptions ;
+    B3Btn01optns.onClick = compDurationEditorOptions ;
     B3Btn02.onClick = collapseTransformationManager ;
     B3Btn10.onClick = updateCTbox ;
     //UI events for Versionning Block.
