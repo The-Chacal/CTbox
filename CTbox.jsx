@@ -17,6 +17,7 @@ if ( CTcheckScriptWriting( this ) ){
     //@include "CTboxElements/Layer/DepthDisplacement.jsx";
     //@include "CTboxElements/Layer/LayerCleaner.jsx";
     //@include "CTboxElements/Layer/GetLayerBottom.jsx";
+    //@include "CTboxElements/Misc/AddSeparator.jsx";
     //@include "CTboxElements/Misc/CollapseTransformationManager.jsx";
     //@include "CTboxElements/Misc/CompDurationEditor.jsx";
     //@include "CTboxElements/Misc/UpdateCTbox.jsx";
@@ -178,10 +179,9 @@ function CTbuildUI( thisObj ){
                 var B3Btn02 = Block03.add( "button" , undefined , { en: "Col. Comp." , fr: "Rast. Comp." } );
                 B3Btn02.helpTip = { en: "Rasteurize the selected Composition and its elements.\n   Risky move to my opinion!" , fr: "   Rasteurise la composition et tous ses sous-compositions.\n   Pour gens ayant le goût du risque!"} ;
                 B3Btn02.size = btnsSize ;
-                var B3Btn03 = Block03.add( "button" , undefined , "" );
-                B3Btn03.helpTip = "" ;
+                var B3Btn03 = Block03.add( "button" , undefined , "Add Sep." );
+                B3Btn03.helpTip = "   Add a Separator in your active comp above your selected layer.\n\n   Alt + Click : parent your selected layers to the Separator.\n   Shift + Click : create a Separator for each selected layer and link them." ;
                 B3Btn03.size = btnsSize ;
-                B3Btn03.visible = false ;
                 var B3Btn04 = Block03.add( "button" , undefined , "" );
                 B3Btn04.helpTip = "" ;
                 B3Btn04.size = btnsSize ;
@@ -263,6 +263,7 @@ function CTbuildUI( thisObj ){
     B3Btn01.onClick = compDurationChoice ;
     B3Btn01optns.onClick = compDurationEditorOptions ;
     B3Btn02.onClick = collapseTransformationManager ;
+    B3Btn03.onClick = addSeparator ;
     B3Btn10.onClick = updateCTbox ;
     //UI events for Versionning Block.
     BXBtn01.onClick = function(){ CTversioning( "X.0" ) };
