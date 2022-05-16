@@ -23,7 +23,20 @@ function addSeparator(){
         }else if( modifiers.ctrlState && !modifiers.majState && !modifiers.altState ){
             alert("ctrl");
         }else if( !modifiers.ctrlState && modifiers.majState && !modifiers.altState ){
-            alert("maj");
+            var highestLayer = layerSelection[0];
+            var separatorPosition = getAveragePosition( layerSelection );
+            if( layerSelection.length > 1 ){
+                highestLayer = sortLayersByIndex( layerSelection )[0];
+            }
+            separator = createShape();
+            separator.property( "ADBE Transform Group" ).property( "ADBE Position" ).setValue( separatorPosition );
+            separator.name = "----- Controller -----";
+            separator.moveBefore( highestLayer );
+            for( var i = 0 ; i < layerSelection.length ; i++ ){
+                if( layerSelection[i].parent == null ){
+                    layerSelection[i].parent = separator ;
+                }
+            }
         }else if( !modifiers.ctrlState && !modifiers.majState && modifiers.altState ){
             alert("alt");
         }else if( modifiers.ctrlState && modifiers.majState && !modifiers.altState ){
@@ -55,11 +68,32 @@ function createShape(){
 }
 /**
  * Sort an array of layers according to their index
- * @param { Array } Array containing the layers to sort.
+ * @param { Array } layers Array containing the layers to sort.
  */
 function sortLayersByIndex( layers ){
 
     var sortedLayers = layers.sort( function( a , b ){ return parseFloat( a.index ) - parseFloat( b.index ) } );
     return sortedLayers ;
+
+}
+/**
+ * Get the average position of a group of layers
+ * @param { Array } layers Array containing the layers to get the average position from.
+ */
+function getAveragePosition( layers ){
+    
+    var averagePosition = [ 0 , 0 , 0 ];
+    for( var i = 0 ; i < layers.length ; i++ ){
+        var hasParent = false;
+        if( layers[i].parent != null ){
+            hasParent = true ;
+            var savedParent = layers[i].parent ;
+            layers[i].parent = null ;
+        }
+        averagePosition += layers[i].property( "ADBE Transform Group" ).property( "ADBE Position" ).value ;
+        if( hasParent ){ layers[i].parent = savedParent ; }
+    }
+    averagePosition = averagePosition / layers.length ;
+    return averagePosition ;
 
 }
