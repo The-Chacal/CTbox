@@ -7,12 +7,20 @@
  * Changes the collapse transformation status.
  */
 function addSeparator(){
+
+    //Checking the modifiers keys.
     var modifiers = modifiersStatuses() ;
+    //Saving the selected layers.
     var layerSelection = CTcheckSelectedLayers();
+    //Creating an empty variable.
     var separator = null ;
+    //Starting undoGroup.
     app.beginUndoGroup("Add Separator.")
+    //Doing the job...
     if( layerSelection.length > 0 ){
+        //If one or more layers are selected.
         if( !modifiers.ctrlState && !modifiers.majState && !modifiers.altState ){
+            //If there is no modifier active.
             var highestLayer = layerSelection[0];
             if( layerSelection.length > 1 ){
                 highestLayer = sortLayersByIndex( layerSelection )[0];
@@ -21,8 +29,14 @@ function addSeparator(){
             separator.name = "----------------------------------------";
             separator.moveBefore( highestLayer );
         }else if( modifiers.ctrlState && !modifiers.majState && !modifiers.altState ){
-            alert("ctrl");
+            //If Ctrl key is pressed.
+            if( layerSelection.length == 1 ){
+                separator = createShape();
+                separator.name = layerSelection[0].name + " ----- Controller -----";
+                separator.moveBefore( layerSelection[0] );
+            }
         }else if( !modifiers.ctrlState && modifiers.majState && !modifiers.altState ){
+            //If the Shift key is pressed.
             var highestLayer = layerSelection[0];
             var separatorPosition = getAveragePosition( layerSelection );
             if( layerSelection.length > 1 ){
@@ -38,6 +52,7 @@ function addSeparator(){
                 }
             }
         }else if( !modifiers.ctrlState && !modifiers.majState && modifiers.altState ){
+            //If the Alt key is pressed.
             for( var i = 0 ; i < layerSelection.length ; i++ ){
                 separator = createShape();
                 separator.name = "----------------------------------------";
@@ -53,9 +68,11 @@ function addSeparator(){
             alert( "ctrl+maj+alt");
         }
     } else {
-        separator = createShape()
+        //If there is no layer selection.
+        separator = createShape();
         separator.name = "----------------------------------------";
     }
+    //Closing the UndoGroup.
     app.endUndoGroup();
 }
 /**
