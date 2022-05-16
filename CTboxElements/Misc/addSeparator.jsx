@@ -30,7 +30,7 @@ function addSeparator(){
             }
             separator = createShape();
             separator.property( "ADBE Transform Group" ).property( "ADBE Position" ).setValue( separatorPosition );
-            separator.name = "----- Controller -----";
+            separator.name = "---------- Controller ----------";
             separator.moveBefore( highestLayer );
             for( var i = 0 ; i < layerSelection.length ; i++ ){
                 if( layerSelection[i].parent == null ){
@@ -38,7 +38,11 @@ function addSeparator(){
                 }
             }
         }else if( !modifiers.ctrlState && !modifiers.majState && modifiers.altState ){
-            alert("alt");
+            for( var i = 0 ; i < layerSelection.length ; i++ ){
+                separator = createShape();
+                separator.name = "----------------------------------------";
+                separator.moveBefore( layerSelection[i] );
+            }
         }else if( modifiers.ctrlState && modifiers.majState && !modifiers.altState ){
             alert("ctrl + maj");
         }else if( !modifiers.ctrlState && modifiers.majState && modifiers.altState ){
