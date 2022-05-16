@@ -165,7 +165,7 @@ function propertyCleaner( item , cleanProperties , cleanExpressions ){
             propertyCleaner( item.property(i) , cleanProperties , cleanExpressions );
         } else {
             //Removing keys on properties.
-            if( cleanProperties && item.property(i) != item.property( "ADBE Marker" ) && item.property(i).numKeys > 0 ){
+            if( cleanProperties && item.property(i) != item.property( "ADBE Marker" ) && item.property(i).numKeys > 0 && item.property(i).propertyValueType != PropertyValueType.CUSTOM_VALUE){
                 //Saving the Property Value at the current Time.
                 var currentValue = item.property(i).value ;
                 //Removing all keys on the Property.
