@@ -63,10 +63,15 @@ function addSeparator(){
                 separator.name = "----------------------------------------";
                 separator.moveBefore( layerSelection[i] );
             }
-        }else if( modifiers.ctrlState && modifiers.majState && !modifiers.altState ){
-            alert("ctrl + maj");
         }else if( !modifiers.ctrlState && modifiers.majState && modifiers.altState ){
-            alert("maj+alt");
+            //If Alt and Shift keys are pressed.
+            for( var i = 0 ; i < layerSelection.length ; i++ ){
+                separator = createShape();
+                separator.property( "ADBE Transform Group" ).property( "ADBE Position" ).setValue( getAveragePosition( [ layerSelection[i] ] ) );
+                separator.name = layerSelection[i].name + " - Controller";
+                separator.moveBefore( layerSelection[i] );
+                if( layerSelection[i].parent == null ){ layerSelection[i].parent = separator ; }
+            }
         }else if( modifiers.ctrlState && !modifiers.majState && modifiers.altState ){
             alert("ctrl+alt");
         }else if( modifiers.ctrlState && modifiers.majState && modifiers.altState ){
