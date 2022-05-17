@@ -30,10 +30,15 @@ function addSeparator(){
             separator.moveBefore( highestLayer );
         }else if( modifiers.ctrlState && !modifiers.majState && !modifiers.altState ){
             //If Ctrl key is pressed.
-            if( layerSelection.length == 1 ){
+            if( layerSelection.length < 2 ){
                 separator = createShape();
-                separator.name = layerSelection[0].name + " ----- Controller -----";
+                separator.name = layerSelection[0].name + " - Controller";
                 separator.moveBefore( layerSelection[0] );
+            } else {
+                var highestLayer = sortLayersByIndex( layerSelection )[0];
+                separator = createShape();
+                separator.name = "---------- Controller ----------";
+                separator.moveBefore( highestLayer );
             }
         }else if( !modifiers.ctrlState && modifiers.majState && !modifiers.altState ){
             //If the Shift key is pressed.
