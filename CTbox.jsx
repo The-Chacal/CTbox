@@ -180,7 +180,7 @@ function CTbuildUI( thisObj ){
                 B3Btn02.helpTip = { en: "Rasteurize the selected Composition and its elements.\n   Risky move to my opinion!" , fr: "   Rasteurise la composition et tous ses sous-compositions.\n   Pour gens ayant le goût du risque!"} ;
                 B3Btn02.size = btnsSize ;
                 var B3Btn03 = Block03.add( "button" , undefined , "Add Sep." );
-                B3Btn03.helpTip = "   Add a Separator in your active comp above your selected layer.\n\n   Alt + Click : parent your selected layers to the Separator.\n   Shift + Click : create a Separator for each selected layer and link them." ;
+                B3Btn03.helpTip = "   Add a Separator in your active comp above your selected layer.\n\n   CTRL + Click : Add a named Separator in your active comp above your selected layers\n   MAJ + Click : Add a Separator in your active comp above your selected layers and parent the layers to the separator.\n   ALT + Click : Add a Separator in your active comp above each of your selected layer.\n   ALT + SHIFT + Click : Add a Separator in your active comp above each of your selected layer and parent the layers to their Separator.\n   ALT + SHIFT + CTRL : Add a named Separator in your active comp above each of your selected layer and parent the layers to their Separator." ;
                 B3Btn03.size = btnsSize ;
                 var B3Btn04 = Block03.add( "button" , undefined , "" );
                 B3Btn04.helpTip = "" ;
