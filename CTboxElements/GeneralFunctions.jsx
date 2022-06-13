@@ -244,13 +244,13 @@ function CTversioning( type ){
         //Updating the name of the Main Comp ( which is supposed to have the same name as the old File ).
         var mainCompItem = null ;
         for ( var i = 1 ; i <= app.project.numItems ; i++ ){
-            if( app.project.items[i].typeName == "Composition" && app.project.items[i].name == oldName ){
+            if( app.project.items[i].typeName == "Composition" && app.project.items[i].name == oldName && app.project.items[i].parentFolder == app.project.rootFolder ){
                 mainCompItem = app.project.items[i] ;
                 mainCompItem.name = newName ;
-                mainCompItem.parentFolder = app.project.rootFolder ;
                 break ;
             }
         }
+        if( mainCompItem == null ){ CTalertDlg( "It's messy" , "You did not tidy your room enough, I can't find the project.\n\n   Your project comp can't be found in the root Folder of your project"); return ; }
         //Updating the Render Queue Item if its file is the main comp.
         for( var i = 1 ; i <= app.project.renderQueue.items.length ; i++ ){
             if( app.project.renderQueue.items[i].comp == mainCompItem ){
