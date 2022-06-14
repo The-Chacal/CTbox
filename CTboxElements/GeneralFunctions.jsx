@@ -1,5 +1,5 @@
 //****************************************//
-//  General Functions v2.0
+//  General Functions v2.1
 //****************************************//
 
 //========== CTbox dialogs ==========
@@ -266,8 +266,6 @@ function CTversioning( type ){
                 mainCompRender.outputModules[1].file = new File( oldExportFolderPath + "/" + newName + ".mov" );
             }
         }
-        //Restoring the active item.
-        currentItem.openInViewer();
         //Moving the old File in a "XX - AEP Older Versions".
         var oldVersionsFolderPath = oldVersionFolderPath + "/XX - AEP Older Versions" ;
         var oldVersionsFolder = new Folder( oldVersionsFolderPath );
@@ -277,6 +275,8 @@ function CTversioning( type ){
         oldProjectFile.copy( oldVersionsFolderPath + "/" + oldName + ".aep" );
         app.project.save( newProjectFile );
         oldProjectFile.remove();
+        //Restoring the active item.
+        if( currentItem != null ){ currentItem.openInViewer() };
     }
 
 }
