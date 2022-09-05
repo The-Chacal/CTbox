@@ -243,7 +243,7 @@ X";
 function getLayerBottomOptions(){
 
     var getLayerBottomOptionsDialog = new Window( "dialog" , undefined , undefined , { borderless : true } );
-    getLayerBottomOptionsDialog.spacing = 0 ;
+    getLayerBottomOptionsDialog.spacing = 2 ;
         var mainGroup = getLayerBottomOptionsDialog.add( "panel" , undefined , "Get Layer Bottom Options :" );
         mainGroup.orientation = "column" ;
         mainGroup.spacing = 2 ;
@@ -271,7 +271,6 @@ function getLayerBottomOptions(){
         var btnsRow = getLayerBottomOptionsDialog.add( "group" );
         btnsRow.orientation = "row" ;
         btnsRow.spacing = 0 ;
-        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
         var btnSize = [ 60 , 20 ];
             var btnA = btnsRow.add( "button" , undefined , "Ok" );
             btnA.size = btnSize ;
