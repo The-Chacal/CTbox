@@ -330,10 +330,10 @@ function CTboxOptions(){
     var CTboxOptnsDlg = new Window( "dialog" , undefined , undefined , { borderless : true } );
     CTboxOptnsDlg.spacing = 2 ;
         var textPanel = CTboxOptnsDlg.add( "panel" , undefined , "Generate id : " );
-        textPanel.margins = [ 30 , 10 , 0 , 0 ];
+        textPanel.margins = [ 5 , 10 , 5 , 0 ];
         textPanel.alignChildren = "fill" ;
         textPanel.spacing = 0 ;
-        textPanel.preferredSize = [ 200 , -1 ];
+        textPanel.preferredSize = [ 180 , -1 ];
             var rimIdOptns = textPanel.add( "checkbox" , undefined , " - for the Rims." );
             var gradientIdOptns = textPanel.add( "checkbox" , undefined , " - for the Gradients." );
             var castShadowIdOptns = textPanel.add( "checkbox" , undefined , " - for the Cast Shadows." );
@@ -341,7 +341,6 @@ function CTboxOptions(){
         btnsRow.orientation = "row" ;
         btnsRow.alignChildren = "center" ;
         btnsRow.spacing = 0 ;
-        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
         var btnSize = [ 60 , 20 ];
             var btnA = btnsRow.add( "button" , undefined , "Ok" );
             btnA.size = btnSize ;
