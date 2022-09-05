@@ -1,5 +1,5 @@
 //****************************************//
-//  Posterize Property v1.0
+//  Posterize Property v2.0
 //****************************************//
 
 /**
@@ -26,30 +26,29 @@ function posterizeProp(){
                 }
                 //Adding the Expression.
                 var newExpression = "//---------- Links ----------\
-var StepSlider = effect(\"Posterize - Step\")(1);\
+var stepSlider = effect(\"Posterize - Step\")(1);\
 \
 //---------- Code ----------\
-var Result = value ;\
-var CurrentStep = StepSlider ;\
-var Delta = 0 ;\
-if( StepSlider.numKeys > 1 )\
-{\
-    var StepSliderNearestKey = StepSlider.nearestKey( time );\
-    if( time < StepSliderNearestKey.time && StepSliderNearestKey.index == 1 )\
+var result = value ;\
+var currentStep = stepSlider ;\
+var delta = 0 ;\
+if( stepSlider != 1 ){\
+    if( stepSlider.numKeys > 1 )\
     {\
-        CurrentStep = StepSliderNearestKey ;\
-    } else if( time < StepSliderNearestKey.time )\
-    {\
-        CurrentStep = StepSlider.key( StepSliderNearestKey.index - 1 );\
-    } else if( time >= StepSliderNearestKey.time )\
-    {\
-        CurrentStep = StepSliderNearestKey ;\
+        var stepSliderNearestKey = stepSlider.nearestKey( time );\
+        if( time < stepSliderNearestKey.time )\
+        {\
+            stepSliderNearestKey = stepSlider.key( stepSliderNearestKey.index - 1 );\
+        }\
+        currentStep = stepSliderNearestKey ;\
+        delta = framesToTime( timeToFrames( time - stepSliderNearestKey.time ) % currentStep );\
+    } else {\
+        delta = framesToTime( timeToFrames( time - inPoint ) % currentStep );\
     }\
+    result = valueAtTime( time - delta );\
 }\
-Delta = framesToTime( timeToFrames( time - inPoint ) % CurrentStep );\
-Result = valueAtTime( time - Delta );\
 //--------------------\
-Result";
+result";
                 currentProperty.expression = newExpression ;
                 //Closing the UndoGroup.
                 app.endUndoGroup() ;
