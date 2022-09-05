@@ -1,5 +1,4 @@
 //========== Script Launch ==========
-$.localize = true;
 if ( CTcheckScriptWriting( this ) ){
     // Including all the scripts files needed for the toolbox.
     //@include "CTboxElements/GeneralFunctions.jsx"
@@ -50,16 +49,16 @@ function CTbuildUI( thisObj ){
         Block0.spacing = 0 ;
         Block0.orientation = "row" ;
             var B0Btn01 = Block0.add( "iconButton" );
-            B0Btn01.text = { en: "Exp" , fr: "Exp" };
-            B0Btn01.helpTip = { en: "Expressions Panel" , fr: "Onglet Expressions" };
+            B0Btn01.text = "Exp" ;
+            B0Btn01.helpTip = "Expressions Panel" ;
             B0Btn01.size = [ 25 , 25 ];
             var B0Btn02 = Block0.add( "iconButton" );
-            B0Btn02.text = { en: "Lay" , fr: "Cal" };
-            B0Btn02.helpTip = { en: "Layer Panel" , fr: "Onglet Calque" };
+            B0Btn02.text = "Lay" ;
+            B0Btn02.helpTip = "Layer Panel" ;
             B0Btn02.size = [ 25 , 25 ];
             var B0Btn03 = Block0.add( "iconButton" );
-            B0Btn03.text = { en: "Mis" , fr: "Div" };
-            B0Btn03.helpTip = { en: "Miscellaneous Panel", fr: "Onglet Divers" };
+            B0Btn03.text = "Mis" ;
+            B0Btn03.helpTip = "Miscellaneous Panel" ;
             B0Btn03.size = [ 25 , 25 ];
         //Creating the Panels Block.
         var panelsBlock = globalGroup.add( "group" );
@@ -69,17 +68,17 @@ function CTbuildUI( thisObj ){
             var Block01 = panelsBlock.add( "panel" , undefined , "Expr. :" );
             Block01.margins = [ 5 , 10 , 5 , 5 ] ;
             Block01.spacing = 2 ;
-                var B1Btn01 = Block01.add( "button" , undefined , { en: "Fix Exp" , fr: "Cor. Exp." } );
-                B1Btn01.helpTip = { en: "   Allow to modify the expressions of layers or properties" , fr: "   Permet de modifier le texte des expressions du calque ou propriété selectionné." } ;
+                var B1Btn01 = Block01.add( "button" , undefined , "Fix Exp." );
+                B1Btn01.helpTip = "   Allows to edit Expressions trough layers or properties." ;
                 B1Btn01.size = btnsSize ;
                 var B1Btn02 = Block01.add( "button" , undefined , "Psz. Pro." );
-                B1Btn02.helpTip = { en: "   Posterize a property and add a Slider Effect to set the step" , fr : "   Posterize la propriété selectionnée et ajoute un paramètre glissière pour régler le pas." } ;
+                B1Btn02.helpTip = "   Posterizes a property and add a Slider Effect to set the step" ;
                 B1Btn02.size = btnsSize ;
                 var B1Btn03 = Block01.add( "button" , undefined , "Mark. Accum." );
-                B1Btn03.helpTip = { en: "   Add a variable to the expression of the selected properties that increase passing each marker on a layer." , fr: "   Crée une variable dans l'expression de la propriété selectionnée qui s'incrémente en passant les marqueurs présents sur le calque." } ;
+                B1Btn03.helpTip = "   Adds a variable to the Expression of the selected properties that increases passing each marker on a layer." ;
                 B1Btn03.size = btnsSize ;
                 var B1Btn04 = Block01.add( "button" , undefined , "Mark. Anim." );
-                B1Btn04.helpTip = { en: "   Freeze the animation of a property until the next marker." , fr: "   Fait évoluer l'animation de la propriété séléctionnée qu'au passage des marqueurs présents sur le calque." } ;
+                B1Btn04.helpTip = "   Freezes the animation of a property until the next marker." ;
                 B1Btn04.size = btnsSize ;
                 var B1Btn05 = Block01.add( "button" , undefined , "" );
                 B1Btn05.helpTip = "" ;
@@ -105,63 +104,63 @@ function CTbuildUI( thisObj ){
                 B1Btn10.helpTip = "" ;
                 B1Btn10.size = btnsSize ;
                 B1Btn10.visible = false ;
-            var Block02 = panelsBlock.add( "panel" , undefined , { en: "Layer :" , fr: "Calque :" } );
+            var Block02 = panelsBlock.add( "panel" , undefined , "Layer :" );
             Block02.margins = [ 5 , 10 , 5 , 5 ] ;
             Block02.spacing = 2 ;
             Block02.visible = false ;
                 var B2Btn01Block = Block02.add( "group" );
                 B2Btn01Block.orientation = "row" ;
                 B2Btn01Block.spacing = 0 ;
-                    var B2Btn01 = B2Btn01Block.add( "button" , undefined , { en: "Loc. Bot." , fr: "Def. Bas" } );
-                    B2Btn01.helpTip = { en: "   Locates the Content lowest point in the layer, for the length of the active layer.\n   Adds a point Effect to the layer." , fr: "   Définit le point le plus bas du contenu d'un calque sur la durée de ce dernier.\n   Ajoute un paramètre Point au calque." } ;
+                    var B2Btn01 = B2Btn01Block.add( "button" , undefined , "Get Bot." );
+                    B2Btn01.helpTip = "   Locates the lowest alpha point on the layer, for the length of the active layer.\n   Adds a point Effect to the layer." ;
                     B2Btn01.size = btnsSize - [ 16 , 0 ];
                     var B2Btn01optns = B2Btn01Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
-                    B2Btn01optns.helpTip = "Get Lowest Layer Point Options" ;
+                    B2Btn01optns.helpTip = "   \"Get Lowest Layer Point\" Options" ;
                     B2Btn01optns.size = [ 16 , btnsSize[1] ];
                 var B2Btn02Block = Block02.add( "group" );
                 B2Btn02Block.orientation = "row" ;
                 B2Btn02Block.spacing = 0 ;
                     var B2Btn02 = B2Btn02Block.add( "button" , undefined , "Det. Anim." );
-                    B2Btn02.helpTip = { en: "   Adds a Marker on the Layer if it \"moves\"." , fr: "   Ajoute un marqueur sur le calque quand l'animation evolue." } ;
+                    B2Btn02.helpTip = "   Adds a Marker on the Layer if it \"moves\"." ;
                     B2Btn02.size = btnsSize - [ 16 , 0 ];
                     var B2Btn02optns = B2Btn02Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
-                    B2Btn02optns.helpTip = "Get Lowest Layer Point Options" ;
+                    B2Btn02optns.helpTip = "   \"Animation Detector\" Options" ;
                     B2Btn02optns.size = [ 16 , btnsSize[1] ];
-                var B2Btn03 = Block02.add( "button" , undefined , { en: "Add Grad." , fr: "Aj. Degradé" } );
-                B2Btn03.helpTip = { en: "   Creates a Gradient in Multiply Mode." , fr: "   Crée un dégradé en mode Produit." } ;
+                var B2Btn03 = Block02.add( "button" , undefined , "Add Grad." );
+                B2Btn03.helpTip = "   Creates a Gradient in Multiply Mode." ;
                 B2Btn03.size = btnsSize ;
                 var B2Btn04Block = Block02.add( "Group" );
                 B2Btn04Block.orientation = "row" ;
                 B2Btn04Block.spacing = 0 ;
-                    var B2Btn04a = B2Btn04Block.add( "button" , undefined , { en: "Add Rim" , fr : "Aj. Rim" } );
-                    B2Btn04a.helpTip = { en: "   Creates an outside Rim Light in Overlay Mode." , fr: "   Crée une Rim Light externe en mode Incrustation." } ;
+                    var B2Btn04a = B2Btn04Block.add( "button" , undefined , "Add Rim" );
+                    B2Btn04a.helpTip = "   Creates an outside Rim Light in Overlay Mode." ;
                     B2Btn04a.size = [ btnsSize[0] / 2 , btnsSize[1] ];
-                    var B2Btn04b = B2Btn04Block.add( "button" , undefined , { en: "Add Rim" , fr : "Aj. Rim" } );
-                    B2Btn04b.helpTip = { en: "   Creates an inside Rim Light in Multiply Mode." , fr: "   Crée une Rim Light interne en mode Produit." } ;
+                    var B2Btn04b = B2Btn04Block.add( "button" , undefined , "Add Rim" );
+                    B2Btn04b.helpTip = "   Creates an inside Rim Light in Multiply Mode." ;
                     B2Btn04b.size = [ btnsSize[0] / 2 , btnsSize[1] ];
-                var B2Btn05 = Block02.add( "button" , undefined , { en: "Gro. Sha." , fr: "Omb. Sol" } );
-                B2Btn05.helpTip = { en: "   Creates a Shadow Layer of the selected layer." , fr: "   Crée une ombre au sol du calque selectionné." } ;
+                var B2Btn05 = Block02.add( "button" , undefined , "Gro. Sha." );
+                B2Btn05.helpTip = "   Creates a Shadow Layer for the selected layer." ;
                 B2Btn05.size = btnsSize ;
-                var B2Btn06 = Block02.add( "button" , undefined , { en: "Cast Sha." , fr: "Omb. Sil" } );
-                B2Btn06.helpTip = { en: "   Creates a Silhouette Shadow Layer of the selected layer." , fr: "   Crée une ombre au sol à partir de la silhouette du calque selectionné." } ;
+                var B2Btn06 = Block02.add( "button" , undefined , "Cast Sha." );
+                B2Btn06.helpTip = "   Creates a Silhouette Shadow Layer for the selected layer." ;
                 B2Btn06.size = btnsSize ;
                 var B2Btn07 = Block02.add( "button" , undefined , "Key to Mark." );
-                B2Btn07.helpTip = { en: "   Adds markers for each animation key on the layer." , fr: "   Ajoute des Marqueurs pour chaque clé d'animation présente sur le calque." } ;
+                B2Btn07.helpTip = "   Adds Markers for each animation key on the layer." ;
                 B2Btn07.size = btnsSize ;
                 var B2Btn08 = Block02.add( "button" , undefined , "Cop. Mark." );
-                B2Btn08.helpTip = { en: "   Copies the Markers from one layer and pastes it on the selected others." , fr : "   Copie les Marqueurs du calque selectionné sur d'autres." } ;
+                B2Btn08.helpTip = "   Copies the Markers from one layer and pastes it on the selected others." ;
                 B2Btn08.size = btnsSize ;
-                var B2Btn09 = Block02.add( "button" , undefined , { en: "Mov. Dep." , fr: "Dep. Prof" } );
-                B2Btn09.helpTip = { en: "   Moves the layer to the depth wanted" , fr: "   Déplace le calque selectionné à la profondeur indiquée." } ;
+                var B2Btn09 = Block02.add( "button" , undefined , "Mov. Dep." );
+                B2Btn09.helpTip = "   Moves the layer to the depth wanted" ;
                 B2Btn09.size = btnsSize ;
                 var B2Btn10Block = Block02.add( "group" );
                 B2Btn10Block.orientation = "row" ;
                 B2Btn10Block.spacing = 0 ;
-                    var B2Btn10 = B2Btn10Block.add( "button" , undefined , "Clean Layer" );
-                    B2Btn10.helpTip = { en: "   Deletes selected properties on the selected layer." , fr: "   Supprime les priopriétés choisies du calques selectionné." } ;
+                    var B2Btn10 = B2Btn10Block.add( "button" , undefined , "Clean Lay." );
+                    B2Btn10.helpTip = "   Deletes selected properties on the selected layer." ;
                     B2Btn10.size = btnsSize - [ 16 , 0 ];
                     var B2Btn10optns = B2Btn10Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
-                    B2Btn10optns.helpTip = "Clean Layer Options" ;
+                    B2Btn10optns.helpTip = "   \"Layer Cleaner\" Options" ;
                     B2Btn10optns.size = [ 16 , btnsSize[1] ];
             var Block03 = panelsBlock.add( "panel" , undefined , { en: "Misc. :" , fr: "Divers :" } );
             Block03.margins = [ 5 , 10 , 5 , 5 ] ;
@@ -174,10 +173,10 @@ function CTbuildUI( thisObj ){
                     B3Btn01.helpTip = "   Change the Duration of a Composition and its elements to the Duration wanted." ;
                     B3Btn01.size = btnsSize - [ 16 , 0 ];
                     var B3Btn01optns = B3Btn01Block.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
-                    B3Btn01optns.helpTip = "   Change Composition Duration Options"
+                    B3Btn01optns.helpTip = "   \"Composition Duration Editor\" Options"
                     B3Btn01optns.size = [ 16 , btnsSize[1] ];
-                var B3Btn02 = Block03.add( "button" , undefined , { en: "Col. Comp." , fr: "Rast. Comp." } );
-                B3Btn02.helpTip = { en: "Rasteurize the selected Composition and its elements.\n   Risky move to my opinion!" , fr: "   Rasteurise la composition et tous ses sous-compositions.\n   Pour gens ayant le goût du risque!"} ;
+                var B3Btn02 = Block03.add( "button" , undefined , "Col. Comp." );
+                B3Btn02.helpTip = "   Enable the collapse transformations for the selected Composition and its elements.\n   Risky move to my opinion!" ;
                 B3Btn02.size = btnsSize ;
                 var B3Btn03 = Block03.add( "button" , undefined , "Add Sep." );
                 B3Btn03.helpTip = "   Add a Separator in your active comp above your selected layer.\n\n   CTRL + Click : Add a named Separator in your active comp above your selected layers\n   MAJ + Click : Add a Separator in your active comp above your selected layers and parent the layers to the separator.\n   ALT + Click : Add a Separator in your active comp above each of your selected layer.\n   ALT + SHIFT + Click : Add a Separator in your active comp above each of your selected layer and parent the layers to their Separator.\n   ALT + SHIFT + CTRL : Add a named Separator in your active comp above each of your selected layer and parent the layers to their Separator." ;
@@ -206,8 +205,8 @@ function CTbuildUI( thisObj ){
                 B3Btn09.helpTip = "" ;
                 B3Btn09.size = btnsSize ;
                 B3Btn09.visible = false ;
-                var B3Btn10 = Block03.add( "button" , undefined , "MàJ" );
-                B3Btn10.helpTip = "Mise à Jour du Script" ;
+                var B3Btn10 = Block03.add( "button" , undefined , "Upd." );
+                B3Btn10.helpTip = "Update the Script - Only works on the studio network." ;
                 B3Btn10.size = btnsSize ;
         //Creating the Versionning Block.
         var BlockXX = globalGroup.add( "group" );
@@ -290,8 +289,8 @@ function CTcheckScriptWriting( thisObj ){
 
     if ( app.preferences.getPrefAsLong("Main Pref Section","Pref_SCRIPTING_FILE_NETWORK_SECURITY") != 1 ){
         var BugDlg = thisObj ;
-        var BugPanel = BugDlg.add( "panel" , undefined , { en: "Small Problem : " , fr: "Petit Problème :" } );
-        BugPanel.add( "StaticText" , undefined , { en: "You need to authorize the scripts to write files and access network in the Preferences.\n\n   You need to close this, make the change, then relaunch the Script." , fr: "   Vous devez autoriser les scripts à écrire des fichiers et accéder au réseau dans les préférences.\n\n   Fermez, modifiez puis relancez ce script." } , { multiline: true } );
+        var BugPanel = BugDlg.add( "panel" , undefined , "Small Problem : " );
+        BugPanel.add( "StaticText" , undefined ,"You need to authorize the scripts to write files and access network in the Preferences.\n\n   You need to close this, make the change, then relaunch the Script." , { multiline: true } );
         thisObj.layout.layout( true );
         return false ;
     } else {
@@ -305,16 +304,16 @@ function CTcheckScriptWriting( thisObj ){
  */
 function CTexpandNotepad( Dlg ){
     if( Dlg.children.length < 2 ){
-        var notepad = Dlg.add( "panel" , undefined , { en: "Notepad" , fr: "Bloc-Note : " } );
+        var notepad = Dlg.add( "panel" , undefined , "Notepad" );
         notepad.alignment = "Top" ;
         notepad.margins = [ 5 , 10 , 5 , 5 ];
-            var notepadText = notepad.add( "EditText" , undefined , { en: "You can write or thoughts here..." , fr: "   Note ici tes pensées..." } , { multiline: true , scrollable: true } );
+            var notepadText = notepad.add( "EditText" , undefined , "You can write your thoughts here..." , { multiline: true , scrollable: true } );
             var SavedText = CTgetSavedString( "CTboxSave" , "Notepad" );
             if( SavedText != null ){
                 notepadText.text = SavedText ;
             }
         notepadText.preferredSize = [ 200 , Dlg.children[0].size[1] - 25 ];
-        notepadText.onActivate = function(){ if( notepadText.text == { en : "You can write or thoughts here..." , fr: "   Note ici tes pensées..." } ){ notepadText.text = "" ; } };
+        notepadText.onActivate = function(){ if( notepadText.text == "You can write your thoughts here..." ){ notepadText.text = "" ; } };
         notepadText.onChange = function(){ CTsaveString( "CTboxSave" , "Notepad" , notepadText.text ) };
     } else {
         Dlg.remove( Dlg.children[1] );
