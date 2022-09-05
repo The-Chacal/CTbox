@@ -1,5 +1,5 @@
 //****************************************//
-//  Clean Layer v3.0
+//  Clean Layer v3.1
 //****************************************//
 
 //Functions cleaning anything the user can have done on a layer.
@@ -25,12 +25,11 @@ function layerCleanerOptions(){
     if( savedReinitLayer == null ){ savedReinitLayer = false ; }
     //Creating the dialog.
     var cleanLayerOptnsDlg = new Window( "dialog" , undefined , undefined , { borderless :true } );
-    cleanLayerOptnsDlg.alignChildren = "fill" ;
-    cleanLayerOptnsDlg.spacing = 3 ;
-        var optionsGroup = cleanLayerOptnsDlg.add( "Panel" , undefined , { en: "Delete : " , fr: "Supprimer : " });
-        optionsGroup.alignChildren = "Left" ;
-        optionsGroup.spacing = 0 ;
+    cleanLayerOptnsDlg.spacing = 2 ;
+    var optionsGroup = cleanLayerOptnsDlg.add( "Panel" , undefined , { en: "Delete : " , fr: "Supprimer : " });
         optionsGroup.margins = [ 5 , 10 , 5 , 0 ];
+        optionsGroup.alignChildren = "fill" ;
+        optionsGroup.spacing = 0 ;
             var cleanProperties = optionsGroup.add( "Checkbox" , undefined , { en: " - ALL the Animations." , fr: " - TOUTES les Animations." } );
             cleanProperties.characters = 15 ;
             cleanProperties.value = savedCleanProperties ;
@@ -50,13 +49,11 @@ function layerCleanerOptions(){
             cleanLayerStyles.characters = 16 ;
             cleanLayerStyles.value = savedCleanLayerStyles ;
         var resetLayerTransform = cleanLayerOptnsDlg.add( "Checkbox" , undefined , { en: " - Reset Layer." , fr: " - RàZ le.s Calque.s."} );
-        resetLayerTransform.characters = 15 ;
+        resetLayerTransform.characters = 12 ;
         resetLayerTransform.value = savedReinitLayer ;
-        resetLayerTransform.alignment = "right" ;
         var btnsRow = cleanLayerOptnsDlg.add( "group" );
         btnsRow.orientation = "row" ;
         btnsRow.spacing = 0 ;
-        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
         var btnSize = [ 60 , 20 ];
             var btnA = btnsRow.add( "button" , undefined , "Ok" );
             btnA.size = btnSize ;
