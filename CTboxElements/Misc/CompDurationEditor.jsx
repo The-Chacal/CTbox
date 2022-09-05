@@ -1,5 +1,5 @@
 //****************************************//
-//   Composition Duration Editor v1.2
+//   Composition Duration Editor v1.3
 //****************************************//
 
 // Functions managing the length of a comp and all its components.
@@ -187,12 +187,11 @@ function compDurationEditor( layer , durationWanted , ignoreLockedLayers ){
 function compDurationEditorOptions(){
 
     var compDurationEditorOptionsDialog = new Window( "dialog" , undefined , undefined , { borderless : true } );
-    compDurationEditorOptionsDialog.alignChildren = "fill"
-    compDurationEditorOptionsDialog.spacing = 0 ;
+    compDurationEditorOptionsDialog.spacing = 2 ;
         var mainGroup = compDurationEditorOptionsDialog.add( "panel" , undefined , "Composition Duration Editor Options :" );
-        mainGroup.orientation = "column" ;
+        mainGroup.margins = [ 5 , 10 , 5 , 0 ];
         mainGroup.alignChildren = "fill" ;
-        mainGroup.spacing = 2 ;
+        mainGroup.spacing = 0 ;
             var updateActiveComp = mainGroup.add( "checkbox" , undefined , " - Update the Active Composition." );
             var ignoreLockedLayers = mainGroup.add( "checkbox" , undefined , " - Ignore Locked Layers." );
             ignoreLockedLayers.helpTip = "  If checked, the script will not change the length of a locked Layer."
@@ -200,7 +199,6 @@ function compDurationEditorOptions(){
         btnsRow.orientation = "row" ;
         btnsRow.alignment = "center" ;
         btnsRow.spacing = 0 ;
-        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
         var btnSize = [ 60 , 20 ];
             var btnA = btnsRow.add( "button" , undefined , "Ok" );
             btnA.size = btnSize ;
