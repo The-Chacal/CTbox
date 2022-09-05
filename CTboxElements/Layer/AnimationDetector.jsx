@@ -10,7 +10,7 @@ function getAnimDetectionOptions(){
     
     var animDetectionDlg = new Window( "dialog" , undefined , undefined , { borderless :true } );
     animDetectionDlg.alignChildren = "fill" ;
-    animDetectionDlg.spacing = 0 ;
+    animDetectionDlg.spacing = 2 ;
         var presetLine = animDetectionDlg.add( "group" );
         presetLine.alignChildren = [ "center" , "fill" ];
             presetLine.add( "statictext{ text: 'Preset : ' , characters: 5 }" );
@@ -35,7 +35,6 @@ function getAnimDetectionOptions(){
         btnsRow.orientation = "row" ;
         btnsRow.alignChildren = [ "center" , "fill" ];
         btnsRow.spacing = 0 ;
-        btnsRow.margins = [ 0 , 2 , 0 , 0 ];
         var btnSize = [ 60 , 20 ];
             var btnA = btnsRow.add( "button" , undefined , "Ok" );
             btnA.size = btnSize ;
