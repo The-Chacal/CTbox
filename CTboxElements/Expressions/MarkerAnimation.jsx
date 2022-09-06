@@ -39,7 +39,7 @@ Result";
                 app.endUndoGroup() ;
             }
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished modifying your expressions" , fr: "   J'ai fini de customiser tes expressions." } );
+        CTalertDlg( "I'm Done" , "I've finished modifying your expressions" );
     }
     
 }
