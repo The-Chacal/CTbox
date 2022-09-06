@@ -9,7 +9,7 @@
 function addSeparator(){
 
     //Checking the modifiers keys.
-    var modifiers = modifiersStatuses() ;
+    var modifiers = CTmodifiersStatuses() ;
     //Saving the selected layers.
     var layerSelection = CTcheckSelectedLayers();
     //Creating an empty variable.

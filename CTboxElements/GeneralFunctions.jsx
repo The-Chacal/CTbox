@@ -316,7 +316,7 @@ function CTgetScriptFolder(){
  * Check which modifiers are pressed and retuns the status of all the modifiers.
  * @returns { object } An object containing ctrlState, majState, altState corresponding to the state of the keys.
  */
- function modifiersStatuses(){
+ function CTmodifiersStatuses(){
 
     //Saving the keyboard state.
     var keysState = ScriptUI.environment.keyboardState ;
