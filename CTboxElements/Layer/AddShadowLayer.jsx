@@ -62,7 +62,7 @@ createPath( Pts , inPts , outPts , true )";
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "   I've created your Cast Shadows." , fr: "J'ai fini de créer ton ombre au sol." } );
+        CTalertDlg( "I'm Done" , "   I've created your Cast Shadows." );
     }
     
 }
