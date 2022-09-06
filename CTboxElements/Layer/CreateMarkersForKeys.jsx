@@ -8,27 +8,27 @@
  */
 function createMarkersForKeysChoice(){
     
-    var createMarkersForKeysChoiceDlg = new Window( "palette" , { en: "Choice of the properties to analyse" , fr: "Choix des Propriétés à analyser" } );
+    var createMarkersForKeysChoiceDlg = new Window( "palette" , "Choice of the properties to analyse" );
     createMarkersForKeysChoiceDlg.global = createMarkersForKeysChoiceDlg.add( "Group" );
     createMarkersForKeysChoiceDlg.global.preferredSize = [ 150 , -1 ];
         createMarkersForKeysChoiceDlg.global.orientation = "Column" ;
         createMarkersForKeysChoiceDlg.global.alignChildren = "fill" ;
-            createMarkersForKeysChoiceDlg.global.Optns = createMarkersForKeysChoiceDlg.global.add( "Panel" , undefined , { en: "Analyse : " , fr: "Analyser : " } );
+            createMarkersForKeysChoiceDlg.global.Optns = createMarkersForKeysChoiceDlg.global.add( "Panel" , undefined , "Analyse : " );
             createMarkersForKeysChoiceDlg.global.Optns.alignChildren = "Left" ;
             createMarkersForKeysChoiceDlg.global.Optns.margins = [ 10 , 15 , 10 , 0 ];
-                var checkTransformProperties = createMarkersForKeysChoiceDlg.global.Optns.add( "Checkbox" , undefined , { en: " - Transformations." , fr: " - Les Transformations."} );
+                var checkTransformProperties = createMarkersForKeysChoiceDlg.global.Optns.add( "Checkbox" , undefined , " - Transformations." );
                 checkTransformProperties.characters = 15 ;
                 checkTransformProperties.value = true ;
-                var checkEffects = createMarkersForKeysChoiceDlg.global.Optns.add( "Checkbox" , undefined , { en: " - Effects." , fr: " - Les Effets." } );
+                var checkEffects = createMarkersForKeysChoiceDlg.global.Optns.add( "Checkbox" , undefined , " - Effects." );
                 checkEffects.characters = 15 ;
                 checkEffects.value = true ;
-                var checkLayerStyles = createMarkersForKeysChoiceDlg.global.Optns.add( "Checkbox" , undefined , { en: " - Layer Styles." , fr: " - Les Styles de Calque." } );
+                var checkLayerStyles = createMarkersForKeysChoiceDlg.global.Optns.add( "Checkbox" , undefined , " - Layer Styles." );
                 checkLayerStyles.characters = 15 ;
                 checkLayerStyles.value = true ;
             createMarkersForKeysChoiceDlg.global.Btns = createMarkersForKeysChoiceDlg.global.add( "Group" ) ;
             createMarkersForKeysChoiceDlg.global.Btns.alignment = "Center" ;
-                var BtnA = createMarkersForKeysChoiceDlg.global.Btns.add( "Button" , undefined , { en: "Confirm" , fr: "Valider" } );
-                var BtnB = createMarkersForKeysChoiceDlg.global.Btns.add( "Button" , undefined , { en: "Cancel" , fr: "Annuler" } );
+                var BtnA = createMarkersForKeysChoiceDlg.global.Btns.add( "Button" , undefined , "Confirm" );
+                var BtnB = createMarkersForKeysChoiceDlg.global.Btns.add( "Button" , undefined , "Cancel" );
         //UI Events
         BtnA.onClick = function(){ if( layerAnalyser( checkTransformProperties.value , checkEffects.value , checkLayerStyles.value ) ){ createMarkersForKeysChoiceDlg.close(); } }
         BtnB.onClick = function(){ createMarkersForKeysChoiceDlg.close() } ;
@@ -51,7 +51,7 @@ function layerAnalyser( checkTransformProperties , checkEffects , checkLayerStyl
     if( LayerSelection.length > 0 ){
         for( var z = 0 ; z < LayerSelection.length ; z++ ){
             //Opening the UndoGroup
-            app.beginUndoGroup( { en: "Markers Creation" , fr: "Ajout de Marqueurs." } );
+            app.beginUndoGroup( "Markers Creation" );
             //Adding Markers for each animaton Key found.
             var CurrentLayer = LayerSelection[z];
             if( checkTransformProperties ){
@@ -66,7 +66,7 @@ function layerAnalyser( checkTransformProperties , checkEffects , checkLayerStyl
             //Closing The UndoGroup
             app.endUndoGroup();
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished creating Markers on your layers." , fr: "J'ai fini d'ajouter les marqueurs à tes Calques." } );
+        CTalertDlg( "I'm Done" , "I've finished creating Markers on your layers." );
         return true ;
     } else {
         return false ;

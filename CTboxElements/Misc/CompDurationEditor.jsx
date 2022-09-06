@@ -73,7 +73,7 @@ function getListOfLayers( dropdownlistToUpdate ){
             dropdownlistToUpdate.add( "item" ,  CurrentLayer.index + " - " + CurrentLayer.name );
         }
     } else {
-        dropdownlistToUpdate.add( "item" , { en: "Empty" , fr: "Vide" } );
+        dropdownlistToUpdate.add( "item" , "Empty" );
     }
     dropdownlistToUpdate.selection = dropdownlistToUpdate.items[0] ;
     
@@ -92,7 +92,7 @@ function getNewDuration( hasRefLayer , durationWanted , isFrames , refLayer ){
     if( app.project.activeItem != undefined ){
         if( !hasRefLayer ){
             if( isNaN( durationWanted ) ){
-                CTalertDlg( "Nope" , { en: "   The Duration entered is not a Number" , fr: "   La durée demandée n'est pas un nombre." } );
+                CTalertDlg( "Nope" , "   The Duration entered is not a Number" );
             } else {
                 if( isFrames ){
                     durationSet = durationWanted * app.project.activeItem.frameDuration ;
@@ -140,7 +140,7 @@ function compDurationEditorLauncher( durationWanted ){
             app.endUndoGroup(); 
         } 
     }
-    CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished changing the duration of your Comps" , fr: "J'ai fini de retimer tes Compos." } ); 
+    CTalertDlg( "I'm Done" , "I've finished changing the duration of your Comps" ); 
     return true ; 
 
 }

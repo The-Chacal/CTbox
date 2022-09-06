@@ -16,7 +16,7 @@ function createCastShadow(){
         var scriptFolder = CTgetScriptFolder();
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
-            app.beginUndoGroup( { en: "Creating Cast Shadow." , fr: "Creation de l'ombre projetée." } );
+            app.beginUndoGroup( "Creating Cast Shadow." );
             var castShadowSettingsName = "CTbox - Cast Shadow - Settings";
             if( hasID ){
                 //Generating the unique Id for the CastShadow.
@@ -60,7 +60,7 @@ function createCastShadow(){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've created your silhouette Shadow" , fr: "J'ai fini de créer l'ombre Silhouette." } );
+        CTalertDlg( "I'm Done" , "I've created your silhouette Shadow" );
     }
     
 }

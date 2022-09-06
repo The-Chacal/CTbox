@@ -12,14 +12,14 @@ function collapseTransformationManager(){
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
-            app.beginUndoGroup( { en: "Managing the Collapse option" , fr: "Gestion de la Rasteurisation" });
+            app.beginUndoGroup( "Managing the Collapse option" );
             //Checing the current collapse transformation value of the layer and updating it accordingly.
             var collapseTransformationStatus = !layerSelection[i].collapseTransformation ;
             switchCollapseTransformationStatus( layerSelection[i] , collapseTransformationStatus );
             //Closing the UndoGroup.
             app.endUndoGroup()
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished managing the collapse option of your Layers" , fr: "J'ai fini de gérer la rasteurisation de tes Calques." } );
+        CTalertDlg( "I'm Done" , "   I've finished managing the collapse option of your Layers" );
     }
     
 }

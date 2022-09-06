@@ -14,9 +14,9 @@ function getAnimDetectionOptions(){
         var presetLine = animDetectionDlg.add( "group" );
         presetLine.alignChildren = [ "center" , "fill" ];
             presetLine.add( "statictext{ text: 'Preset : ' , characters: 5 }" );
-            var presetSelector = presetLine.add( "dropdownlist" , undefined , [ { en: "None" , fr: "Aucun" } , "Anim 2D/3D" , "Stopmotion" ] );
+            var presetSelector = presetLine.add( "dropdownlist" , undefined , [ "None" , "Anim 2D/3D" , "Stopmotion" ] );
             presetSelector.selection = presetSelector.items[0];
-        var settings = animDetectionDlg.add( "panel" , undefined , { en: "Settings : " , fr: "Paramètres" } );
+        var settings = animDetectionDlg.add( "panel" , undefined , "Settings : " );
         settings.alignChildren = "Fill" ;
         settings.spacing = 0 ;
             var settingsLine1 = settings.add( "group" );
@@ -75,12 +75,12 @@ function detectAnimation(){
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
-            app.beginUndoGroup( { en: "Animation Detection." , fr: "Detection de l'Animation." } );
+            app.beginUndoGroup( "Animation Detection." );
             //Checking if there is any effects on the layer.
             if( layerSelection[i].property( "ADBE Effect Parade" ).numProperties > 0 ){
                 for( var j = 1 ; j <= layerSelection[i].property( "ADBE Effect Parade" ).numProperties ; j++ ){
                     if( layerSelection[i].property( "ADBE Effect Parade" ).property(j).active ){
-                        if( !CTchoiceDlg( { en: "So..." , fr: "Alors..."} , { en: "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , fr: "   Cette action est lourde à éxécuter.\n   Mieux vaut désactiver tes effets non-nécessaires à cette détection d'abord\n\n   On Continue ou tu modifies?" } , { en: "Continue" , fr: "Continuer" } , { en: "Modify" , fr: "Modifier" } ) ){
+                        if( !CTchoiceDlg( "So..." , "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , "Continue" , "Modify" ) ){
                             return false ;
                         } else {
                             break ;
@@ -129,7 +129,7 @@ if( AverageDelta == 0 )\
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished detecting Animation on your layers." , fr: "   J'ai fini de détecter les phases d'anim de tes calques." } );
+        CTalertDlg( "I'm Done" , "I've finished detecting Animation on your layers." );
         return true ;
     }
     return false ;

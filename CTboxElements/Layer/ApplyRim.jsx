@@ -17,7 +17,7 @@ function applyRim( outsideRim ){
         var scriptFolder = CTgetScriptFolder();
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
-            app.beginUndoGroup( { en: "Applying Rim." , fr: "Ajout de Liseré." } );
+            app.beginUndoGroup( "Applying Rim." );
             var rimSettingsName = "CTbox - Rim - Settings";
             if( hasID ){
                 //Generating the unique Id for the Rim.
@@ -80,7 +80,7 @@ function applyRim( outsideRim ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've created the Rim for your layer(s)." , fr: "J'ai fini de créer le liseré pour le(s) calque(s)." } );
+        CTalertDlg( "I'm Done" , "I've created the Rim for your layer(s)." );
     }
     
 }

@@ -17,14 +17,14 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Check if the Content lowest point has already been detected or not.
-            if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null && !CTchoiceDlg( "Arg..." , { en: "   It seems like you have already detected the content lowest point for the layer \"" + layerSelection[i].name + "\".\n\n   Are you sure that you want to do it again?" , fr: "   Il semblerait que tu ais déjà détecté le point le plus bas de ce calque \"" + layerSelection[i].name + "\".\n\n   Es-tu sûr de vouloir le refaire?" })){
+            if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null && !CTchoiceDlg( "Arg..." , "   It seems like you have already detected the content lowest point for the layer \"" + layerSelection[i].name + "\".\n\n   Are you sure that you want to do it again?" ) ){
                 return false ;
             }
             //Checks if there is any effects on the layer and asks to continue or not if there is some.
             if( layerSelection[i].property("ADBE Effect Parade").numProperties > 0 ){
                 for( var j = 1 ; j <= layerSelection[i].property("ADBE Effect Parade").numProperties ; j++ ){
                     if( layerSelection[i].property("ADBE Effect Parade").property(j).name != "CTbox - Content Lowest Point" && layerSelection[i].property("ADBE Effect Parade").property(j).active ){
-                        if( !CTchoiceDlg( { en: "So..." , fr: "Alors..."} , { en: "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , fr: "   Cette action est lourde à éxécuter.\n   Mieux vaut désactiver tes effets non-nécessaires à cette détection d'abord\n\n   On Continue ou tu modifies?" } , { en: "Continue" , fr: "Continuer" } , { en: "Modify" , fr: "Modifier" } ) ){
+                        if( !CTchoiceDlg( "So..." , "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , "Continue" , "Modify" ) ){
                             return false ;
                         } else {
                             break ;
@@ -33,7 +33,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
                 }
             }
             //Opening the UndoGroup.
-            if( hasUndoGroup ){ app.beginUndoGroup( { en: "Lowest Point Detection" , fr: "Detection du point le plus bas." } ); }
+            if( hasUndoGroup ){ app.beginUndoGroup( "Lowest Point Detection" ); }
             //Getting the saved Parameters.
             var verticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
             if( verticalOriginalStep == null ){ verticalOriginalStep = 50 };
@@ -231,7 +231,7 @@ X";
             layerSelection[i].selected = true ;
         }
         if( promptEndAlert ){
-            CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished detecting the lowest point of your layer(s)." , fr: "J'ai fini de detecter le bas de ton/tes calque(s)." } );
+            CTalertDlg( "I'm Done" , "I've finished detecting the lowest point of your layer(s)." );
         }
         return true ;
     }
