@@ -31,8 +31,8 @@ function CTalertDlg( title , messageContent ){
  */
 function CTchoiceDlg( title , messageContent , messageBtnA , messageBtnB ){
 
-    if( typeof messageBtnA === "undefined" ){ messageBtnA = { en: "Yes" , fr: "Oui" } ; }
-    if( typeof messageBtnB === "undefined" ){ messageBtnB = { en: "No" , fr: "Non" } ; }
+    if( typeof messageBtnA === "undefined" ){ messageBtnA = "Yes" ; }
+    if( typeof messageBtnB === "undefined" ){ messageBtnB = "No" ; }
     var choiceDialog = new Window( "dialog" , title , undefined , { borderless : true } );
     choiceDialog.spacing = 2 ;
         var textPanel = choiceDialog.add( "panel" );
@@ -212,7 +212,7 @@ function CTversioning( type ){
     if( app.project != undefined ){
         //Checking if the project has been saved at least one time.
         if( app.project.file == null){
-            CTalertDlg( { en: "Saaaaaaaave!" , fr: "Sauvegaaaarde!" } , { en: "I need you to save this project a first time to be able to work." , fr: "J'ai besoin que ce projet soit sauvegardé une première fois pour travailler." } );
+            CTalertDlg( "Saaaaaaaave!" , "I need you to save this project a first time to be able to work." );
             return ;
         }
         //Saving which item was the active one at the start of the script.
@@ -238,7 +238,7 @@ function CTversioning( type ){
         oldVersionFolderPath = oldVersionFolderPath.join( "/" );
         var newProjectFile = new File( oldVersionFolderPath + "/" + newName + ".aep" );
         //Checking that the file to create does not already exists.
-        if( newProjectFile.exists && !CTchoiceDlg( { en: "Well..." , fr: "Euh..." } , { en: "   The file \"" + newName +".aep\" exists already.\n\n   Are you sure that you want to overwrite it?" , fr: "   le fichier \"" + newName + ".aep\" existe déjà.\n\n   Es-tu sûr.e de vouloir l'écraser?" } ) ){
+        if( newProjectFile.exists && !CTchoiceDlg( "Well..." , "   The file \"" + newName +".aep\" exists already.\n\n   Are you sure that you want to overwrite it?" ) ){
             return ;
         }
         //Updating the name of the Main Comp ( which is supposed to have the same name as the old File ).
