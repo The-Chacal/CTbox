@@ -14,18 +14,18 @@ function copyMarkerChoice(){
         //Getting the names of the active Composition layers.
         var compLayersNames = getLayersNames();
         //Creating the dialog.
-        var copyMarkerChoiceDlg = new Window( "palette" , { en: "Choose your Layers." , fr: "Choisis tes Calques." } );
+        var copyMarkerChoiceDlg = new Window( "palette" , "Choose your Layers." );
         copyMarkerChoiceDlg.preferredSize = [ 300 , -1 ];
         copyMarkerChoiceDlg.alignChildren = "fill" ;
         copyMarkerChoiceDlg.margins = [ 10 , 5 , 10 , 10 ];
         copyMarkerChoiceDlg.spacing = 2 ;
-            var block01 = copyMarkerChoiceDlg.add( "panel" , undefined , { en: "Markers to Copy : " , fr: "Marqueurs à Copier : " } );
+            var block01 = copyMarkerChoiceDlg.add( "panel" , undefined , "Markers to Copy : " );
             block01.alignChildren = "fill" ;
             block01.margins = [ 5 , 10 , 5 , 5 ];
                 var refLayerSelector = block01.add( "dropdownlist" , undefined , compLayersNames );
-                refLayerSelector.title = { en: "Source Layer" , fr: "Calque Source : " } ;
+                refLayerSelector.title = "Source Layer" ;
                 refLayerSelector.titleLayout.characters = 10 ;
-            var block02 = copyMarkerChoiceDlg.add( "panel" , undefined , { en: "Layers to Modifiy" , fr: "Calque(s) à Modifier : " } );
+            var block02 = copyMarkerChoiceDlg.add( "panel" , undefined , "Layers to Modifiy" );
             block02.alignChildren = "fill" ;
             block02.margins = [ 5 , 10 , 5 , 5 ];
             block02.spacing = 2 ;
@@ -50,9 +50,9 @@ function copyMarkerChoice(){
             block03.alignment = "right" ;
             block03.spacing = 0 ;
             block03.margins = [ 0 , 0 , 0 , 0];
-                var B03BtnA = block03.add( "button" , undefined , { en: "Copy" , fr: "Copier" } );
+                var B03BtnA = block03.add( "button" , undefined , "Copy" );
                 B03BtnA.size = [ 75 , 25 ] ;
-                var B03BtnB = block03.add( "button" , undefined , { en: "Cancel" , fr: "Annuler" } );
+                var B03BtnB = block03.add( "button" , undefined , "Cancel" );
                 B03BtnB.size = [ 75 , 25 ] ;
         //UI Events.
         refreshLayersListBtn.onClick = function(){ refreshLayersList( refLayerSelector ); for( var i = 0 ; i < block02.rows.children.length ; i++ ){ refreshLayersList( block02.rows.children[i] ); } }
@@ -143,7 +143,7 @@ function rowManager( dlgGroup, rows , nbRows ){
         for( var i = 1 ; i <= nbRows ; i++ )
         {
             rows[ "Row" + ( NbExistingRows + i ) ] = dlgGroup.add( "dropdownlist" , undefined , itemsList );
-            rows[ "Row" + ( NbExistingRows + i ) ].title = { en: "Layer " + parseFloat( NbExistingRows + i ) + " : " , fr: "Calque " + parseFloat( NbExistingRows + i ) + " : " } ;
+            rows[ "Row" + ( NbExistingRows + i ) ].title = "Layer " + parseFloat( NbExistingRows + i ) + " : " ;
             rows[ "Row" + ( NbExistingRows + i ) ].titleLayout.characters = 10 ;
             rows[ "Row" + ( NbExistingRows + i ) ].selection = rows[ "Row" + ( NbExistingRows + i ) ].items[ i - 1 ] ;
         }
@@ -172,7 +172,7 @@ function copyMarkers( RefLayerIndex , dlgGroup ){
             MarkersToCopy.push( compActive.layer( RefLayerIndex ).property(1).keyTime( i ) );
         }
     } else {
-        CTalertDlg( { en: "No, no , no..." , fr: "Non, non, non..." } , { en: "   There is no Markers on the Source Layer.\n   What do you want me to do???" , fr: "   Il n'y a pas de marqueurs sur le Calque Source.\n   Tu veux que je fasse quoi???"});
+        CTalertDlg( "No, no , no..." , "   There is no Markers on the Source Layer.\n   What do you want me to do???" );
         return false ;
     }
     //Creating an array with the indexes of the target layers.
@@ -192,7 +192,7 @@ function copyMarkers( RefLayerIndex , dlgGroup ){
     //Copying the markers on the targeted layers
     for( i = 0 ; i < layersToModifyIndexes.length ; i++ ){
         //Opening the UndoGroup.
-        app.beginUndoGroup( { en: "Markers Copy" , fr: "Copie de Marqueurs" } );
+        app.beginUndoGroup( "Markers Copy" );
         for( var j = 0 ; j < MarkersToCopy.length ; j++ ){
             compActive.layer( layersToModifyIndexes[i] ).property(1).addKey( MarkersToCopy[j] );
         }
@@ -200,7 +200,7 @@ function copyMarkers( RefLayerIndex , dlgGroup ){
         app.endUndoGroup();
 
     }
-    CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished copying Markers." , fr: "J'ai finis de copier les Marqueurs demandés." } );
+    CTalertDlg( "I'm Done" , "I've finished copying Markers." );
     return true ;
 
 }
