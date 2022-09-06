@@ -27,29 +27,29 @@ function layerCleanerOptions(){
     var cleanLayerOptnsDlg = new Window( "dialog" , undefined , undefined , { borderless :true } );
     cleanLayerOptnsDlg.alignChildren = "fill" ;
     cleanLayerOptnsDlg.spacing = 3 ;
-        var optionsGroup = cleanLayerOptnsDlg.add( "Panel" , undefined , { en: "Delete : " , fr: "Supprimer : " });
+        var optionsGroup = cleanLayerOptnsDlg.add( "Panel" , undefined , "Delete : " );
         optionsGroup.alignChildren = "Left" ;
         optionsGroup.spacing = 0 ;
         optionsGroup.margins = [ 5 , 10 , 5 , 0 ];
-            var cleanProperties = optionsGroup.add( "Checkbox" , undefined , { en: " - ALL the Animations." , fr: " - TOUTES les Animations." } );
+            var cleanProperties = optionsGroup.add( "Checkbox" , undefined , " - ALL the Animations." );
             cleanProperties.characters = 15 ;
             cleanProperties.value = savedCleanProperties ;
-            var cleanEffects = optionsGroup.add( "Checkbox" , undefined , { en: " - ALL the Effects." , fr: " - TOUS les Effets."} );
+            var cleanEffects = optionsGroup.add( "Checkbox" , undefined , " - ALL the Effects." );
             cleanEffects.characters = 15 ;
             cleanEffects.value = savedCleanEffects ;
-            var cleanExpressions = optionsGroup.add( "Checkbox" , undefined , { en: " - ALL the Expressions." , fr: " - TOUTES les Expressions."} );
+            var cleanExpressions = optionsGroup.add( "Checkbox" , undefined , " - ALL the Expressions." );
             cleanExpressions.characters = 15 ;
             cleanExpressions.value = savedCleanExpressions ;
-            var cleanMasks = optionsGroup.add( "Checkbox" , undefined , { en: " - ALL the Masks." , fr: " - TOUS les Masques."} );
+            var cleanMasks = optionsGroup.add( "Checkbox" , undefined , " - ALL the Masks." );
             cleanMasks.characters = 15 ;
             cleanMasks.value = savedCleanMasks ;
-            var cleanMarkers = optionsGroup.add( "Checkbox" , undefined , { en: " - ALL the Markers." , fr: " - TOUS les Marqueurs." } );
+            var cleanMarkers = optionsGroup.add( "Checkbox" , undefined , " - ALL the Markers." );
             cleanMarkers.characters = 15 ;
             cleanMarkers.value = savedCleanMarkers ;
-            var cleanLayerStyles = optionsGroup.add( "Checkbox" , undefined , { en: "All the Layer Styles" , fr: " - TOUS les Styles de Calque." } );
+            var cleanLayerStyles = optionsGroup.add( "Checkbox" , undefined , "All the Layer Styles" );
             cleanLayerStyles.characters = 16 ;
             cleanLayerStyles.value = savedCleanLayerStyles ;
-        var resetLayerTransform = cleanLayerOptnsDlg.add( "Checkbox" , undefined , { en: " - Reset Layer." , fr: " - RàZ le.s Calque.s."} );
+        var resetLayerTransform = cleanLayerOptnsDlg.add( "Checkbox" , undefined , " - Reset Layer." );
         resetLayerTransform.characters = 15 ;
         resetLayerTransform.value = savedReinitLayer ;
         resetLayerTransform.alignment = "right" ;
@@ -144,7 +144,7 @@ function layerCleaner( showEndAlert , createUndoGroup ){
             layerSelection[i].selected = true ;
         }
         if( showEndAlert ){
-            CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished Cleaning your layers" , fr: "J'ai fini de nettoyer tes Calques." } );
+            CTalertDlg( "I'm Done" , "I've finished Cleaning your layers" );
         }
         return true ;
     } else {
