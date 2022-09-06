@@ -13,7 +13,7 @@ function posterizeProp(){
             var currentProperty = CTgetProperty( propertiesToTreat[i] );
             if( currentProperty.canSetExpression ){
                 //Opening the UndoGroup.
-                app.beginUndoGroup( { en: "Posterising the Property" , fr: "Ajout de la Posterisation" } );
+                app.beginUndoGroup( "Posterising the Property" );
                 //Adding a Slider setting the step of the Animation, if it does not already exists.
                 var propertyParentLayer = propertiesToTreat[i][ propertiesToTreat[i].length - 1 ];
                 var posterizeStepSlider = null ;
@@ -54,6 +54,6 @@ result";
                 app.endUndoGroup() ;
             }
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished adding posterisation to your properties." , fr: "   J'ai fini de posterizer tes expressions." } );
+        CTalertDlg( "I'm Done" , "I've finished adding posterisation to your properties." );
     }
 }
