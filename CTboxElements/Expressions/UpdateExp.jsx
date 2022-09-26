@@ -77,7 +77,7 @@ function updateExp( textA , textB , worksOnLayers , showEndAlert , createUndoGro
         if( layersToUpdate.length > 0 ){
             for( var i = 0 ; i < layersToUpdate.length ; i++ ){
                 //Opening the UndoGroup.
-                if( createUndoGroup ){ app.beginUndoGroup( "Expression Modification" , "Modification de l'Expression" ); }
+                if( createUndoGroup ){ app.beginUndoGroup( "Expression Modification" ); }
                 //Correcting the Expressions.
                 applyExpUpdate( layersToUpdate[i] , textA , textB ) ;
                 //Closing the UndoGroup.
