@@ -8,10 +8,16 @@
 function applyGradient(){
 
     var layerSelection = CTcheckSelectedLayers ();
+    //Saving the modifiers keys.
+    var modifiers = CTmodifiersStatuses();
     if( layerSelection.length > 0 ){
         //Getting the id option status
         var hasID = JSON.parse( CTgetSavedString( "CTboxSave" , "GradientId" ) );
         if( hasID == null ){ hasID = true ;}
+        //Altering the id option status according to the ctrl key status.
+        if( modifiers.ctrlState ){
+            hasID = !hasID;
+        }
         //Getting the path to the Script on the Computer.
         var scriptFolder = CTgetScriptFolder();
         for( var i = 0 ; i < layerSelection.length ; i++ ){
