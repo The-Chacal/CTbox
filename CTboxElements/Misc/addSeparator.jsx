@@ -1,5 +1,5 @@
 //****************************************//
-//  Add Separator v1.0
+//  Separator Creator
 //****************************************//
 
 //  Functions adding a separator layer in your active comp.

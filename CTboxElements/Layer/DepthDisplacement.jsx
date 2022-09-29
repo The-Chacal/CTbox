@@ -1,5 +1,5 @@
 //****************************************//
-//  Move Layer in Depth v1.1
+//  Move Layer in Depth
 //****************************************//
 
 //  Script moving a layer along the Z axis keeping its visual size

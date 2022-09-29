@@ -1,5 +1,5 @@
 //****************************************//
-//  Collapse Transformation Manager v1.0
+//  Collapse Transformation Manager
 //****************************************//
 
 //  Functions changing the collapse transformation option trough comps

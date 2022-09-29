@@ -1,5 +1,5 @@
 //****************************************//
-//  Create Markers for Keys v1.0
+//  Markers for Keys Creator
 //****************************************//
 
 //  Functions creating a Marker for each animation Key on the layer.

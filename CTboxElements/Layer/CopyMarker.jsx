@@ -1,5 +1,5 @@
 //****************************************//
-//  Copy Markers v1.1
+//  Markers Copier
 //****************************************//
 
 //  Functions copying markers from one to a selection of others.

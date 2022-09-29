@@ -1,5 +1,5 @@
 //****************************************//
-//   Composition Duration Editor v1.3
+//   Composition Duration Editor
 //****************************************//
 
 // Functions managing the length of a comp and all its components.

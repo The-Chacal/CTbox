@@ -1,5 +1,5 @@
 //****************************************//
-//  Clean Layer v3.1
+//  Layer Cleaner
 //****************************************//
 
 //Functions cleaning anything the user can have done on a layer.

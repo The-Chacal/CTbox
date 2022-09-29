@@ -1,5 +1,5 @@
 //****************************************//
-//  Animation Detector v1.2
+//  Animation Detector
 //****************************************//
 
 //  Functions adding a Marker on the layer as soon as there is some change in it.

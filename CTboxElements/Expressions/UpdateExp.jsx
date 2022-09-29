@@ -1,5 +1,5 @@
 //****************************************//
-//  Update Expressions v1.0
+//  Expressions Updater
 //****************************************//
 
 //  Functions allowing you to modify expressions in properties or layers selected.
