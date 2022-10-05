@@ -117,9 +117,14 @@ function CTbuildUI( thisObj ){
                 var B2Btn03 = Block02.add( "button" , undefined , "Add Grad." );
                 B2Btn03.helpTip = "   Create a Gradient in Multiply Mode.\n   CTRL + Click > Invert the ID option setting for this click." ;
                 B2Btn03.size = btnsSize ;
-                var B2Btn04 = Block02.add( "button" , undefined , "Add Rim" );
-                B2Btn04.helpTip = "   Create an outside Rim Light in Overlay Mode for the selected Layer.\n   ALT + Click > Create an inside Rim Light in Multiply Mode for the selected Layer.\n   CTRL + Click > Invert the ID option setting for this click." ;
-                B2Btn04.size = btnsSize ;
+                var B2Btn04Block = Block02.add( "group" );
+                B2Btn04Block.spacing = 0 ;
+                    var B2Btn04a = B2Btn04Block.add( "button" , undefined , "O.Rim" );
+                    B2Btn04a.helpTip = "   Create an outside Rim Light in Overlay Mode for the selected Layer.\n   CTRL + Click > Invert the ID option setting for this click." ;
+                    B2Btn04a.size = [ btnsSize[0] / 2 , btnsSize[1] ];
+                    var B2Btn04b = B2Btn04Block.add( "button" , undefined , "I.Rim" );
+                    B2Btn04b.helpTip = "   Create an inside Rim Light in Multiply Mode for the selected Layer.\n   CTRL + Click > Invert the ID option setting for this click." ;
+                    B2Btn04b.size = [ btnsSize[0] / 2 , btnsSize[1] ];
                 var B2Btn05 = Block02.add( "button" , undefined , "Gro. Sha." );
                 B2Btn05.helpTip = "   Create a Shadow Layer for the selected Layer." ;
                 B2Btn05.size = btnsSize ;
@@ -221,7 +226,8 @@ function CTbuildUI( thisObj ){
     B2Btn01.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ getLayerBottom( true , true ); } else { getLayerBottomOptions(); } };
     B2Btn02.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ detectAnimation(); } else { getAnimDetectionOptions(); } };
     B2Btn03.onClick = applyGradient ;
-    B2Btn04.onClick = function(){ var modifiers = CTmodifiersStatuses(); applyRim( !modifiers.altState ); };
+    B2Btn04a.onClick = function(){ applyRim( true ); };
+    B2Btn04b.onClick = function(){ applyRim( false ); };
     B2Btn05.onClick = addShadowLayer ;
     B2Btn06.onClick = createCastShadow ;
     B2Btn07.onClick = createMarkersForKeysChoice ;
