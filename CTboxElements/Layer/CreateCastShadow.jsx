@@ -66,7 +66,7 @@ function createCastShadow(){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( "I'm Done" , "I've created your silhouette Shadow" );
+        CTalertDlg( "I'm Done" , "   I've created your silhouette Shadow" );
     }
     
 }

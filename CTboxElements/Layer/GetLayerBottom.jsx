@@ -231,7 +231,7 @@ X";
             layerSelection[i].selected = true ;
         }
         if( promptEndAlert ){
-            CTalertDlg( "I'm Done" , "I've finished detecting the lowest point of your layer(s)." );
+            CTalertDlg( "I'm Done" , "   I've finished detecting the lowest point of your layer(s)." );
         }
         return true ;
     }

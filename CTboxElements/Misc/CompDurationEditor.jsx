@@ -140,7 +140,7 @@ function compDurationEditorLauncher( durationWanted ){
             app.endUndoGroup(); 
         } 
     }
-    CTalertDlg( "I'm Done" , "I've finished changing the duration of your Comps" ); 
+    CTalertDlg( "I'm Done" , "   I've finished changing the duration of your Comps" ); 
     return true ; 
 
 }

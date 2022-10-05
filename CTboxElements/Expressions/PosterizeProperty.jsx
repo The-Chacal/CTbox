@@ -54,6 +54,6 @@ result";
                 app.endUndoGroup() ;
             }
         }
-        CTalertDlg( "I'm Done" , "I've finished adding posterisation to your properties." );
+        CTalertDlg( "I'm Done" , "   I've finished adding posterisation to your properties." );
     }
 }

@@ -9,13 +9,13 @@
 function depthChoice (){
     
     var depthChoiceDlg = new Window( "palette" , "Move in Depth" );
-    depthChoiceDlg.global = depthChoiceDlg.add( "Panel" , undefined , { en: "Depth Setting : " , fr: "Choix de la valeur en Z :" } );
+    depthChoiceDlg.global = depthChoiceDlg.add( "Panel" , undefined , "Depth Setting : " );
     depthChoiceDlg.global.orientation = "Column" ;
         var depthWanted = depthChoiceDlg.global.add( "EditText{ justify : 'center' , characters : 10 , properties : { enabled : true } }" );
-        depthWanted.text = { en: 'Z wanted' , fr: 'Z voulu' };
-        var moveInDepth = depthChoiceDlg.global.add( "Button" , undefined , { en:"Move" , fr: "Déplacer" } );
+        depthWanted.text = "Z wanted" ;
+        var moveInDepth = depthChoiceDlg.global.add( "Button" , undefined , "Move" );
     //UI Events.
-    depthWanted.onActivate = function(){ if( depthWanted.text == { en: "Z wanted" , fr: "Z voulu" } ) { depthWanted.text = "" ; } } ;
+    depthWanted.onActivate = function(){ if( depthWanted.text == "Z wanted" ) { depthWanted.text = "" ; } } ;
     depthWanted.onChange = function(){ movingInDepth( depthWanted.text ) } ;
     moveInDepth.onClick  = function(){ movingInDepth( depthWanted.text ) } ;
     //Showing UI
@@ -33,18 +33,18 @@ function movingInDepth( Depth ){
         if( layerSelection.length > 1 || layerSelection.length == 1 && layerSelection[0] != app.project.activeItem.activeCamera ){
             //Checking that there is an active Camera. Creates one if not.
             if( app.project.activeItem.activeCamera == null ){
-                var NewCamera = app.project.activeItem.layers.addCamera( { en: "Forgotten Camera" , fr: "Caméra Oubliée" } , [ app.project.activeItem.width / 2 , app.project.activeItem.height / 2 ] );
+                var NewCamera = app.project.activeItem.layers.addCamera( "Forgotten Camera" , [ app.project.activeItem.width / 2 , app.project.activeItem.height / 2 ] );
                 NewCamera.property(2).property(2).setValue( [ app.project.activeItem.width / 2 , app.project.activeItem.height / 2 , NewCamera.property(2).property(2).value[2] ] );
             }
             //Moving layers.
             for( var i = 0 ; i < layerSelection.length ; i++ ){
                 if( layerSelection[i] != app.project.activeItem.activeCamera ){
                     //Opening the UndoGroup
-                    app.beginUndoGroup( { en: "Layer Displacement" , fr: "Déplacement du Calque." } );
+                    app.beginUndoGroup( "Layer Displacement" );
                     var MovedLayer = layerSelection[i] ;
                     //Checking if the layer has the 3D option active.
                     if( !MovedLayer.threeDLayer ){
-                        if( CTchoiceDlg( { en: "So..." , fr: "Alors..." } , { en: "The Layer \"" + layerSelection[i].name + "\"  is not a 3D Layer.\r   Do you want me set it in 3D and Continue?" , fr: "Le Calque \"" + layerSelection[i].name + "\"  n'est pas un calque 3D.\r   Je te le mets en 3D et on continue?" } ) ){
+                        if( CTchoiceDlg( "So..." , "   The Layer \"" + layerSelection[i].name + "\"  is not a 3D Layer.\r   Do you want me set it in 3D and continue?"  ) ){
                             layerSelection[i].threeDLayer = true ;
                         } else {
                             //Closing the UndoGroup if the user don't want the layer be 3D actived.
@@ -89,7 +89,7 @@ function movingInDepth( Depth ){
                     app.endUndoGroup();
                 }
             }
-            CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've finished moving your layers." , fr: "J'ai fini de déplacer tes Calques." } );
+            CTalertDlg( "I'm Done" , "   I've finished moving your layers." );
         }
     }
     

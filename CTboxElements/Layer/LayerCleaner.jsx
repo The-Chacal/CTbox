@@ -26,7 +26,7 @@ function layerCleanerOptions(){
     //Creating the dialog.
     var cleanLayerOptnsDlg = new Window( "dialog" , undefined , undefined , { borderless :true } );
     cleanLayerOptnsDlg.spacing = 2 ;
-    var optionsGroup = cleanLayerOptnsDlg.add( "Panel" , undefined , { en: "Delete : " , fr: "Supprimer : " });
+    var optionsGroup = cleanLayerOptnsDlg.add( "Panel" , undefined , "Delete : " );
         optionsGroup.margins = [ 5 , 10 , 5 , 0 ];
             var cleanProperties = optionsGroup.add( "Checkbox" , undefined , " - ALL the Animations." );
             cleanProperties.characters = 15 ;
@@ -46,7 +46,7 @@ function layerCleanerOptions(){
             var cleanLayerStyles = optionsGroup.add( "Checkbox" , undefined , "All the Layer Styles" );
             cleanLayerStyles.characters = 16 ;
             cleanLayerStyles.value = savedCleanLayerStyles ;
-        var resetLayerTransform = cleanLayerOptnsDlg.add( "Checkbox" , undefined , { en: " - Reset Layer." , fr: " - RàZ le.s Calque.s."} );
+        var resetLayerTransform = cleanLayerOptnsDlg.add( "Checkbox" , undefined , " - Reset Layer." );
         resetLayerTransform.characters = 15 ;
         resetLayerTransform.value = savedReinitLayer ;
         var btnsRow = cleanLayerOptnsDlg.add( "group" );
@@ -139,7 +139,7 @@ function layerCleaner( showEndAlert , createUndoGroup ){
             layerSelection[i].selected = true ;
         }
         if( showEndAlert ){
-            CTalertDlg( "I'm Done" , "I've finished Cleaning your layers" );
+            CTalertDlg( "I'm Done" , "   I've finished Cleaning your layers" );
         }
         return true ;
     } else {

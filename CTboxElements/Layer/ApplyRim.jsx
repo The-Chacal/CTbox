@@ -95,7 +95,7 @@ function applyRim( isOutsideRim ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( "I'm Done" , "I've created the Rim for your layer(s)." );
+        CTalertDlg( "I'm Done" , "   I've created the Rim for your layer(s)." );
     }
     
 }
