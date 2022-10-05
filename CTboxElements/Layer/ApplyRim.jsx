@@ -4,9 +4,9 @@
 
 /**
  * Creates a Rim Light in Overlay mode over the layer
- * @param { boolean } outsideRim is the Rim on the outside or inside of the charater.
+ * @param { boolean } isOutsideRim is the Rim on the outside or inside of the charater.
  */
-function applyRim( outsideRim ){
+function applyRim( isOutsideRim ){
 
     var layerSelection = CTcheckSelectedLayers();
     //Saving the modifiers keys.
@@ -24,11 +24,20 @@ function applyRim( outsideRim ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.
             app.beginUndoGroup( "Applying Rim." );
-            var rimSettingsName = "CTbox - Rim - Settings";
-            if( hasID ){
-                //Generating the unique Id for the Rim.
-                var rimLayerId = CTgenerateIdNb();
-                var rimSettingsName = "CTbox - Rim id" + rimLayerId + " - Settings";
+            if( isOutsideRim){
+                var rimSettingsName = "CTbox - OutsideRim - Settings";
+                if( hasID ){
+                    //Generating the unique Id for the Rim.
+                    var rimLayerId = CTgenerateIdNb();
+                    rimSettingsName = "CTbox - OutsideRim id" + rimLayerId + " - Settings";
+                }
+            } else {
+                var rimSettingsName = "CTbox - InsideRim - Settings";
+                if( hasID ){
+                    //Generating the unique Id for the Rim.
+                    var rimLayerId = CTgenerateIdNb();
+                    rimSettingsName = "CTbox - InsideRim id" + rimLayerId + " - Settings";
+                }
             }
             //Creating the Gradient layer from the selected layer.
             layerSelection[i].selected = true ;
@@ -36,7 +45,7 @@ function applyRim( outsideRim ){
             rimLayer.label = 2 ;
             rimLayer.parent = layerSelection[i];
             rimLayer.shy = true ;
-            if( outsideRim ){
+            if( isOutsideRim ){
                 if( hasID ){
                     rimLayer.name = layerSelection[i].name + " - OutsideRim - id" + rimLayerId ;
                 } else {
@@ -66,7 +75,7 @@ function applyRim( outsideRim ){
             app.project.autoFixExpressions( "XXX" , layerSelection[i].name );
             app.project.autoFixExpressions( "CTbox - Rim - Settings" , rimSettingsName );
             //Setting the Color.
-            if( outsideRim ){
+            if( isOutsideRim ){
                 layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(1).setValue( [ .835 , .788 , .725 ] );
             } else {
                 layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(1).setValue( [ .700 , .630 , .559 ] );
