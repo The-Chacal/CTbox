@@ -129,7 +129,7 @@ if( AverageDelta == 0 )\
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( "I'm Done" , "I've finished detecting Animation on your layers." );
+        CTalertDlg( "I'm Done" , "   I've finished detecting Animation on your layers." );
         return true ;
     }
     return false ;

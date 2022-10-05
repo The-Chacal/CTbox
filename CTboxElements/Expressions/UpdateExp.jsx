@@ -103,7 +103,7 @@ function updateExp( textA , textB , worksOnLayers , showEndAlert , createUndoGro
                 }
             }
             if( showEndAlert ){
-                CTalertDlg( "I'm Done" , "I've finished updating your expressions" );
+                CTalertDlg( "I'm Done" , "   I've finished updating your expressions" );
             }
         }
     }

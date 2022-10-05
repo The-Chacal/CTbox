@@ -22,7 +22,7 @@ function applyGradient(){
         var scriptFolder = CTgetScriptFolder();
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup
-            app.beginUndoGroup( { en: "Applying Gradient." , fr: "Ajout de Dégradé." } );
+            app.beginUndoGroup( "Applying Gradient." );
             var gradientSettingsName = "CTbox - Gradient - Settings";
             if( hasID ){
                 //Generating the unique Id for the Gradient.
@@ -70,7 +70,7 @@ function applyGradient(){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             layerSelection[i].selected = true ;
         }
-        CTalertDlg( { en: "I'm Done" , fr: "J'ai Fini" } , { en: "I've created the Gradient for your layer(s)." , fr: "J'ai fini de créer le degradé pour le(s) calque(s)." } );
+        CTalertDlg( "I'm Done" , "   I've created the Gradient for your layer(s)." );
     }
     
 }

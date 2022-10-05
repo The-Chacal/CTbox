@@ -66,7 +66,7 @@ function layerAnalyser( checkTransformProperties , checkEffects , checkLayerStyl
             //Closing The UndoGroup
             app.endUndoGroup();
         }
-        CTalertDlg( "I'm Done" , "I've finished creating Markers on your layers." );
+        CTalertDlg( "I'm Done" , "   I've finished creating Markers on your layers." );
         return true ;
     } else {
         return false ;

@@ -200,7 +200,7 @@ function copyMarkers( RefLayerIndex , dlgGroup ){
         app.endUndoGroup();
 
     }
-    CTalertDlg( "I'm Done" , "I've finished copying Markers." );
+    CTalertDlg( "I'm Done" , "    I've finished copying Markers." );
     return true ;
 
 }
