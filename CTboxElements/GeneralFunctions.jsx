@@ -84,7 +84,7 @@ function CTcheckSelectedLayers(){
     var layersSelected = [] ;
     if( app.project.activeItem != undefined && app.project.activeItem.selectedLayers.length > 0 ){
         layersSelected = app.project.activeItem.selectedLayers ;
-        while( app.project.activeItem.selectedLayers > 0 ){ app.project.activeItem.selectedLayers[0].selected = false }
+        while( app.project.activeItem.selectedLayers.length > 0 ){ app.project.activeItem.selectedLayers[0].selected = false }
     }
     return layersSelected ;
 
