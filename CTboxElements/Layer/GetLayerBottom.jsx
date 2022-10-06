@@ -34,6 +34,8 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             }
             //Opening the UndoGroup.
             if( hasUndoGroup ){ app.beginUndoGroup( "Lowest Point Detection" ); }
+            //Selecting the layer to work on.
+            layerSelection[i].selected = true ;
             //Getting the saved Parameters.
             var verticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
             if( verticalOriginalStep == null ){ verticalOriginalStep = 50 };
@@ -223,6 +225,8 @@ X";
             layerSelection[i].property("ADBE Effect Parade").property( "DetectedY" ).remove();
             layerSelection[i].property("ADBE Effect Parade").property( "DetectedXleft" ).remove();
             layerSelection[i].property("ADBE Effect Parade").property( "DetectedXright" ).remove();
+            //Unselecting the active layer.
+            layerSelection[i].selected = false ;
             //Closing the UndoGroup
             if( hasUndoGroup ){ app.endUndoGroup(); }
         }
