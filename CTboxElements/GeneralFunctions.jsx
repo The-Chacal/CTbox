@@ -313,7 +313,7 @@ function CTgetScriptFolder(){
 
 }
 /**
- * Check which modifiers are pressed and retuns the status of all the modifiers.
+ * Checks which modifiers are pressed and retuns the status of all the modifiers.
  * @returns { object } An object containing ctrlState, majState, altState corresponding to the state of the keys.
  */
  function CTmodifiersStatuses(){
@@ -327,5 +327,39 @@ function CTgetScriptFolder(){
     modifiers.altState = keysState.altKey ;
     //Returning the object.
     return modifiers ;
+
+}
+/**
+ * Returns an array containing the key objects of a property
+ * @param { object } property The property object you want to say the keys of.
+ * @returns { array } An array containing all of the keys object of the selected property.
+ */
+function CTsavePropertyKeys( property ){
+    
+    var propertyKeys = [] ;
+    if( property.numKeys !== "undefined" && property.numKeys > 0 ){
+        for( var i = 1 ; i <= property.numKeys ; i++ ){
+            var key = new Object();
+            key.time = property.keyTime( i ) ;
+            key.value = property.keyValue( i ) ;
+            key.inInterpolationType = property.keyInInterpolationType( i );
+            key.outInterpolationType = property.keyOutInterpolationType( i );
+            if( property.propertyValueType == PropertyValueType.ThreeD_SPATIAL || property.propertyValueType == PropertyValueType.TwoD_SPATIAL ){
+                key.spatial = true ;
+                key.inTangent = property.keyInSpatialTangent( i );
+                key.outTangent = property.keyOutSpatialTangent( i );
+                key.continuous = property.keySpatialContinuous( i );
+                key.autoBezier = property.keySpatialAutoBezier( i );
+                key.roving = property.keyRoving( i );
+            }
+            key.inEase = property.keyInTemporalEase( i );
+            key.outEase = property.keyOutTemporalEase( i );
+            key.continuous = property.keyTemporalContinuous( i );
+            key.autoBezier = property.keyTemporalAutoBezier( i );
+            key.index = i;
+            propertyKeys.push( key );
+        }
+    }
+    return propertyKeys
 
 }
