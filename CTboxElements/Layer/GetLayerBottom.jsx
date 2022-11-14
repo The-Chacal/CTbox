@@ -16,7 +16,10 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
     var layerSelection = CTcheckSelectedLayers() ;
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
-            //Creating a variable for the existance of previously created lowest Point.
+            //Saving the start and end time of the layer.
+            var analysisStartTime = Math.floor( layerSelection[i].inPoint * 100  );
+            var analysisEndTime = Math.floor( layerSelection[i].outPoint * 100 );
+            //Creating a variables for the existance of previously created lowest Point.
             var existingLowestPoint = false ;
             var lowestPointKeys = [];
             //Check if the Content lowest point has already been detected or not.
@@ -228,8 +231,10 @@ X";
             }
             if( existingLowestPoint && lowestPointKeys.length > 0 ){
                 for( j = 0 ; j < lowestPointKeys.length ; j++ ){
-                    lowestPoint.property(2).setValueAtTime( lowestPointKeys[j].time , lowestPointKeys[j].value );
-                    lowestPoint.property(2).setInterpolationTypeAtKey( lowestPoint.property(2).nearestKeyIndex( lowestPointKeys[j].time ) , lowestPointKeys[j].inInterpolationType , lowestPointKeys[j].outInterpolationType );
+                    if( Math.floor( lowestPointKeys[j].time * 100 ) < analysisStartTime || Math.floor( lowestPointKeys[j].time * 100 ) >= analysisEndTime ){
+                        lowestPoint.property(2).setValueAtTime( lowestPointKeys[j].time , lowestPointKeys[j].value );
+                        lowestPoint.property(2).setInterpolationTypeAtKey( lowestPoint.property(2).nearestKeyIndex( lowestPointKeys[j].time ) , lowestPointKeys[j].inInterpolationType , lowestPointKeys[j].outInterpolationType );
+                    }
                 }
             }
             lowestPoint.property(2).selected = false ;
