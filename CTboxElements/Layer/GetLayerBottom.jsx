@@ -16,9 +16,17 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
     var layerSelection = CTcheckSelectedLayers() ;
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
+            //Creating a variable for the existance of previously created lowest Point.
+            var existingLowestPoint = false ;
+            var lowestPointKeys = [];
             //Check if the Content lowest point has already been detected or not.
-            if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null && !CTchoiceDlg( "Arg..." , "   It seems like you have already detected the content lowest point for the layer \"" + layerSelection[i].name + "\".\n\n   Are you sure that you want to do it again?" ) ){
+            if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null ){
+                if( !CTchoiceDlg( "Arg..." , "   It seems like you have already detected the content lowest point for the layer \"" + layerSelection[i].name + "\".\n\n   Are you sure that you want to do it again?" ) ){
                 return false ;
+                } else {
+                    existingLowestPoint = true ;
+                    lowestPointKeys = CTsavePropertyKeys( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ).property( 2 ) );
+                }
             }
             //Checks if there is any effects on the layer and asks to continue or not if there is some.
             if( layerSelection[i].property("ADBE Effect Parade").numProperties > 0 ){
@@ -199,7 +207,7 @@ function preciseX( searchedX , Y , Step , StartX, direction ){\
 \
 X";
             //Applying the final preset.
-            layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) );
+            if( !existingLowestPoint ){ layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
             var lowestPoint = layerSelection[i].property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
             lowestPoint.property(2).expression = "//---------- Links ----------\
             var DetectedY = effect(\"DetectedY\")(1);\
@@ -217,6 +225,12 @@ X";
             for( var j = 1 ; j <= lowestPoint.property(2).numKeys ; j++ )
             {
                 lowestPoint.property(2).setInterpolationTypeAtKey( j , KeyframeInterpolationType.HOLD , KeyframeInterpolationType.HOLD );
+            }
+            if( existingLowestPoint && lowestPointKeys.length > 0 ){
+                for( j = 0 ; j < lowestPointKeys.length ; j++ ){
+                    lowestPoint.property(2).setValueAtTime( lowestPointKeys[j].time , lowestPointKeys[j].value );
+                    lowestPoint.property(2).setInterpolationTypeAtKey( lowestPoint.property(2).nearestKeyIndex( lowestPointKeys[j].time ) , lowestPointKeys[j].inInterpolationType , lowestPointKeys[j].outInterpolationType );
+                }
             }
             lowestPoint.property(2).selected = false ;
             //Removing the expression of the final point.
