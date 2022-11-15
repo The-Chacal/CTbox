@@ -340,7 +340,7 @@ function CTsavePropertyKeys( property ){
     if( property.numKeys !== "undefined" && property.numKeys > 0 ){
         for( var i = 1 ; i <= property.numKeys ; i++ ){
             var key = new Object();
-            key.time = property.keyTime( i ) ;
+            key.time = property.keyTime( i );
             key.value = property.keyValue( i ) ;
             key.inInterpolationType = property.keyInInterpolationType( i );
             key.outInterpolationType = property.keyOutInterpolationType( i );
