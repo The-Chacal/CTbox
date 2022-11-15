@@ -12,20 +12,46 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
 
     //Getting the path to the Script on the Computer.
     var scriptFolder = CTgetScriptFolder();
+    //Saving the modifiers keys statuses.
+    var modifiers = CTmodifiersStatuses() ;
     //Starting the true work.
     var layerSelection = CTcheckSelectedLayers() ;
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Saving the start and end time of the layer.
-            var analysisStartTime = Math.floor( layerSelection[i].inPoint * 100  );
-            var analysisEndTime = Math.floor( layerSelection[i].outPoint * 100 );
+            var layerInPoint = layerSelection[i].inPoint ;
+            var layerOutPoint = layerSelection[i].outPoint ;
+            //Creating variables for the start and end of the analysis depending of the shortcuts.
+            var analysisStartTime = layerInPoint ;
+            var analysisEndTime = layerOutPoint ;
+            var activeItem = app.project.activeItem ;
+            if( modifiers.ctrlState && modifiers.majState ){
+                var currentTime = activeItem.time ;
+                if( currentTime < analysisStartTime ){
+                    analysisEndTime = analysisStartTime + activeItem.frameDuration ;
+                } else if( currentTime >= analysisEndTime ){
+                    analysisStartTime = analysisEndTime - activeItem.frameDuration ;
+                } else {
+                    analysisStartTime = activeItem.time ;
+                    analysisEndTime = analysisStartTime + activeItem.frameDuration ;
+                }
+            } else if( modifiers.ctrlState ){
+                var workAreaStartTime = activeItem.workAreaStart ;
+                var workAreaEndTime = workAreaStartTime + activeItem.workAreaDuration ;
+                if( workAreaStartTime > analysisStartTime ){
+                    analysisStartTime = workAreaStartTime ;
+                }
+                if( workAreaEndTime < analysisEndTime ){
+                    analysisEndTime = workAreaEndTime ;
+                }
+            }
             //Creating a variables for the existance of previously created lowest Point.
             var existingLowestPoint = false ;
             var lowestPointKeys = [];
             //Check if the Content lowest point has already been detected or not.
             if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null ){
                 if( !CTchoiceDlg( "Arg..." , "   It seems like you have already detected the content lowest point for the layer \"" + layerSelection[i].name + "\".\n\n   Are you sure that you want to do it again?" ) ){
-                return false ;
+                    return false ;
                 } else {
                     existingLowestPoint = true ;
                     lowestPointKeys = CTsavePropertyKeys( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ).property( 2 ) );
@@ -47,6 +73,9 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             if( hasUndoGroup ){ app.beginUndoGroup( "Lowest Point Detection" ); }
             //Selecting the layer to work on.
             layerSelection[i].selected = true ;
+            //Setting the in and out Points of the layer for the analysis.
+            layerSelection[i].inPoint = analysisStartTime ;
+            layerSelection[i].outPoint = analysisEndTime ;
             //Getting the saved Parameters.
             var verticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
             if( verticalOriginalStep == null ){ verticalOriginalStep = 50 };
@@ -231,7 +260,7 @@ X";
             }
             if( existingLowestPoint && lowestPointKeys.length > 0 ){
                 for( j = 0 ; j < lowestPointKeys.length ; j++ ){
-                    if( Math.floor( lowestPointKeys[j].time * 100 ) < analysisStartTime || Math.floor( lowestPointKeys[j].time * 100 ) >= analysisEndTime ){
+                    if( lowestPointKeys[j].time < analysisStartTime || lowestPointKeys[j].time.toFixed(2) >= analysisEndTime.toFixed(2) ){
                         lowestPoint.property(2).setValueAtTime( lowestPointKeys[j].time , lowestPointKeys[j].value );
                         lowestPoint.property(2).setInterpolationTypeAtKey( lowestPoint.property(2).nearestKeyIndex( lowestPointKeys[j].time ) , lowestPointKeys[j].inInterpolationType , lowestPointKeys[j].outInterpolationType );
                     }
@@ -244,6 +273,9 @@ X";
             layerSelection[i].property("ADBE Effect Parade").property( "DetectedY" ).remove();
             layerSelection[i].property("ADBE Effect Parade").property( "DetectedXleft" ).remove();
             layerSelection[i].property("ADBE Effect Parade").property( "DetectedXright" ).remove();
+            //Restoring the in and out Points of the layer.
+            layerSelection[i].inPoint = layerInPoint ;
+            layerSelection[i].outPoint = layerOutPoint ;
             //Unselecting the active layer.
             layerSelection[i].selected = false ;
             //Closing the UndoGroup
