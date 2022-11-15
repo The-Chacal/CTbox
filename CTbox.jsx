@@ -109,7 +109,7 @@ function CTbuildUI( thisObj ){
             Block02.spacing = 2 ;
             Block02.visible = false ;
                 var B2Btn01 = Block02.add( "button" , undefined , "Loc. Bot." );
-                B2Btn01.helpTip = "   Locate the lowest alpha point on the selected Layer\n   This script adds a Point Effect to the Layer.\n   ALT + Click > \"Get Lowest Layer Point\" Options.";
+                B2Btn01.helpTip = "   Locate the lowest alpha point on the selected Layer\n   This script adds a Point Effect to the Layer.\n   CTRL + Click > The analysis is done over the Work Area.\n   CTRL + MAJ + Click > The analysis is done on the current Time only.\n   ALT + Click > \"Get Lowest Layer Point\" Options.";
                 B2Btn01.size = btnsSize ;
                 var B2Btn02 = Block02.add( "button" , undefined , "Det. Anim." );
                 B2Btn02.helpTip = "   Add a Marker on the Layer if it \"moves\".\n   ALT + Click > \"Animation Detector\" Options." ;
