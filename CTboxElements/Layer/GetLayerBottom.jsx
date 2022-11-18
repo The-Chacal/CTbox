@@ -16,8 +16,17 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
     var modifiers = CTmodifiersStatuses() ;
     //Starting the true work.
     var layerSelection = CTcheckSelectedLayers() ;
+    var layersToAnalyse = []
     if( layerSelection.length > 0 ){
         for( var i = 0 ; i < layerSelection.length ; i++ ){
+            //Creating an object to store layers properties.
+            var layer = new Object();
+            //Storing layer object and layer name.
+            layer.toBeProcessed = true ;
+            layer.object = layerSelection[i];
+            layer.name = layerSelection[i].name ;
+            layer.inPoint = layerSelection[i].inPoint ;
+            layer.outPoint = layerSelection[i].outPoint ;
             //Saving the start and end time of the layer.
             var layerInPoint = layerSelection[i].inPoint ;
             var layerOutPoint = layerSelection[i].outPoint ;
@@ -45,37 +54,39 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
                     analysisEndTime = workAreaEndTime ;
                 }
             }
-            //Creating a variables for the existance of previously created lowest Point.
-            var existingLowestPoint = false ;
-            var lowestPointKeys = [];
+            //storing the analysis limits and duration.
+            layer.analysisStartTime = analysisStartTime ;
+            layer.analysisEndTime = analysisEndTime ;
+            layer.analysisDuration = analysisEndTime - analysisStartTime ;
+            //Creating a variables for the existance of previously created lowest Point and effects active.
+            layer.hasEffectActive = false ;
+            layer.existingLowestPoint = false ;
+            layer.lowestPointKeys = [];
             //Check if the Content lowest point has already been detected or not.
             if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null ){
-                if( !CTchoiceDlg( "Arg..." , "   It seems like you have already detected the content lowest point for the layer \"" + layerSelection[i].name + "\".\n\n   Are you sure that you want to do it again?" ) ){
-                    return false ;
-                } else {
-                    existingLowestPoint = true ;
-                    lowestPointKeys = CTsavePropertyKeys( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ).property( 2 ) );
-                }
+                layer.existingLowestPoint = true ;
+                layer.lowestPointKeys = CTsavePropertyKeys( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ).property( 2 ) );
             }
             //Checks if there is any effects on the layer and asks to continue or not if there is some.
             if( layerSelection[i].property("ADBE Effect Parade").numProperties > 0 ){
                 for( var j = 1 ; j <= layerSelection[i].property("ADBE Effect Parade").numProperties ; j++ ){
                     if( layerSelection[i].property("ADBE Effect Parade").property(j).name != "CTbox - Content Lowest Point" && layerSelection[i].property("ADBE Effect Parade").property(j).active ){
-                        if( !CTchoiceDlg( "So..." , "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , "Continue" , "Modify" ) ){
-                            return false ;
-                        } else {
-                            break ;
-                        }
+                        layer.hasEffectActive = true ;
+                        break ;
                     } 
                 }
             }
+            //Storing the layer object in the array.
+            layersToAnalyse.push( layer );
+        }
+        for( var i = 0 ; i < layersToAnalyse.length ; i++ ){
             //Opening the UndoGroup.
             if( hasUndoGroup ){ app.beginUndoGroup( "Lowest Point Detection" ); }
             //Selecting the layer to work on.
-            layerSelection[i].selected = true ;
+            layersToAnalyse[i].object.selected = true ;
             //Setting the in and out Points of the layer for the analysis.
-            layerSelection[i].inPoint = analysisStartTime ;
-            layerSelection[i].outPoint = analysisEndTime ;
+            layersToAnalyse[i].object.inPoint = layersToAnalyse[i].analysisStartTime ;
+            layersToAnalyse[i].object.outPoint = layersToAnalyse[i].analysisEndTime ;
             //Getting the saved Parameters.
             var verticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
             if( verticalOriginalStep == null ){ verticalOriginalStep = 50 };
@@ -84,7 +95,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             var horizontalScanHeight = CTgetSavedString( "CTboxSave" , "horizontalScanHeight" );
             if( horizontalScanHeight == null ){ horizontalScanHeight = 50 };
             //Adding sliders with expression to get the final point.
-            var Yslider = layerSelection[i].property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
+            var Yslider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
             Yslider.name = "DetectedY";
             Yslider.property(1).expression = "var originalStep = " + verticalOriginalStep + " ;\
 var H = thisLayer.height - 1;\
@@ -134,7 +145,7 @@ function preciseY( searchedY , Step , StartY, direction ){\
 }\
 \
 Y";
-            var XleftSlider = layerSelection[i].property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
+            var XleftSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
             XleftSlider.name = "DetectedXleft";
             XleftSlider.property(1).expression = "var originalStep = " + horizontalOriginalStep + " ;\
 var originalHeight = " + horizontalScanHeight + " ;\
@@ -186,7 +197,7 @@ function preciseX( searchedX , Y , Step , StartX, direction ){\
 }\
 \
 X";
-            var XrightSlider = layerSelection[i].property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
+            var XrightSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
             XrightSlider.name = "DetectedXright";
             XrightSlider.property(1).expression = "var originalStep = " + horizontalOriginalStep + " ;\
 var originalHeight = " + horizontalScanHeight + " ;\
@@ -239,8 +250,8 @@ function preciseX( searchedX , Y , Step , StartX, direction ){\
 \
 X";
             //Applying the final preset.
-            if( !existingLowestPoint ){ layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
-            var lowestPoint = layerSelection[i].property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
+            if( !layersToAnalyse[i].existingLowestPoint ){ layersToAnalyse[i].object.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
+            var lowestPoint = layersToAnalyse[i].object.property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
             lowestPoint.property(2).expression = "//---------- Links ----------\
             var DetectedY = effect(\"DetectedY\")(1);\
             var DetectedXleft = effect(\"DetectedXleft\")(1);\
@@ -258,11 +269,11 @@ X";
             {
                 lowestPoint.property(2).setInterpolationTypeAtKey( j , KeyframeInterpolationType.HOLD , KeyframeInterpolationType.HOLD );
             }
-            if( existingLowestPoint && lowestPointKeys.length > 0 ){
-                for( j = 0 ; j < lowestPointKeys.length ; j++ ){
-                    if( lowestPointKeys[j].time < analysisStartTime || lowestPointKeys[j].time.toFixed(2) >= analysisEndTime.toFixed(2) ){
-                        lowestPoint.property(2).setValueAtTime( lowestPointKeys[j].time , lowestPointKeys[j].value );
-                        lowestPoint.property(2).setInterpolationTypeAtKey( lowestPoint.property(2).nearestKeyIndex( lowestPointKeys[j].time ) , lowestPointKeys[j].inInterpolationType , lowestPointKeys[j].outInterpolationType );
+            if( layersToAnalyse[i].existingLowestPoint && layersToAnalyse[i].lowestPointKeys.length > 0 ){
+                for( j = 0 ; j < layersToAnalyse[i].lowestPointKeys.length ; j++ ){
+                    if( layersToAnalyse[i].lowestPointKeys[j].time < analysisStartTime || layersToAnalyse[i].lowestPointKeys[j].time.toFixed(2) >= analysisEndTime.toFixed(2) ){
+                        lowestPoint.property(2).setValueAtTime( layersToAnalyse[i].lowestPointKeys[j].time , layersToAnalyse[i].lowestPointKeys[j].value );
+                        lowestPoint.property(2).setInterpolationTypeAtKey( lowestPoint.property(2).nearestKeyIndex( layersToAnalyse[i].lowestPointKeys[j].time ) , layersToAnalyse[i].lowestPointKeys[j].inInterpolationType , layersToAnalyse[i].lowestPointKeys[j].outInterpolationType );
                     }
                 }
             }
@@ -270,14 +281,14 @@ X";
             //Removing the expression of the final point.
             lowestPoint.property(2).expression = "" ;
             //Removing the now useless Sliders with heavy expressions.
-            layerSelection[i].property("ADBE Effect Parade").property( "DetectedY" ).remove();
-            layerSelection[i].property("ADBE Effect Parade").property( "DetectedXleft" ).remove();
-            layerSelection[i].property("ADBE Effect Parade").property( "DetectedXright" ).remove();
+            layersToAnalyse[i].object.property("ADBE Effect Parade").property( "DetectedY" ).remove();
+            layersToAnalyse[i].object.property("ADBE Effect Parade").property( "DetectedXleft" ).remove();
+            layersToAnalyse[i].object.property("ADBE Effect Parade").property( "DetectedXright" ).remove();
             //Restoring the in and out Points of the layer.
-            layerSelection[i].inPoint = layerInPoint ;
-            layerSelection[i].outPoint = layerOutPoint ;
+            layersToAnalyse[i].object.inPoint = layer.inPoint ;
+            layersToAnalyse[i].object.outPoint = layer.outPoint ;
             //Unselecting the active layer.
-            layerSelection[i].selected = false ;
+            layersToAnalyse[i].selected = false ;
             //Closing the UndoGroup
             if( hasUndoGroup ){ app.endUndoGroup(); }
         }
