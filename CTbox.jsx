@@ -223,7 +223,7 @@ function CTbuildUI( thisObj ){
     B1Btn03.onClick = markerAccum ;
     B1Btn04.onClick = markerAnimation ;
     //UI events for Block02.
-    B2Btn01.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ getLayerBottom( true , true ); } else { getLayerBottomOptions(); } };
+    B2Btn01.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ getLayerBottom( false , true ); } else { getLayerBottomOptions(); } };
     B2Btn02.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ detectAnimation(); } else { getAnimDetectionOptions(); } };
     B2Btn03.onClick = applyGradient ;
     B2Btn04a.onClick = function(){ applyRim( true ); };
