@@ -322,7 +322,13 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
  */
 function layerBottomDetectionDialog( layers ){
     var dlg = new Window( "dialog" , "Layer Bottom Detection Choice" , undefined , { borderless : true } );
-    dlg.spacing = 2 ;
+    dlg.group = dlg.add( "group" );
+    dlg.group.alignChildren = "fill" ;
+    dlg.group.spacing = 2 ;
+    dlg.lines = dlg.group.add( "group" );
+    dlg.lines.maximumSize = [ 250 , 10000 ];
+    dlg.lines.orientation = "column" ;
+    dlg.lines.spacing = 2 ;
     //Creating lines for each layer selected.
     for( var i = 0 ; i < layers.length ; i++ ){
         //Creating the warning text according to the  characteristics of the layer.
@@ -352,27 +358,27 @@ function layerBottomDetectionDialog( layers ){
             warningText += "\n\n   This might affect the length of the analysis in heavy proportions...\n    Even cause crashes..."
         }
         //Actually creating the lines.
-        var line = dlg.add( "panel" , undefined , layers[i].index + " - " + layers[i].name + " :" );
+        var line = dlg.lines.add( "panel" , undefined , layers[i].index + " - " + layers[i].name + " :" );
         line.alignChildren = [ "left" , "center" ];
         line.spacing = 2 ;
         line.margins = [ 5 , 10 , 5 , 5 ];
-            var layerWarnings = line.add( "Panel" , undefined , "Warning : " );
-            layerWarnings.alignment = "Fill" ;
-            layerWarnings.margins = [ 15 , 10 , 5 , 5 ];
-                var warnings = {}
-                if( warningText == " > This layer is out of Bounds." || warningText == " > Nothing to worry about."){
-                    warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : false } );
-                } else { 
-                    warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : true } );
-                }
-                warnings.alignment = "Fill" ;
-            var layerChoice = line.add( "group" );
-                layerChoice.add( "statictext" , undefined , "Discard this layer ?");
-                var layerDiscard = layerChoice.add( "radiobutton" , undefined , " - Yes.");
-                layerDiscard.characters = 4 ;
-                var layerNotDiscard = layerChoice.add( "radiobutton" , undefined , " - No.");
-                layerNotDiscard.characters = 4 ;
-                layerNotDiscard.value = true ;
+        var layerWarnings = line.add( "Panel" , undefined , "Warning : " );
+        layerWarnings.alignment = "Fill" ;
+        layerWarnings.margins = [ 15 , 10 , 5 , 5 ];
+        var warnings = {}
+        if( warningText == " > This layer is out of Bounds." || warningText == " > Nothing to worry about."){
+            warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : false } );
+        } else { 
+            warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : true } );
+        }
+        warnings.alignment = "Fill" ;
+        var layerChoice = line.add( "group" );
+        layerChoice.add( "statictext" , undefined , "Discard this layer ?");
+        var layerDiscard = layerChoice.add( "radiobutton" , undefined , " - Yes.");
+        layerDiscard.characters = 4 ;
+        var layerNotDiscard = layerChoice.add( "radiobutton" , undefined , " - No.");
+        layerNotDiscard.characters = 4 ;
+        layerNotDiscard.value = true ;
         
         //Updating radio buttons according to the warning message.
         if( warnings.text == " > This layer is out of Bounds." ){
@@ -380,6 +386,18 @@ function layerBottomDetectionDialog( layers ){
             layerDiscard.enabled = false ;
             layerNotDiscard.enabled = false ;
         }
+    }
+    //Calculating layout to know the height of the window.
+    dlg.layout.layout( true );
+    //Adding a scrollbar if the layers windows is too hight.
+    if( dlg.group.size[1] > 600 ){
+        dlg.group.maximumSize = [ dlg.group.size[0] + 12 , 600 ];
+        dlg.group.scrollbar = dlg.group.add( "group" );
+        dlg.group.scrollbar.maximumSize = [ 250 , 10000 ];
+        dlg.group.scrollbar.margins = [ 0 , 10 , 0 , 0 ];
+            var scrollbar = dlg.group.scrollbar.add( "scrollbar" );
+            scrollbar.size = [ 10 , 590 ];
+            scrollbar.alignment = [ "center" , "top" ];
     }
     //Creating the rest of the dialog.
     var saveChoiceLine = dlg.add( "panel" , undefined , "Think about it twice :" );
@@ -404,15 +422,19 @@ function layerBottomDetectionDialog( layers ){
             btnA.size = btnSize ;
             var btnB = btnsRow.add( "button" , undefined , "Cancel" );
             btnB.size = btnSize ;
+    //Updationg layout.
+    dlg.layout.layout( true );
     //UI parameters
     dlg.defaultElement = btnA ;
     //UI Events.
+    scrollbar.onChange = function(){ dlg.lines.location = [ 0 , 0 - ( ( dlg.lines.size[1] - dlg.group.size[1] ) * scrollbar.value / scrollbar.maxvalue ) ]; }
+    scrollbar.onChanging = function(){ dlg.lines.location = [ 0 , 0 - ( ( dlg.lines.size[1] - dlg.group.size[1] ) * scrollbar.value / scrollbar.maxvalue ) ]; }
     btnA.onClick = function(){
         if( saveTheFile.value ){
             app.project.save();
         }
-        for( i = 0 ; i < dlg.children.length - 2 ; i++ ){
-            if( dlg.children[i].children[1].children[1].value ){
+        for( i = 0 ; i < dlg.group.children.length ; i++ ){
+            if( dlg.group.children[i].children[1].children[1].value ){
                 layers[i].toBeProcessed = false ;
             }
         }
