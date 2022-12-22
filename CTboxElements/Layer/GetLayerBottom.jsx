@@ -85,7 +85,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             layersToAnalyse.push( layer );
         }
         //Opening the dialog allowing the user to chooser whether to continue or abort an analyse.
-        layersToAnalyse = layerBottomDetectionDialog( layersToAnalyse );
+        layersToAnalyse = layerAnalysisChoiceDialog( layersToAnalyse );
         //Analysing the layers selected.
         if( layersToAnalyse.length > 0 ){
             for( var i = 0 ; i < layersToAnalyse.length ; i++ ){
@@ -109,171 +109,171 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
                     var Yslider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
                     Yslider.name = "DetectedY";
                     Yslider.property(1).expression = "var originalStep = " + verticalOriginalStep + " ;\
-    var H = thisLayer.height - 1;\
-    var Y = searchFromHeight( H , originalStep , H );\
-    \
-    function searchFromHeight( searchedY , Step , StartY ){\
-    \
-        for( var i = StartY + .5 ; i >= 0 ; i -= Step )\
+var H = thisLayer.height - 1;\
+var Y = searchFromHeight( H , originalStep , H );\
+\
+function searchFromHeight( searchedY , Step , StartY ){\
+\
+    for( var i = StartY + .5 ; i >= 0 ; i -= Step )\
+    {\
+        var Alpha = thisLayer.sampleImage( [ thisLayer.width / 2 , i ] , [ thisLayer.width / 2 , .5 ] , true )[3];\
+        if( Alpha != 0 && i == thisLayer.height - .5)\
         {\
-            var Alpha = thisLayer.sampleImage( [ thisLayer.width / 2 , i ] , [ thisLayer.width / 2 , .5 ] , true )[3];\
-            if( Alpha != 0 && i == thisLayer.height - .5)\
-            {\
-                searchedY = i + .5 ;\
-                break ;\
-            } else if( Alpha != 0 ){\
-                searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , i - .5 + Math.floor( Step / 2 ) , 1 );\
-                break ;\
-            }\
+            searchedY = i + .5 ;\
+            break ;\
+        } else if( Alpha != 0 ){\
+            searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , i - .5 + Math.floor( Step / 2 ) , 1 );\
+            break ;\
         }\
-        return searchedY ;\
-    \
     }\
-    //direction : 0 to Top, 1 to Bottom.\
-    function preciseY( searchedY , Step , StartY, direction ){\
-    \
-        var Alpha = thisLayer.sampleImage( [ thisLayer.width / 2 , StartY + .5 ] , [ thisLayer.width / 2 , .5 ] , true )[3];\
-        if( Step == 1 ){\
-            if( Alpha == 0 )\
-            {\
-                searchedY = StartY - Step ;\
-                return searchedY ;\
-            } else if( direction = 1 ){\
-                searchedY = StartY + Step ;\
-                return searchedY ;\
-            } else {\
-                searchedY = StartY ;\
-                return searchedY ;\
-            }\
-        } else if( Alpha == 0 ){\
-            searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , StartY - Math.floor( Step / 2 ) , 0 );\
+    return searchedY ;\
+\
+}\
+//direction : 0 to Top, 1 to Bottom.\
+function preciseY( searchedY , Step , StartY, direction ){\
+\
+    var Alpha = thisLayer.sampleImage( [ thisLayer.width / 2 , StartY + .5 ] , [ thisLayer.width / 2 , .5 ] , true )[3];\
+    if( Step == 1 ){\
+        if( Alpha == 0 )\
+        {\
+            searchedY = StartY - Step ;\
+            return searchedY ;\
+        } else if( direction = 1 ){\
+            searchedY = StartY + Step ;\
             return searchedY ;\
         } else {\
-            searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , StartY + Math.floor( Step / 2 ) , 1 );\
+            searchedY = StartY ;\
             return searchedY ;\
         }\
-    \
+    } else if( Alpha == 0 ){\
+        searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , StartY - Math.floor( Step / 2 ) , 0 );\
+        return searchedY ;\
+    } else {\
+        searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , StartY + Math.floor( Step / 2 ) , 1 );\
+        return searchedY ;\
     }\
-    \
-    Y";
+\
+}\
+\
+Y";
                     var XleftSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
                     XleftSlider.name = "DetectedXleft";
                     XleftSlider.property(1).expression = "var originalStep = " + horizontalOriginalStep + " ;\
-    var originalHeight = " + horizontalScanHeight + " ;\
-    var W = thisLayer.width - 1 ;\
-    var Y = effect(\"DetectedY\")(1);\
-    var X = searchFromX0( 0 , Y , originalStep , W );\
-    \
-    function searchFromX0( searchedX , Y ,  Step , EndX ){\
-    \
-        for( var i = 0 + .5 ; i <= EndX - .5 ; i += Step )\
+var originalHeight = " + horizontalScanHeight + " ;\
+var W = thisLayer.width - 1 ;\
+var Y = effect(\"DetectedY\")(1);\
+var X = searchFromX0( 0 , Y , originalStep , W );\
+\
+function searchFromX0( searchedX , Y ,  Step , EndX ){\
+\
+    for( var i = 0 + .5 ; i <= EndX - .5 ; i += Step )\
+    {\
+        var Alpha = thisLayer.sampleImage( [ i , Y - 25 ] , [ .5 , 25 ] , true )[3];\
+        if( Alpha != 0 && i == .5)\
         {\
-            var Alpha = thisLayer.sampleImage( [ i , Y - 25 ] , [ .5 , 25 ] , true )[3];\
-            if( Alpha != 0 && i == .5)\
-            {\
-                searchedX = 0 ;\
-                break ;\
-            } else if( Alpha != 0 ){\
-                searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , i - .5 - Math.floor( Step / 2 ) , 0 );\
-                break ;\
-            }\
+            searchedX = 0 ;\
+            break ;\
+        } else if( Alpha != 0 ){\
+            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , i - .5 - Math.floor( Step / 2 ) , 0 );\
+            break ;\
         }\
-        return searchedX ;\
-    \
     }\
-    //direction : 0 to Left, 1 to Right.\
-    function preciseX( searchedX , Y , Step , StartX, direction ){\
-    \
-        var Alpha = thisLayer.sampleImage( [ StartX + .5 , Y - originalHeight ] , [ .5 , originalHeight ] , true )[3];\
-        if( Step == 1 ){\
-            if( Alpha == 0 )\
-            {\
-                searchedX = StartX + Step ;\
-                return searchedX ;\
-            } else if( direction = 1 ){\
-                searchedX = StartX - Step ;\
-                return searchedX ;\
-            } else {\
-                searchedX = StartX ;\
-                return searchedX ;\
-            }\
-        } else if( Alpha == 0 ){\
-            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX + Math.floor( Step / 2 ) , 1 );\
+    return searchedX ;\
+\
+}\
+//direction : 0 to Left, 1 to Right.\
+function preciseX( searchedX , Y , Step , StartX, direction ){\
+\
+    var Alpha = thisLayer.sampleImage( [ StartX + .5 , Y - originalHeight ] , [ .5 , originalHeight ] , true )[3];\
+    if( Step == 1 ){\
+        if( Alpha == 0 )\
+        {\
+            searchedX = StartX + Step ;\
+            return searchedX ;\
+        } else if( direction = 1 ){\
+            searchedX = StartX - Step ;\
             return searchedX ;\
         } else {\
-            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX - Math.floor( Step / 2 ) , 0 );\
+            searchedX = StartX ;\
             return searchedX ;\
         }\
-    \
+    } else if( Alpha == 0 ){\
+        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX + Math.floor( Step / 2 ) , 1 );\
+        return searchedX ;\
+    } else {\
+        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX - Math.floor( Step / 2 ) , 0 );\
+        return searchedX ;\
     }\
-    \
-    X";
+\
+}\
+\
+X";
                     var XrightSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
                     XrightSlider.name = "DetectedXright";
                     XrightSlider.property(1).expression = "var originalStep = " + horizontalOriginalStep + " ;\
-    var originalHeight = " + horizontalScanHeight + " ;\
-    var W = thisLayer.width - 1 ;\
-    var Y = effect(\"DetectedY\")(1);\
-    var X = searchFromWidth( W , Y , originalStep , W );\
-    \
-    function searchFromWidth( searchedX , Y ,  Step , StartX ){\
-    \
-        for( var i = StartX + .5 ; i >= 0 ; i -= Step )\
+var originalHeight = " + horizontalScanHeight + " ;\
+var W = thisLayer.width - 1 ;\
+var Y = effect(\"DetectedY\")(1);\
+var X = searchFromWidth( W , Y , originalStep , W );\
+\
+function searchFromWidth( searchedX , Y ,  Step , StartX ){\
+\
+    for( var i = StartX + .5 ; i >= 0 ; i -= Step )\
+    {\
+        var Alpha = thisLayer.sampleImage( [ i , Y - originalHeight ] , [ .5 , originalHeight ] , true )[3];\
+        if( Alpha != 0 && i == thisLayer.width - .5)\
         {\
-            var Alpha = thisLayer.sampleImage( [ i , Y - originalHeight ] , [ .5 , originalHeight ] , true )[3];\
-            if( Alpha != 0 && i == thisLayer.width - .5)\
-            {\
-                searchedX = i + .5 ;\
-                break ;\
-            } else if( Alpha != 0 ){\
-                searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , i - .5 + Math.floor( Step / 2 ) , 1 );\
-                break ;\
-            }\
+            searchedX = i + .5 ;\
+            break ;\
+        } else if( Alpha != 0 ){\
+            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , i - .5 + Math.floor( Step / 2 ) , 1 );\
+            break ;\
         }\
-        return searchedX ;\
-    \
     }\
-    //direction : 0 to Left, 1 to Right.\
-    function preciseX( searchedX , Y , Step , StartX, direction ){\
-    \
-        var Alpha = thisLayer.sampleImage( [ StartX + .5 , Y - 20 ] , [ .5 , 20 ] , true )[3];\
-        if( Step == 1 ){\
-            if( Alpha == 0 )\
-            {\
-                searchedX = StartX - Step ;\
-                return searchedX ;\
-            } else if( direction = 1 ){\
-                searchedX = StartX + Step ;\
-                return searchedX ;\
-            } else {\
-                searchedX = StartX ;\
-                return searchedX ;\
-            }\
-        } else if( Alpha == 0 ){\
-            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX - Math.floor( Step / 2 ) , 0 );\
+    return searchedX ;\
+\
+}\
+//direction : 0 to Left, 1 to Right.\
+function preciseX( searchedX , Y , Step , StartX, direction ){\
+\
+    var Alpha = thisLayer.sampleImage( [ StartX + .5 , Y - 20 ] , [ .5 , 20 ] , true )[3];\
+    if( Step == 1 ){\
+        if( Alpha == 0 )\
+        {\
+            searchedX = StartX - Step ;\
+            return searchedX ;\
+        } else if( direction = 1 ){\
+            searchedX = StartX + Step ;\
             return searchedX ;\
         } else {\
-            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX + Math.floor( Step / 2 ) , 1 );\
+            searchedX = StartX ;\
             return searchedX ;\
         }\
-    \
+    } else if( Alpha == 0 ){\
+        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX - Math.floor( Step / 2 ) , 0 );\
+        return searchedX ;\
+    } else {\
+        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX + Math.floor( Step / 2 ) , 1 );\
+        return searchedX ;\
     }\
-    \
-    X";
+\
+}\
+\
+X";
                     //Applying the final preset.
                     if( !layersToAnalyse[i].existingLowestPoint ){ layersToAnalyse[i].object.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
                     var lowestPoint = layersToAnalyse[i].object.property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
                     lowestPoint.property(2).expression = "//---------- Links ----------\
-    var DetectedY = effect(\"DetectedY\")(1);\
-    var DetectedXleft = effect(\"DetectedXleft\")(1);\
-    var DetectedXright = effect(\"DetectedXright\")(1);\
-    \
-    //---------- Code ----------\
-    var X = ( DetectedXleft + DetectedXright ) / 2 ;\
-    var Y = DetectedY ;\
-    \
-    //---------- End ----------\
-    [ X , Y ]"
+var DetectedY = effect(\"DetectedY\")(1);\
+var DetectedXleft = effect(\"DetectedXleft\")(1);\
+var DetectedXright = effect(\"DetectedXright\")(1);\
+\
+//---------- Code ----------\
+var X = ( DetectedXleft + DetectedXright ) / 2 ;\
+var Y = DetectedY ;\
+\
+//---------- End ----------\
+[ X , Y ]";
                     lowestPoint.property(2).selected = true ;
                     app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
                     for( var j = 1 ; j <= lowestPoint.property(2).numKeys ; j++ )
@@ -316,134 +316,6 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
     }
     
 }
-/**
- * Opens a dialog after checking the options of the layers to let the user decide if he wants to pursue or not for each layer.
- * @param { array } layers An array containing the layer object and caracteristics for the layer bottom detection.
- */
-function layerBottomDetectionDialog( layers ){
-    var dlg = new Window( "dialog" , "Layer Bottom Detection Choice" , undefined , { borderless : true } );
-    dlg.group = dlg.add( "group" );
-    dlg.group.alignChildren = "fill" ;
-    dlg.group.spacing = 2 ;
-    dlg.lines = dlg.group.add( "group" );
-    dlg.lines.maximumSize = [ 250 , 10000 ];
-    dlg.lines.orientation = "column" ;
-    dlg.lines.spacing = 2 ;
-    //Creating lines for each layer selected.
-    for( var i = 0 ; i < layers.length ; i++ ){
-        //Creating the warning text according to the  characteristics of the layer.
-        var warningText = "";
-        if( layers[i].analysisDuration.toFixed(2) == 0 ){
-            warningText = " > This layer is out of Bounds.";
-        }
-        if( warningText != " > This layer is out of Bounds." && layers[i].existingLowestPoint ){
-            warningText += " > This layer has already been analysed for lowest point.";
-        }
-        if( warningText != " > This layer is out of Bounds." && layers[i].hasEffectActive ){
-            warningText += " > This layer has active effects.";
-        }
-        if( warningText != " > This layer is out of Bounds." && layers[i].object.width > 3000 ){
-            warningText += " > This layer is more than 3000px in width.";
-        }
-        if( warningText != " > This layer is out of Bounds." && layers[i].object.height > 3000 ){
-            warningText += " > This layer is more than 3000px in height.";
-        }
-        if( warningText != " > This layer is out of Bounds." && layers[i].analysisDuration.toFixed(2) > 3 ){
-            warningText += " > This layer will be analysed over more than 5s.";
-        }
-        if( warningText == "" ){
-            warningText = " > Nothing to worry about."
-        } else if( warningText != " > This layer is out of Bounds." && warningText != " > This layer has already been analysed for lowest point." ){
-            warningText = warningText.replace( /. > /gm , ".\n > " );
-            warningText += "\n\n   This might affect the length of the analysis in heavy proportions...\n    Even cause crashes..."
-        }
-        //Actually creating the lines.
-        var line = dlg.lines.add( "panel" , undefined , layers[i].index + " - " + layers[i].name + " :" );
-        line.alignChildren = [ "left" , "center" ];
-        line.spacing = 2 ;
-        line.margins = [ 5 , 10 , 5 , 5 ];
-        var layerWarnings = line.add( "Panel" , undefined , "Warning : " );
-        layerWarnings.alignment = "Fill" ;
-        layerWarnings.margins = [ 15 , 10 , 5 , 5 ];
-        var warnings = {}
-        if( warningText == " > This layer is out of Bounds." || warningText == " > Nothing to worry about."){
-            warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : false } );
-        } else { 
-            warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : true } );
-        }
-        warnings.alignment = "Fill" ;
-        var layerChoice = line.add( "group" );
-        layerChoice.add( "statictext" , undefined , "Discard this layer ?");
-        var layerDiscard = layerChoice.add( "radiobutton" , undefined , " - Yes.");
-        layerDiscard.characters = 4 ;
-        var layerNotDiscard = layerChoice.add( "radiobutton" , undefined , " - No.");
-        layerNotDiscard.characters = 4 ;
-        layerNotDiscard.value = true ;
-        
-        //Updating radio buttons according to the warning message.
-        if( warnings.text == " > This layer is out of Bounds." ){
-            layerDiscard.value = true ;
-            layerDiscard.enabled = false ;
-            layerNotDiscard.enabled = false ;
-        }
-    }
-    //Calculating layout to know the height of the window.
-    dlg.layout.layout( true );
-    //Adding a scrollbar if the layers windows is too hight.
-    if( dlg.group.size[1] > 600 ){
-        dlg.group.maximumSize = [ dlg.group.size[0] + 12 , 600 ];
-        dlg.group.scrollbar = dlg.group.add( "group" );
-        dlg.group.scrollbar.maximumSize = [ 250 , 10000 ];
-        dlg.group.scrollbar.margins = [ 0 , 10 , 0 , 0 ];
-            var scrollbar = dlg.group.scrollbar.add( "scrollbar" );
-            scrollbar.size = [ 10 , 590 ];
-            scrollbar.alignment = [ "center" , "top" ];
-    }
-    //Creating the rest of the dialog.
-    var saveChoiceLine = dlg.add( "panel" , undefined , "Think about it twice :" );
-    saveChoiceLine.spacing = 0 ;
-    saveChoiceLine.alignment = "fill" ;
-    saveChoiceLine.alignChildren = "fill"
-        var saveChoiceText = saveChoiceLine.add( "statictext" , undefined , "   Do you want me to save before I start?" );
-        saveChoiceText.characters = 23 ;
-        saveChoiceText.alignment = "center" ;
-        var saveRadiosLine = saveChoiceLine.add( "group" );
-        saveRadiosLine.alignment = "center" ;
-            var saveTheFile = saveRadiosLine.add( "radiobutton" , undefined , " - Yes" );
-            saveTheFile.characters = 4 ;
-            saveTheFile.value = true ;
-            var saveNotTheFile = saveRadiosLine.add( "radiobutton" , undefined , " - No" );
-            saveNotTheFile.characters = 3 ;
-    var btnsRow = dlg.add( "group" );
-        btnsRow.orientation = "row" ;
-        btnsRow.spacing = 0 ;
-        var btnSize = [ 60 , 20 ];
-            var btnA = btnsRow.add( "button" , undefined , "Proceed" );
-            btnA.size = btnSize ;
-            var btnB = btnsRow.add( "button" , undefined , "Cancel" );
-            btnB.size = btnSize ;
-    //Updationg layout.
-    dlg.layout.layout( true );
-    //UI parameters
-    dlg.defaultElement = btnA ;
-    //UI Events.
-    scrollbar.onChange = function(){ dlg.lines.location = [ 0 , 0 - ( ( dlg.lines.size[1] - dlg.group.size[1] ) * scrollbar.value / scrollbar.maxvalue ) ]; }
-    scrollbar.onChanging = function(){ dlg.lines.location = [ 0 , 0 - ( ( dlg.lines.size[1] - dlg.group.size[1] ) * scrollbar.value / scrollbar.maxvalue ) ]; }
-    btnA.onClick = function(){
-        if( saveTheFile.value ){
-            app.project.save();
-        }
-        for( i = 0 ; i < dlg.group.children.length ; i++ ){
-            if( dlg.group.children[i].children[1].children[1].value ){
-                layers[i].toBeProcessed = false ;
-            }
-        }
-        dlg.close() ; }
-    btnB.onClick = function(){ layers = []; dlg.close() ; }
-    //Showing UI.
-    dlg.show();
-    return layers;
-} 
 /**
  * Opens a dialog allowing the user to set the option of the search for layer lowest point
  */
