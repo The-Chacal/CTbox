@@ -363,3 +363,133 @@ function CTsavePropertyKeys( property ){
     return propertyKeys
 
 }
+/**
+ * Opens a dialog after checking the options of the layers to let the user decide if he wants to pursue or not for each layer.
+ * @param { array } layers An array containing the layer object and caracteristics for the layer bottom detection.
+ */
+function layerAnalysisChoiceDialog( layers ){
+    var dlg = new Window( "dialog" , "Layer Bottom Detection Choice" , undefined , { borderless : true } );
+    dlg.group = dlg.add( "group" );
+    dlg.group.alignChildren = "fill" ;
+    dlg.group.spacing = 2 ;
+    dlg.lines = dlg.group.add( "group" );
+    dlg.lines.maximumSize = [ 250 , 10000 ];
+    dlg.lines.orientation = "column" ;
+    dlg.lines.spacing = 2 ;
+    //Creating lines for each layer selected.
+    for( var i = 0 ; i < layers.length ; i++ ){
+        //Creating the warning text according to the  characteristics of the layer.
+        var warningText = "";
+        if( layers[i].analysisDuration.toFixed(2) == 0 ){
+            warningText = " > This layer is out of Bounds.";
+        }
+        if( warningText != " > This layer is out of Bounds." && layers[i].existingLowestPoint ){
+            warningText += " > This layer has already been analysed for lowest point.";
+        }
+        if( warningText != " > This layer is out of Bounds." && layers[i].hasEffectActive ){
+            warningText += " > This layer has active effects.";
+        }
+        if( warningText != " > This layer is out of Bounds." && layers[i].object.width > 3000 ){
+            warningText += " > This layer is more than 3000px in width.";
+        }
+        if( warningText != " > This layer is out of Bounds." && layers[i].object.height > 3000 ){
+            warningText += " > This layer is more than 3000px in height.";
+        }
+        if( warningText != " > This layer is out of Bounds." && layers[i].analysisDuration.toFixed(2) > 3 ){
+            warningText += " > This layer will be analysed over more than 5s.";
+        }
+        if( warningText == "" ){
+            warningText = " > Nothing to worry about."
+        } else if( warningText != " > This layer is out of Bounds." && warningText != " > This layer has already been analysed for lowest point." ){
+            warningText = warningText.replace( /. > /gm , ".\n > " );
+            warningText += "\n\n   This might affect the length of the analysis in heavy proportions...\n    Even cause crashes..."
+        }
+        //Actually creating the lines.
+        var line = dlg.lines.add( "panel" , undefined , layers[i].index + " - " + layers[i].name + " :" );
+        line.alignChildren = [ "left" , "center" ];
+        line.spacing = 2 ;
+        line.margins = [ 5 , 10 , 5 , 5 ];
+        var layerWarnings = line.add( "Panel" , undefined , "Warning : " );
+        layerWarnings.alignment = "Fill" ;
+        layerWarnings.margins = [ 15 , 10 , 5 , 5 ];
+        var warnings = {}
+        if( warningText == " > This layer is out of Bounds." || warningText == " > Nothing to worry about."){
+            warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : false } );
+        } else { 
+            warnings = layerWarnings.add( "statictext" , undefined , warningText , { multiline : true } );
+        }
+        warnings.alignment = "Fill" ;
+        var layerChoice = line.add( "group" );
+        layerChoice.add( "statictext" , undefined , "Discard this layer ?");
+        var layerDiscard = layerChoice.add( "radiobutton" , undefined , " - Yes.");
+        layerDiscard.characters = 4 ;
+        var layerNotDiscard = layerChoice.add( "radiobutton" , undefined , " - No.");
+        layerNotDiscard.characters = 4 ;
+        layerNotDiscard.value = true ;
+        
+        //Updating radio buttons according to the warning message.
+        if( warnings.text == " > This layer is out of Bounds." ){
+            layerDiscard.value = true ;
+            layerDiscard.enabled = false ;
+            layerNotDiscard.enabled = false ;
+        }
+    }
+    //Calculating layout to know the height of the window.
+    dlg.layout.layout( true );
+    //Adding a scrollbar
+    if( dlg.group.size[1] > 600 ){
+        dlg.group.maximumSize = [ 500 , 600 ];
+        dlg.group.scrollbar = dlg.group.add( "group" );
+        dlg.group.scrollbar.maximumSize = [ 250 , 10000 ];
+        dlg.group.scrollbar.margins = [ 0 , 10 , 0 , 0 ];
+        var scrollbar = dlg.group.scrollbar.add( "scrollbar" );
+            scrollbar.alignment = [ "center" , "top" ];
+            scrollbar.size = [ 10 , 590 ];
+    }
+    //Creating the rest of the dialog.
+    var saveChoiceLine = dlg.add( "panel" , undefined , "Think about it twice :" );
+    saveChoiceLine.spacing = 0 ;
+    saveChoiceLine.alignment = "fill" ;
+    saveChoiceLine.alignChildren = "fill"
+        var saveChoiceText = saveChoiceLine.add( "statictext" , undefined , "   Do you want me to save before I start?" );
+        saveChoiceText.characters = 23 ;
+        saveChoiceText.alignment = "center" ;
+        var saveRadiosLine = saveChoiceLine.add( "group" );
+        saveRadiosLine.alignment = "center" ;
+            var saveTheFile = saveRadiosLine.add( "radiobutton" , undefined , " - Yes" );
+            saveTheFile.characters = 4 ;
+            saveTheFile.value = true ;
+            var saveNotTheFile = saveRadiosLine.add( "radiobutton" , undefined , " - No" );
+            saveNotTheFile.characters = 3 ;
+    var btnsRow = dlg.add( "group" );
+        btnsRow.orientation = "row" ;
+        btnsRow.spacing = 0 ;
+        var btnSize = [ 60 , 20 ];
+            var btnA = btnsRow.add( "button" , undefined , "Proceed" );
+            btnA.size = btnSize ;
+            var btnB = btnsRow.add( "button" , undefined , "Cancel" );
+            btnB.size = btnSize ;
+    //Updationg layout.
+    dlg.layout.layout( true );
+    //UI parameters
+    dlg.defaultElement = btnA ;
+    //UI Events.
+    if( dlg.group.size[1] >= 600 ){
+        scrollbar.onChange = function(){ dlg.lines.location = [ 0 , 0 - ( ( dlg.lines.size[1] - dlg.group.size[1] ) * scrollbar.value / scrollbar.maxvalue ) ]; }
+        scrollbar.onChanging = function(){ dlg.lines.location = [ 0 , 0 - ( ( dlg.lines.size[1] - dlg.group.size[1] ) * scrollbar.value / scrollbar.maxvalue ) ]; }
+    }
+    btnA.onClick = function(){
+        if( saveTheFile.value ){
+            app.project.save();
+        }
+        for( i = 0 ; i < dlg.lines.children.length ; i++ ){
+            if( dlg.lines.children[i].children[1].children[1].value ){
+                layers[i].toBeProcessed = false ;
+            }
+        }
+        dlg.close() ; }
+    btnB.onClick = function(){ layers = []; dlg.close() ; }
+    //Showing UI.
+    dlg.show();
+    return layers;
+}
