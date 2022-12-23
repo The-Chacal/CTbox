@@ -2,7 +2,161 @@
 //  Animation Detector
 //****************************************//
 
-//  Functions adding a Marker on the layer as soon as there is some change in it.
+/**
+ * Detects the animation on the layer by using an expression, converting to keys, then to markers.
+ * @returns { boolean } Success
+ */
+function detectAnimation(){
+
+    //Saving the modifiers keys statuses.
+    var modifiers = CTmodifiersStatuses() ;
+    //Starting the true work.
+    var layerSelection = CTcheckSelectedLayers() ;
+    var layersToAnalyse = []
+    if( layerSelection.length > 0 ){
+        for( var i = 0 ; i < layerSelection.length ; i++ ){
+            //Creating an object to store layers properties.
+            var layer = new Object();
+            //Storing layer object and layer name.
+            layer.toBeProcessed = true ;
+            layer.object = layerSelection[i];
+            layer.index = layerSelection[i].index ;
+            layer.name = layerSelection[i].name ;
+            layer.inPoint = layerSelection[i].inPoint ;
+            layer.outPoint = layerSelection[i].outPoint ;
+            //Saving the start and end time of the layer.
+            var layerInPoint = layerSelection[i].inPoint ;
+            var layerOutPoint = layerSelection[i].outPoint ;
+            //Creating variables for the start and end of the analysis depending of the shortcuts.
+            var analysisStartTime = layerInPoint ;
+            var analysisEndTime = layerOutPoint ;
+            var activeItem = app.project.activeItem ;
+            if( modifiers.ctrlState && modifiers.majState ){
+                var currentTime = activeItem.time ;
+                if( currentTime < analysisStartTime ){
+                    analysisEndTime = analysisStartTime ;
+                } else if( currentTime >= analysisEndTime ){
+                    analysisStartTime = analysisEndTime ;
+                } else {
+                    analysisStartTime = activeItem.time ;
+                    analysisEndTime = analysisStartTime + activeItem.frameDuration ;
+                }
+            } else if( modifiers.ctrlState ){
+                var workAreaStartTime = activeItem.workAreaStart ;
+                var workAreaEndTime = workAreaStartTime + activeItem.workAreaDuration ;
+                if( workAreaStartTime > analysisStartTime ){
+                    analysisStartTime = workAreaStartTime ;
+                }
+                if( workAreaEndTime < analysisEndTime ){
+                    analysisEndTime = workAreaEndTime ;
+                }
+            }
+            //storing the analysis limits and duration.
+            layer.analysisStartTime = analysisStartTime ;
+            layer.analysisEndTime = analysisEndTime ;
+            layer.analysisDuration = analysisEndTime.toFixed(2) - analysisStartTime.toFixed(2) ;
+            //Changing the toBeProcessed value to false if the duration of the analysis is 0s.
+            if( layer.analysisDuration <= 0 ){
+                layer.toBeProcessed = false ;
+            }
+            //Creating a variables for the existance of previously detected animation and effects active.
+            layer.hasEffectActive = false ;
+            layer.existingAnimDetection = false ;
+            layer.lowestPointKeys = [];
+            //Check if the animation has already been detected or not.
+            if( layerSelection[i].property( "ADBE Marker" ).numKeys > 0 ){
+                layer.existingAnimDetection = true ;
+            }
+            //Checks if there is any effects on the layer.
+            if( layerSelection[i].property("ADBE Effect Parade").numProperties > 0 ){
+                for( var j = 1 ; j <= layerSelection[i].property("ADBE Effect Parade").numProperties ; j++ ){
+                    if( layerSelection[i].property("ADBE Effect Parade").property(j).name != "CTbox - Content Lowest Point" && layerSelection[i].property("ADBE Effect Parade").property(j).active ){
+                        layer.hasEffectActive = true ;
+                        break ;
+                    } 
+                }
+            }
+            //Storing the layer object in the array.
+            layersToAnalyse.push( layer );
+        }
+        //Opening the dialog allowing the user to chooser whether to continue or abort an analyse.
+        layersToAnalyse = layerAnalysisChoiceDialog( layersToAnalyse );
+        //Analysing the layers selected.
+        if( layersToAnalyse.length > 0 ){
+            //Getting the saved parameters.
+            var precisionDegree = CTgetSavedString( "CTboxSave" , "PrecisionDegree" );
+            if( precisionDegree == null ){ precisionDegree = 1 };
+            var toleranceDegree = CTgetSavedString( "CTboxSave" , "ToleranceDegree" );
+            if( toleranceDegree == null ){ toleranceDegree = 0 };
+            for( var i = 0 ; i < layersToAnalyse.length ; i++ ){
+                if( layersToAnalyse[i].toBeProcessed ){
+                    //Opening the UndoGroup.
+                    app.beginUndoGroup( "Animation Detection" );
+                    //Selecting the layer to work on.
+                    layersToAnalyse[i].object.selected = true ;
+                    //Setting the in and out Points of the layer for the analysis.
+                    layersToAnalyse[i].object.inPoint = layersToAnalyse[i].analysisStartTime ;
+                    layersToAnalyse[i].object.outPoint = layersToAnalyse[i].analysisEndTime ;
+                    //Adding the expression detecting the movement
+                    var changeDetector = layersToAnalyse[i].object.property( "ADBE Effect Parade" ).addProperty( "ADBE Slider Control" );
+                    changeDetector.name = "LayerColorControl" ;
+                    changeDetector = changeDetector.property(1);
+                    changeDetector.expression = "var Precision = Math.pow( 2 , " + precisionDegree + " );\
+var Tolerance = " + toleranceDegree + ";\
+var Setting = [thisLayer.width / Precision , thisLayer.height / Precision ];\
+var AverageDelta = 0;\
+for( var y = Setting[1] ; y < thisLayer.height ; y += 2 * Setting[1] )\
+{\
+    for( var x = Setting[0] ; x < thisLayer.width ; x += 2 * Setting[0] )\
+    {\
+        var ColorA = thisLayer.sampleImage( [ x , y ] , Setting , postEffect = true , time );\
+        var ColorB = thisLayer.sampleImage( [ x , y ] , Setting , postEffect = true , time - thisComp.frameDuration );\
+        var DeltaAB = 0 ;\
+        for( var i = 0 ; i < 4 ; i++ )\
+        {\
+            DeltaAB += Math.max( 0 , Math.abs( ColorA[i] - ColorB[i] ) * 100 - Tolerance );\
+        }\
+        AverageDelta = ( AverageDelta + DeltaAB / 4 );\
+    }\
+}\
+if( AverageDelta == 0 )\
+{ 0; } else { 1; }";
+                    changeDetector.selected = true ;
+                    app.executeCommand( 2639 ); //Execute the commande "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    changeDetector.selected = false ;
+                    changeDetector.expression = "" ;
+                    if( layersToAnalyse[i].existingAnimDetection ){
+                        for( j = 1 ; j <= layersToAnalyse[i].object.property( "ADBE Marker" ).numKeys ; j++ ){
+                            if( layersToAnalyse[i].object.property( "ADBE Marker" ).keyTime( j ) >= layersToAnalyse[i].analysisStartTime && layersToAnalyse[i].object.property( "ADBE Marker" ).keyTime( j ).toFixed(2) < layersToAnalyse[i].analysisEndTime.toFixed(2) ){
+                                layersToAnalyse[i].object.property( "ADBE Marker" ).removeKey( j );
+                                j -= 1 ;
+                            }
+                        }
+                    }
+                    for( j = 1 ; j <= changeDetector.numKeys ; j ++ ){
+                        if( ( changeDetector.keyTime( j ) == layersToAnalyse[i].inPoint && changeDetector.keyValue( j ) == 1 ) || changeDetector.keyValue( j ) == 1 ){
+                            layersToAnalyse[i].object.property( "ADBE Marker" ).addKey( changeDetector.keyTime( j ) );
+                        }
+                    }
+                    changeDetector.parentProperty.remove();
+                    //Restoring the in and out Points of the layer.
+                    layersToAnalyse[i].object.inPoint = layersToAnalyse[i].inPoint ;
+                    layersToAnalyse[i].object.outPoint = layersToAnalyse[i].outPoint ;
+                    //Closing the UndoGroup.
+                    app.endUndoGroup();
+                }
+            }
+            //Recreating the original layer selection.
+            for( var i = 0 ; i < layersToAnalyse.length ; i++ ){
+                layersToAnalyse[i].selected = true ;
+            }
+            CTalertDlg( "I'm Done" , "   I've finished detecting Animation on your layers." );
+            return true ;
+        }
+    }
+    return false ;
+    
+}
 /**
  * Opens a dialog to choose options for the detection.
  */
@@ -58,80 +212,4 @@ function getAnimDetectionOptions(){
     btnA.onClick = function(){ var precisionParameter = CTcleanNumberString( precisionValue.text , false ); var toleranceParameter = CTcleanNumberString( toleranceValue.text , false ); if(  precisionParameter != null && toleranceParameter != null ){ { CTsaveString( "CTboxSave" , "PrecisionDegree" , precisionValue.text ); CTsaveString( "CTboxSave" , "ToleranceDegree" , toleranceValue.text ); animDetectionDlg.close(); };};};
     //Showing UI
     animDetectionDlg.show();
-}
-/**
- * Detects the animation on the layer by using an expression, converting to keys, then to markers.
- * @returns { boolean } Success
- */
-function detectAnimation(){
-
-    //Getting the saved parameters.
-    var precisionDegree = CTgetSavedString( "CTboxSave" , "PrecisionDegree" );
-    if( precisionDegree == null ){ precisionDegree = 1 };
-    var toleranceDegree = CTgetSavedString( "CTboxSave" , "ToleranceDegree" );
-    if( toleranceDegree == null ){ toleranceDegree = 0 };
-    //Getting to work.
-    var layerSelection = CTcheckSelectedLayers();
-    if( layerSelection.length > 0 ){
-        for( var i = 0 ; i < layerSelection.length ; i++ ){
-            //Opening the UndoGroup.
-            app.beginUndoGroup( "Animation Detection." );
-            //Checking if there is any effects on the layer.
-            if( layerSelection[i].property( "ADBE Effect Parade" ).numProperties > 0 ){
-                for( var j = 1 ; j <= layerSelection[i].property( "ADBE Effect Parade" ).numProperties ; j++ ){
-                    if( layerSelection[i].property( "ADBE Effect Parade" ).property(j).active ){
-                        if( !CTchoiceDlg( "So..." , "   This action is heavy duty.\n   You should disable your effects that do not alter the position of the animation first.\n\n   Do we continue or do you modify?" , "Continue" , "Modify" ) ){
-                            return false ;
-                        } else {
-                            break ;
-                        }
-                    }
-                }
-            }
-            //Adding the expression detecting the movement
-            var changeDetector = layerSelection[i].property( "ADBE Effect Parade" ).addProperty( "ADBE Slider Control" );
-            changeDetector.name = "LayerColorControl" ;
-            changeDetector = changeDetector.property(1);
-            changeDetector.expression = "var Precision = Math.pow( 2 , " + precisionDegree + " );\
-var Tolerance = " + toleranceDegree + ";\
-var Setting = [thisLayer.width / Precision , thisLayer.height / Precision ];\
-var AverageDelta = 0;\
-for( var y = Setting[1] ; y < thisLayer.height ; y += 2 * Setting[1] )\
-{\
-    for( var x = Setting[0] ; x < thisLayer.width ; x += 2 * Setting[0] )\
-    {\
-        var ColorA = thisLayer.sampleImage( [ x , y ] , Setting , postEffect = true , time );\
-        var ColorB = thisLayer.sampleImage( [ x , y ] , Setting , postEffect = true , time - thisComp.frameDuration );\
-        var DeltaAB = 0 ;\
-        for( var i = 0 ; i < 4 ; i++ )\
-        {\
-            DeltaAB += Math.max( 0 , Math.abs( ColorA[i] - ColorB[i] ) * 100 - Tolerance );\
-        }\
-        AverageDelta = ( AverageDelta + DeltaAB / 4 );\
-    }\
-}\
-if( AverageDelta == 0 )\
-{ 0; } else { 1; }";
-            changeDetector.selected = true ;
-            app.executeCommand( 2639 ); //Execute the commande "Animation > Keyframe Assistant > Convert Expression to Keyframes".
-            changeDetector.selected = false ;
-            changeDetector.expression = "" ;
-            for( j = 1 ; j <= changeDetector.numKeys ; j ++ ){
-                if( j == 1 || changeDetector.keyValue( j ) == 1 ){
-                    layerSelection[i].property(1).addKey( changeDetector.keyTime( j ) );
-                }
-            }
-            changeDetector.parentProperty.remove();
-            //Closing the UndoGroup.
-            app.endUndoGroup();
-        }
-        //Recreating the original layer selection.
-        for( var i = 0 ; i < layerSelection.length ; i++ ){
-            layerSelection[i].selected = true ;
-        }
-        CTalertDlg( "I'm Done" , "   I've finished detecting Animation on your layers." );
-        return true ;
-    }
-    return false ;
-    
 }

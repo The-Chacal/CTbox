@@ -112,7 +112,7 @@ function CTbuildUI( thisObj ){
                 B2Btn01.helpTip = "   Locate the lowest alpha point on the selected Layer\n   This script adds a Point Effect to the Layer.\n   CTRL + Click > The analysis is done over the Work Area.\n   CTRL + MAJ + Click > The analysis is done on the current Time only.\n   ALT + Click > \"Get Lowest Layer Point\" Options.";
                 B2Btn01.size = btnsSize ;
                 var B2Btn02 = Block02.add( "button" , undefined , "Det. Anim." );
-                B2Btn02.helpTip = "   Add a Marker on the Layer if it \"moves\".\n   ALT + Click > \"Animation Detector\" Options." ;
+                B2Btn02.helpTip = "   Analyse the content of a footage and see if it \"moves\".\n   This script adds Markers to the layer\n   CTRL + Click > The analysis is done over the Work Area.\n   CTRL + MAJ + Click > The analysis is done on the current Time only.\n   ALT + Click > \"Animation Detector\" Options." ;
                 B2Btn02.size = btnsSize;
                 var B2Btn03 = Block02.add( "button" , undefined , "Add Grad." );
                 B2Btn03.helpTip = "   Create a Gradient in Multiply Mode.\n   CTRL + Click > Invert the ID option setting for this click." ;
