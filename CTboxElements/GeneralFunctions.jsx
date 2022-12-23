@@ -380,7 +380,7 @@ function layerAnalysisChoiceDialog( layers ){
     for( var i = 0 ; i < layers.length ; i++ ){
         //Creating the warning text according to the  characteristics of the layer.
         var warningText = "";
-        if( layers[i].analysisDuration.toFixed(2) == 0 ){
+        if( layers[i].analysisDuration <= 0 ){
             warningText = " > This layer is out of Bounds.";
         }
         if( warningText != " > This layer is out of Bounds." && layers[i].existingLowestPoint ){
