@@ -60,7 +60,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             layer.analysisEndTime = analysisEndTime ;
             layer.analysisDuration = analysisEndTime - analysisStartTime ;
             //Changing the toBeProcessed value to false if the duration of the analysis is 0s.
-            if( layer.analysisDuration == 0 ){
+            if( layer.analysisDuration <= 0 ){
                 layer.toBeProcessed = false ;
             }
             //Creating a variables for the existance of previously created lowest Point and effects active.
@@ -72,7 +72,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
                 layer.existingLowestPoint = true ;
                 layer.lowestPointKeys = CTsavePropertyKeys( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ).property( 2 ) );
             }
-            //Checks if there is any effects on the layer and asks to continue or not if there is some.
+            //Checks if there is any effects on the layer.
             if( layerSelection[i].property("ADBE Effect Parade").numProperties > 0 ){
                 for( var j = 1 ; j <= layerSelection[i].property("ADBE Effect Parade").numProperties ; j++ ){
                     if( layerSelection[i].property("ADBE Effect Parade").property(j).name != "CTbox - Content Lowest Point" && layerSelection[i].property("ADBE Effect Parade").property(j).active ){
@@ -88,6 +88,13 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
         layersToAnalyse = layerAnalysisChoiceDialog( layersToAnalyse );
         //Analysing the layers selected.
         if( layersToAnalyse.length > 0 ){
+            //Getting the saved Parameters.
+            var verticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
+            if( verticalOriginalStep == null ){ verticalOriginalStep = 50 };
+            var horizontalOriginalStep = CTgetSavedString( "CTboxSave" , "horizontalOriginalStep" );
+            if( horizontalOriginalStep == null ){ horizontalOriginalStep = 20 };
+            var horizontalScanHeight = CTgetSavedString( "CTboxSave" , "horizontalScanHeight" );
+            if( horizontalScanHeight == null ){ horizontalScanHeight = 50 };
             for( var i = 0 ; i < layersToAnalyse.length ; i++ ){
                 if( layersToAnalyse[i].toBeProcessed ){
                     promptEndAlert = true ;
@@ -98,13 +105,6 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
                     //Setting the in and out Points of the layer for the analysis.
                     layersToAnalyse[i].object.inPoint = layersToAnalyse[i].analysisStartTime ;
                     layersToAnalyse[i].object.outPoint = layersToAnalyse[i].analysisEndTime ;
-                    //Getting the saved Parameters.
-                    var verticalOriginalStep = CTgetSavedString( "CTboxSave" , "verticalOriginalStep" );
-                    if( verticalOriginalStep == null ){ verticalOriginalStep = 50 };
-                    var horizontalOriginalStep = CTgetSavedString( "CTboxSave" , "horizontalOriginalStep" );
-                    if( horizontalOriginalStep == null ){ horizontalOriginalStep = 20 };
-                    var horizontalScanHeight = CTgetSavedString( "CTboxSave" , "horizontalScanHeight" );
-                    if( horizontalScanHeight == null ){ horizontalScanHeight = 50 };
                     //Adding sliders with expression to get the final point.
                     var Yslider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
                     Yslider.name = "DetectedY";
