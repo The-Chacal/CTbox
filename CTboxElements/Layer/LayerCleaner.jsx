@@ -159,20 +159,24 @@ function propertyCleaner( item , cleanProperties , cleanExpressions ){
         if( item.property(i).numProperties != undefined ){
             propertyCleaner( item.property(i) , cleanProperties , cleanExpressions );
         } else {
+            //Removing expressions on properties.
+            if( cleanExpressions && item.property(i).expression != "" ){
+                item.property(i).expression = "" ;
+            }
             //Removing keys on properties.
             if( cleanProperties && item.property(i) != item.property( "ADBE Marker" ) && item.property(i).numKeys > 0 && item.property(i).propertyValueType != PropertyValueType.CUSTOM_VALUE){
                 //Saving the Property Value at the current Time.
-                var currentValue = item.property(i).value ;
+                if( item.property(i) != item.property( "ADBE Time Remapping" ) ){
+                    var currentValue = item.property(i).value ;
+                }
                 //Removing all keys on the Property.
                 while( item.property(i).numKeys > 0 ){
                     item.property(i).removeKey(1) ;
                 }
                 //Restoring the Value stored.
-                item.property(i).setValue( currentValue );
-            }
-            //Removing expressions on properties.
-            if( cleanExpressions && item.property(i).expression != "" ){
-                item.property(i).expression = "" ;
+                if( item.property(i) != item.property( "ADBE Time Remapping" ) ){
+                    item.property(i).setValue( currentValue );
+                }
             }
         }
     }
