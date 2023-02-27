@@ -300,7 +300,7 @@ function CTversioning( type ){
  */
 function CTgetScriptFolder(){
 
-    var scriptFolder = new Folder( "F:/AE - Scripts/CTbox_for_AE" );
+    var scriptFolder = new Folder( "F:/AE - Scripts/CTboxAE" );
     var testFile = new File( scriptFolder.fsName + "/CTbox.jsx" );
 	if( !testFile.exists ){
         scriptFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
