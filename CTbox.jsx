@@ -193,10 +193,10 @@ function CTbuildUI( thisObj ){
             versionBlock.orientation = "row";
             versionBlock.spacing = 1 ;
                 var BXBtn01 = versionBlock.add( "button" , undefined , "vX.0" );
-                BXBtn01.helpTip = "   Increment the first number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name."
+                BXBtn01.helpTip = "   Increment the first number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name.\n   ALT + Click > The AEP file won't be moved in a \"∞ AEP Older Versions ∞\" Folder." ;
                 BXBtn01.size = [ btnsSize[0] / 2 , btnsSize[1] ];
                 var BXBtn02 = versionBlock.add( "button" , undefined , "v0.X" );
-                BXBtn02.helpTip = "   Increment the second number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name."
+                BXBtn02.helpTip = "   Increment the second number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name.\n   ALT + Click > The AEP file won't be moved in a \"∞ AEP Older Versions ∞\" Folder." ;
                 BXBtn02.size = [ btnsSize[0] / 2 , btnsSize[1] ];
             var CTboxVersionBlock = BlockXX.add( "group" );
             CTboxVersionBlock.margins = [ 1 , 0 , 1 , 0 ];
@@ -241,8 +241,8 @@ function CTbuildUI( thisObj ){
     B3Btn03.onClick = addSeparator ;
     B3Btn10.onClick = updateCTbox ;
     //UI events for Versionning Block.
-    BXBtn01.onClick = function(){ CTversioning( "X.0" ); };
-    BXBtn02.onClick = function(){ CTversioning( "0.X" ); };
+    BXBtn01.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ CTversioning( "X.0" , true ); } else { CTversioning( "X.0" , false ); } };
+    BXBtn02.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ CTversioning( "0.X" , true ); } else { CTversioning( "0.X" , false ); } };
     BXBtn03.onClick = CTboxOptions;
     BXBtn04.onClick = function(){ CTexpandNotepad( CTpanel ); };
     //Checking which Panel was the last actived and showing it.

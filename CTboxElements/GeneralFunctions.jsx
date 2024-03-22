@@ -205,8 +205,9 @@ function CTgetSavedString( saveFileName , stringCodename ){
 /**
  * Increments the version of a file AND its main comp (if their names are identical). Then moves the older file in a "XX - AEP Older Versions" folder.
  * @param { string } type Code for the versioning: "X.0" to change the version, "0.X" to change the subversion.
+ * @param { boolean } isToBeMoved The AEP file is to be moved into the "AEP Older Versions" Folder.
  */
-function CTversioning( type ){
+function CTversioning( type , isToBeMoved ){
     
     //Checking if there is any project in After Effects.
     if( app.project != undefined ){
@@ -253,28 +254,40 @@ function CTversioning( type ){
         if( mainCompItem == null ){ CTalertDlg( "It's messy" , "You did not tidy your room enough, I can't find the project.\n\n   Your project comp can't be found in the root Folder of your project"); return ; }
         //Updating the Render Queue Item if its file is the main comp.
         for( var i = 1 ; i <= app.project.renderQueue.items.length ; i++ ){
-            if( app.project.renderQueue.items[i].comp == mainCompItem ){
-                var oldExportFolderPath = app.project.renderQueue.items[i].outputModule(1).file.fsName.split("\\");
-                oldExportFolderPath.pop();
-                oldExportFolderPath = oldExportFolderPath.join( "/");
-                while( app.project.renderQueue.items.length > 0 ){
-                    app.project.renderQueue.items[1].remove();
+            var activeRQitem = app.project.renderQueue.items[i];
+            if( activeRQitem.status != RQItemStatus.QUEUED ){
+                activeRQitem.remove();
+                i-- ;
+                continue ;
+            }
+            if( activeRQitem.comp == mainCompItem ){
+                for( var j = 1 ; j <= activeRQitem.outputModules.length ; j++ ){
+                    var activeOM = activeRQitem.outputModules[j];
+                    //Creating an array containing each step of the Folder Tree for the export.
+                    var oldExportFolderPath = activeOM.file.fsName.split("\\");
+                    //Removing the name of the export from the path and catching it to get the original extension of the export.
+                    var oldExportExtension = oldExportFolderPath.pop().split(".").pop();
+                    //Checking if the export was set to be "in a subfolder" and, if so, updating also the subfolder.
+                    if( oldExportFolderPath[ oldExportFolderPath.length - 1 ] == oldName ){ oldExportFolderPath[ oldExportFolderPath.length - 1 ] = newName }
+                    //Recreating the path of the export Folder.
+                    oldExportFolderPath = oldExportFolderPath.join( "/");
+                    //For the cases in which the export was supposed to be done in a subfolder we create the needed folder.
+                    var oldExportFolder = new Folder( oldExportFolderPath );
+                    if( !oldExportFolder.exists ){ oldExportFolder.create(); }
+                    //Updating the file path for the export.
+                    activeOM.file = new File( oldExportFolderPath + "/" + newName + "." + oldExportExtension );
                 }
-                var mainCompRender = app.project.renderQueue.items.add( mainCompItem );
-                mainCompRender.applyTemplate( "MySettings - CompLength" );
-                mainCompRender.outputModules[1].applyTemplate( "AppleProRes 422 HQ" );
-                mainCompRender.outputModules[1].file = new File( oldExportFolderPath + "/" + newName + ".mov" );
             }
         }
-        //Moving the old File in a "XX - AEP Older Versions".
-        var oldVersionsFolderPath = oldVersionFolderPath + "/XX - AEP Older Versions" ;
-        var oldVersionsFolder = new Folder( oldVersionsFolderPath );
-        if( !oldVersionsFolder.exists ){
-            oldVersionsFolder.create();
+        if( isToBeMoved ){
+            //Moving the old File in a "AEP Older Versions" Folder.
+            var oldVersionsFolderPath = oldVersionFolderPath + "/XXx- AEP Older Versions -xXX";
+            var oldVersionsFolder = new Folder( oldVersionsFolderPath );
+            if( !oldVersionsFolder.exists ){ oldVersionsFolder.create(); }
+            oldProjectFile.copy( oldVersionsFolderPath + "/" + oldName + ".aep" );
+            oldProjectFile.remove();
         }
-        oldProjectFile.copy( oldVersionsFolderPath + "/" + oldName + ".aep" );
         app.project.save( newProjectFile );
-        oldProjectFile.remove();
         //Restoring the active item.
         if( currentItem != null ){ currentItem.openInViewer() };
     }
