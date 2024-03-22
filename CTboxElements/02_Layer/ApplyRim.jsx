@@ -61,7 +61,7 @@ function applyRim( isOutsideRim ){
                 rimLayer.blendingMode = BlendingMode.MULTIPLY ;
             }
             //Applying the settings preset on the Reference layer.
-            layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRimSettings v2.ffx" ) );
+            layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CharacterRimSettings v2.ffx" ) );
             //Adding the id of the Rim to the Settings Effect name.
             layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Rim - Settings" ).name = rimSettingsName;
             //Unselecting the Rim Layer.
@@ -69,7 +69,7 @@ function applyRim( isOutsideRim ){
             //Applying the Rim preset on the Rim layer.
             rimLayer.selected = true ;
             layerCleaner( false , false );
-            rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterRim v3.ffx" ) );
+            rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CharacterRim v3.ffx" ) );
             rimLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             //Adjusting the expressions.
             app.project.autoFixExpressions( "XXX" , layerSelection[i].name );

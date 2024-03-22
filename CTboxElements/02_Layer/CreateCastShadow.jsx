@@ -45,8 +45,8 @@ function createCastShadow(){
             layerSelection[i].selected = false ;
             silhouetteShadowLayer.selected = true ;
             layerCleaner( false , false );
-            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadowSettings v1.ffx" ) );
-            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CastShadow v3.ffx" ) );
+            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CastShadowSettings v1.ffx" ) );
+            silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CastShadow v3.ffx" ) );
             //Adding the id of the Rim to the Settings Effect name.
             silhouetteShadowLayer.property( "ADBE Effect Parade" ).property( "CTbox - Cast Shadow - Settings" ).name = castShadowSettingsName ;
             //Adjusting the expressions.

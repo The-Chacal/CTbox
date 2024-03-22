@@ -2,24 +2,24 @@
 if ( CTcheckScriptWriting( this ) ){
     // Including all the scripts files needed for the toolbox.
     //@include "CTboxElements/GeneralFunctions.jsx"
-    //@include "CTboxElements/Expressions/MarkerAccum.jsx";
-    //@include "CTboxElements/Expressions/MarkerAnimation.jsx";
-    //@include "CTboxElements/Expressions/PosterizeProperty.jsx";
-    //@include "CTboxElements/Expressions/UpdateExp.jsx";
-    //@include "CTboxElements/Layer/AddShadowLayer.jsx";
-    //@include "CTboxElements/Layer/AnimationDetector.jsx";
-    //@include "CTboxElements/Layer/ApplyGradient.jsx";
-    //@include "CTboxElements/Layer/ApplyRim.jsx";
-    //@include "CTboxElements/Layer/CopyMarker.jsx";
-    //@include "CTboxElements/Layer/CreateCastShadow.jsx";
-    //@include "CTboxElements/Layer/CreateMarkersForKeys.jsx";
-    //@include "CTboxElements/Layer/DepthDisplacement.jsx";
-    //@include "CTboxElements/Layer/LayerCleaner.jsx";
-    //@include "CTboxElements/Layer/GetLayerBottom.jsx";
-    //@include "CTboxElements/Misc/AddSeparator.jsx";
-    //@include "CTboxElements/Misc/CollapseTransformationManager.jsx";
-    //@include "CTboxElements/Misc/CompDurationEditor.jsx";
-    //@include "CTboxElements/Misc/UpdateCTbox.jsx";
+    //@include "CTboxElements/01_Expressions/MarkerAccum.jsx";
+    //@include "CTboxElements/01_Expressions/MarkerAnimation.jsx";
+    //@include "CTboxElements/01_Expressions/PosterizeProperty.jsx";
+    //@include "CTboxElements/01_Expressions/UpdateExp.jsx";
+    //@include "CTboxElements/02_Layer/AddShadowLayer.jsx";
+    //@include "CTboxElements/02_Layer/AnimationDetector.jsx";
+    //@include "CTboxElements/02_Layer/ApplyGradient.jsx";
+    //@include "CTboxElements/02_Layer/ApplyRim.jsx";
+    //@include "CTboxElements/02_Layer/CopyMarker.jsx";
+    //@include "CTboxElements/02_Layer/CreateCastShadow.jsx";
+    //@include "CTboxElements/02_Layer/CreateMarkersForKeys.jsx";
+    //@include "CTboxElements/02_Layer/DepthDisplacement.jsx";
+    //@include "CTboxElements/02_Layer/LayerCleaner.jsx";
+    //@include "CTboxElements/02_Layer/GetLayerBottom.jsx";
+    //@include "CTboxElements/03_Misc/AddSeparator.jsx";
+    //@include "CTboxElements/03_Misc/CollapseTransformationManager.jsx";
+    //@include "CTboxElements/03_Misc/CompDurationEditor.jsx";
+    //@include "CTboxElements/03_Misc/UpdateCTbox.jsx";
     // Launching the creation of the toolbox UI.
     CTbuildUI( this );
 }
@@ -201,10 +201,10 @@ function CTbuildUI( thisObj ){
             CTboxVersionBlock.margins = [ 1 , 0 , 1 , 0 ];
             CTboxVersionBlock.alignment = "right";
             CTboxVersionBlock.spacing = 0 ;
-                var BXBtn03 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Gear.png") );
+                var BXBtn03 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/05_PNGs/w12-Gear.png") );
                 BXBtn03.helpTip = " \"Id\" Options."
                 BXBtn03.size = [ 16 , 16 ];
-                var BXBtn04 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-notePad.png") );
+                var BXBtn04 = CTboxVersionBlock.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/05_PNGs/w12-notePad.png") );
                 BXBtn04.helpTip = "   Open/close Notepad."
                 BXBtn04.size = [ 16 , 16 ];
             var versionText = BlockXX.add( "staticText" , undefined , CTboxVersion );

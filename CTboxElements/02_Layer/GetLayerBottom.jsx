@@ -261,7 +261,7 @@ function preciseX( searchedX , Y , Step , StartX, direction ){\
 \
 X";
                     //Applying the final preset.
-                    if( !layersToAnalyse[i].existingLowestPoint ){ layersToAnalyse[i].object.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
+                    if( !layersToAnalyse[i].existingLowestPoint ){ layersToAnalyse[i].object.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
                     var lowestPoint = layersToAnalyse[i].object.property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
                     lowestPoint.property(2).expression = "//---------- Links ----------\
 var DetectedY = effect(\"DetectedY\")(1);\

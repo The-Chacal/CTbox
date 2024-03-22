@@ -39,11 +39,11 @@ function copyMarkerChoice(){
                 block02.Btns.spacing = 2 ;
                 block02.Btns.margins = [ 0 , 2 , 0 , 0 ] ;
                     var btnSize = [ 16 , 16 ];
-                    var refreshLayersListBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Actualise.png") );
+                    var refreshLayersListBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/05_PNGs/w12-Actualise.png") );
                     refreshLayersListBtn.size = btnSize ;
-                    var addRowBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Plus.png") );
+                    var addRowBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/05_PNGs/w12-Plus.png") );
                     addRowBtn.size = btnSize ;
-                    var deleteRowBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Minus.png") );
+                    var deleteRowBtn = block02.Btns.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/05_PNGs/w12-Minus.png") );
                     deleteRowBtn.size = btnSize ;
             var block03 = copyMarkerChoiceDlg.add( "group" );
             block03.orientation = "row" ;

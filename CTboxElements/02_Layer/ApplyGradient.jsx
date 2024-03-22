@@ -42,7 +42,7 @@ function applyGradient(){
             gradientLayer.shy = true ;
             gradientLayer.blendingMode = BlendingMode.MULTIPLY ;
             //Applying the settings preset on the Reference layer.
-            layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterGradientSettings v1.ffx" ) );
+            layerSelection[i].applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CharacterGradientSettings v1.ffx" ) );
             //Adding the id of the Gradient to the Settings Effect name.
             layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Gradient - Settings" ).name = gradientSettingsName ;
             //Unselecting the Gradient Layer.
@@ -50,7 +50,7 @@ function applyGradient(){
             //Applying the gradient preset on the Gradient layer.
             gradientLayer.selected = true ;
             layerCleaner( false , false );
-            gradientLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/PseudoEffects/CharacterGradient v3.ffx" ) );
+            gradientLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CharacterGradient v3.ffx" ) );
             gradientLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             gradientLayer.property( "ADBE Transform Group" ).property( "ADBE Opacity" ).expression = "thisComp.layer(\"XXX\").effect(\""+ gradientSettingsName + "\")(5)";
             //Adjusting the expressions.

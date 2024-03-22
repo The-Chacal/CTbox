@@ -34,7 +34,7 @@ function compDurationChoice(){
                 var layerRefChoice = settingsRow02.add( "dropDownList" )
                 layerRefChoice.itemSize[0] = 130 ;
                 layerRefChoice.selection = layerRefChoice.items[0];
-                var refreshLayerList = settingsRow02.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/PNG/w12-Actualise.png") );
+                var refreshLayerList = settingsRow02.add( "iconButton" , undefined , new File( scriptFolder.fsName + "/CTboxElements/05_PNGs/w12-Actualise.png") );
                 refreshLayerList.size = [ 16 , 16 ];
         var buttonsGroup = choiceCompDurationDlg.add( "group" );
         buttonsGroup.alignment = "right"
