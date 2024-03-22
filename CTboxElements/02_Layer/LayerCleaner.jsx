@@ -72,31 +72,43 @@ function layerCleanerOptions(){
 /**
  * Cleans the layer according to the selected options.
  * @param { boolean } showEndAlert Does the script alerts when it's done.
- * @param { boolean } createUndoGroup Does the script creates an UndoGroup. 
+ * @param { boolean } createUndoGroup Does the script creates an UndoGroup.
+ * @param { boolean } fullClean All the options have their default value.
  * @returns { boolean } Success
  */
-function layerCleaner( showEndAlert , createUndoGroup ){
+function layerCleaner( showEndAlert , createUndoGroup , fullClean ){
 
     var layerSelection = CTcheckSelectedLayers();
     if( layerSelection.length > 0 ){
-        //Setting defaults for parameters.
-        if( typeof showEndAlert === "undefined" ){ showEndAlert = true ; } 
-        if( typeof createUndoGroup === "undefined" ){ createUndoGroup = true ; } 
-        //Getting saved options values.
-        var cleanProperties = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanProperties" ) );
-        if( cleanProperties == null ){ cleanProperties = true ; }
-        var cleanEffects = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanEffects" ) );
-        if( cleanEffects == null ){ cleanEffects = true ; }
-        var cleanExpressions = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanExpressions" ) );
-        if( cleanExpressions == null ){ cleanExpressions = true ; }
-        var cleanMasks = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanMasks" ) );
-        if( cleanMasks == null ){ cleanMasks = true ; }
-        var cleanMarkers = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanMarkers" ) );
-        if( cleanMarkers == null ){ cleanMarkers = true ; }
-        var cleanLayerStyles = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanLayerStyles" ) );
-        if( cleanLayerStyles == null ){ cleanLayerStyles = true ; }
-        var resetLayerTransform = JSON.parse( CTgetSavedString( "CTboxSave" , "ReinitLayer" ) );
-        if( resetLayerTransform == null ){ resetLayerTransform = false ; }
+        //Setting default values for parameters.
+        if( typeof showEndAlert === "undefined" ){ showEndAlert = true ; }
+        if( typeof createUndoGroup === "undefined" ){ createUndoGroup = true ; }
+        if( typeof fullClean === "undefined" ){ createUndoGroup = false ; }
+        //Setting default values for settings.
+        var cleanProperties = true ;
+        var cleanEffects = true ;
+        var cleanExpressions = true ;
+        var cleanMasks = true ;
+        var cleanMarkers = true ;
+        var cleanLayerStyles = true ;
+        var resetLayerTransform = false ;
+        if( !fullClean ){
+            //Getting saved options values.
+            cleanProperties = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanProperties" ) );
+            if( cleanProperties == null ){ cleanProperties = true ; }
+            cleanEffects = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanEffects" ) );
+            if( cleanEffects == null ){ cleanEffects = true ; }
+            cleanExpressions = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanExpressions" ) );
+            if( cleanExpressions == null ){ cleanExpressions = true ; }
+            cleanMasks = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanMasks" ) );
+            if( cleanMasks == null ){ cleanMasks = true ; }
+            cleanMarkers = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanMarkers" ) );
+            if( cleanMarkers == null ){ cleanMarkers = true ; }
+            cleanLayerStyles = JSON.parse( CTgetSavedString( "CTboxSave" , "CleanLayerStyles" ) );
+            if( cleanLayerStyles == null ){ cleanLayerStyles = true ; }
+            resetLayerTransform = JSON.parse( CTgetSavedString( "CTboxSave" , "ReinitLayer" ) );
+            if( resetLayerTransform == null ){ resetLayerTransform = false ; }
+        }
         //Starting to work.
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Opening the UndoGroup.

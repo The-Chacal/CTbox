@@ -68,7 +68,7 @@ function applyRim( isOutsideRim ){
             layerSelection[i].selected = false ;
             //Applying the Rim preset on the Rim layer.
             rimLayer.selected = true ;
-            layerCleaner( false , false );
+            layerCleaner( false , false , true );
             rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CharacterRim v4.ffx" ) );
             rimLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             //Adjusting the expressions.

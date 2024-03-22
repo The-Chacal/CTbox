@@ -49,7 +49,7 @@ function applyGradient(){
             layerSelection[i].selected = false ;
             //Applying the gradient preset on the Gradient layer.
             gradientLayer.selected = true ;
-            layerCleaner( false , false );
+            layerCleaner( false , false , true );
             gradientLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CharacterGradient v3.ffx" ) );
             gradientLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             gradientLayer.property( "ADBE Transform Group" ).property( "ADBE Opacity" ).expression = "thisComp.layer(\"XXX\").effect(\""+ gradientSettingsName + "\")(5)";

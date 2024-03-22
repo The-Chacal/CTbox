@@ -44,7 +44,7 @@ function createCastShadow(){
             //Cleaning the layer and applying the preset.
             layerSelection[i].selected = false ;
             silhouetteShadowLayer.selected = true ;
-            layerCleaner( false , false );
+            layerCleaner( false , false , true );
             silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CastShadowSettings v1.ffx" ) );
             silhouetteShadowLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CastShadow v3.ffx" ) );
             //Adding the id of the Rim to the Settings Effect name.
