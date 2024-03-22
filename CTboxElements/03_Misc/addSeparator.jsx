@@ -16,9 +16,8 @@ function addSeparator(){
     var separator = null ;
     //Starting undoGroup.
     app.beginUndoGroup("Add Separator.")
-    //Doing the job...
+    //If one or more layers are selected.
     if( layerSelection.length > 0 ){
-        //If one or more layers are selected.
         if( !modifiers.ctrlState && !modifiers.majState && !modifiers.altState ){
             //No Modifier = Add a Separator on top of the selected Layers.
             //Finding the highest layer in the pile.
