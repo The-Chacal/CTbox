@@ -39,7 +39,7 @@ function applyRim( isOutsideRim ){
                     rimSettingsName = "CTbox - InsideRim id" + rimLayerId + " - Settings";
                 }
             }
-            //Creating the Gradient layer from the selected layer.
+            //Creating the Rim layer from the selected layer.
             layerSelection[i].selected = true ;
             var rimLayer = layerSelection[i].duplicate();
             rimLayer.label = 2 ;
@@ -81,7 +81,7 @@ function applyRim( isOutsideRim ){
                 layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(1).setValue( [ .700 , .630 , .559 ] );
                 rimLayer.effect("CTbox - Fill")(4).setValue( 0 );
             }
-            //Checking if the reference layer has a bottom detected and linking the Gradient to it if so.
+            //Checking if the reference layer has a bottom detected and linking the Rim to it if so.
             if( layerSelection[i].property( "ADBE Effect Parade" ).property( "CTbox - Content Lowest Point" ) != null ){
                 layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(7).expression = "comp(\"" + app.project.activeItem.name + "\").layer(\"" + layerSelection[i].name + "\").effect(\"CTbox - Content Lowest Point\")(\"Lowest Point\") + value";
                 layerSelection[i].property( "ADBE Effect Parade" ).property( rimSettingsName )(7).setValue( [ 0 , 0 ] );
