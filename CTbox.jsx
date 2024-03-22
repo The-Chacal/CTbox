@@ -20,6 +20,7 @@ if ( CTcheckScriptWriting( this ) ){
     //@include "CTboxElements/03_Misc/CollapseTransformationManager.jsx";
     //@include "CTboxElements/03_Misc/CompDurationEditor.jsx";
     //@include "CTboxElements/03_Misc/UpdateCTbox.jsx";
+    //@include "CTboxElements/04_Libraries/json2.js";
     // Launching the creation of the toolbox UI.
     CTbuildUI( this );
 }
