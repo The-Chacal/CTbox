@@ -30,6 +30,7 @@ function addShadowLayer(){
             //Adding the expression to be able to resize the shape.
             shadowMask.property(1).expression = "//---------- Links ----------\
 var S = effect(\"CTbox - Shadow - Size\")(1)/100;\
+\
 //---------- Code ----------\
 var W = thisLayer.width ;\
 var H = thisLayer.height ;\
@@ -37,6 +38,7 @@ var C = [ W / 2 , H / 2 ];\
 var Pts = [ [ C[0] , C[1]-H/2*S ] , [ C[0]+W/2*S , C[1] ] , [ C[0] , C[1]+H/2*S ] , [ C[0]-W/2*S , C[1] ] ];\
 var inPts = [ [ -W/4*S , 0 ] , [ 0 , -H/2*S ] , [ W/4*S , 0 ] , [ 0 , H/2*S ] ];\
 var outPts= [ [ W/4*S , 0 ] , [ 0 , H/2*S ] , [ -W/4*S , 0 ] , [ 0 , -H/2*S ] ];\
+\
 //---------- End ----------\
 createPath( Pts , inPts , outPts , true )";
             //Adding the horizontal box Blur Effect.

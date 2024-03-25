@@ -16,25 +16,26 @@ function markerAnimation(){
                 //opening the UndoGroup.
                 app.beginUndoGroup( "Marker Anim" );
                 //Adding the Expression.
-                var newExpression = "//---------- MarkerAnim ----------\
-var Result = value\
+                currentProperty.expression = "//Marker rythmed Animation Expression.\
+//---------- Code ----------\
+var result = value\
 if( thisLayer.marker.numKeys > 0 )\
 {\
-    var ClosestMarker = thisLayer.marker.nearestKey( time );\
-    if( time < ClosestMarker.time && ClosestMarker.index == 1 )\
+    var closestMarker = thisLayer.marker.nearestKey( time );\
+    if( time < closestMarker.time && closestMarker.index == 1 )\
     {\
-        Result = valueAtTime( thisLayer.inPoint );\
-    } else if( time < ClosestMarker.time )\
+        result = valueAtTime( thisLayer.inPoint );\
+    } else if( time < closestMarker.time )\
     {\
-        Result = valueAtTime( thisLayer.marker.key( ClosestMarker.index - 1).time )\
-    } else if( time >= ClosestMarker.time )\
+        result = valueAtTime( thisLayer.marker.key( closestMarker.index - 1).time )\
+    } else if( time >= closestMarker.time )\
     {\
-        Result = valueAtTime( thisLayer.marker.key( ClosestMarker.index ).time )\
+        result = valueAtTime( thisLayer.marker.key( closestMarker.index ).time )\
     }\
 }\
-//--------------------\
-Result";
-                currentProperty.expression = newExpression ;
+\
+//---------- Result ----------\
+result";
                 //Closing the UndoGroup.
                 app.endUndoGroup() ;
             }

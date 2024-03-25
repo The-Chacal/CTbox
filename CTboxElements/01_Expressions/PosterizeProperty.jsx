@@ -25,14 +25,15 @@ function posterizeProp(){
                     posterizeStepSlider.property(1).setValue( 2 );
                 }
                 //Adding the Expression.
-                var newExpression = "//---------- Links ----------\
+                var newExpression = "//Posterize Time Expression.\
+//---------- Links ----------\
 var stepSlider = effect(\"Posterize - Step\")(1);\
 \
 //---------- Code ----------\
 var result = value ;\
 var currentStep = stepSlider ;\
 var delta = 0 ;\
-if( stepSlider != 1 ){\
+if( stepSlider > 1 ){\
     if( stepSlider.numKeys > 1 )\
     {\
         var stepSliderNearestKey = stepSlider.nearestKey( time );\
@@ -47,7 +48,8 @@ if( stepSlider != 1 ){\
     }\
     result = valueAtTime( time - delta );\
 }\
-//--------------------\
+\
+//---------- Result ----------\
 result";
                 currentProperty.expression = newExpression ;
                 //Closing the UndoGroup.
