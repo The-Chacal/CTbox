@@ -181,9 +181,10 @@ function CTbuildUI( thisObj ){
                 B3Btn09.helpTip = "" ;
                 B3Btn09.size = btnsSize ;
                 B3Btn09.visible = false ;
-            var B3Btn10 = Block03.add( "button" , undefined , "Upd." );
+                var B3Btn10 = Block03.add( "button" , undefined , "Upd." );
                 B3Btn10.helpTip = "Update the Script.\n   Only works on the studio network!" ;
                 B3Btn10.size = btnsSize ;
+                B3Btn10.visible = false ;
         //Creating the Versionning Block.
         var BlockXX = globalGroup.add( "group" );
         BlockXX.orientation = "column";
@@ -210,6 +211,9 @@ function CTbuildUI( thisObj ){
                 BXBtn04.size = [ 16 , 16 ];
         var versionText = BlockXX.add( "staticText" , undefined , CTboxVersion );
             versionText.alignment = "right";
+    //Checking the saved state of "updateBtnOptn" and applying it.
+    var updateBtnOptn = JSON.parse( CTgetSavedString( "CTboxSave" , "UpdateBtnOptn" ) );
+    if( updateBtnOptn != null && updateBtnOptn == true ){ B3Btn10.visible = true ;}
     //Updating the Layout.
     CTpanel.layout.layout( "true" );
     //UI Events.
@@ -244,7 +248,7 @@ function CTbuildUI( thisObj ){
     //UI events for Versionning Block.
     BXBtn01.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ CTversioning( "X.0" , true ); } else { CTversioning( "X.0" , false ); } };
     BXBtn02.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ CTversioning( "0.X" , true ); } else { CTversioning( "0.X" , false ); } };
-    BXBtn03.onClick = CTboxOptions;
+    BXBtn03.onClick = function(){ CTboxOptions( CTpanel ); };
     BXBtn04.onClick = function(){ CTexpandNotepad( CTpanel ); };
     //Checking which Panel was the last actived and showing it.
     var ActivePanel = CTgetSavedString( "CTboxSave" , "VisiblePanel" );
@@ -277,11 +281,11 @@ function CTcheckScriptWriting( thisObj ){
 }
 /**
  * Show/Hide the Notepad on the side of the Toolbox.
- * @param { object } Dlg Container to which add the notepad.
+ * @param { object } dlg Container to which add the notepad.
  */
-function CTexpandNotepad( Dlg ){
-    if( Dlg.children.length < 2 ){
-        var notepad = Dlg.add( "panel" , undefined , "Notepad" );
+function CTexpandNotepad( dlg ){
+    if( dlg.children.length < 2 ){
+        var notepad = dlg.add( "panel" , undefined , "Notepad" );
         notepad.alignment = "Top" ;
         notepad.margins = [ 5 , 10 , 5 , 5 ];
             var notepadText = notepad.add( "EditText" , undefined , "You can write your thoughts here..." , { multiline: true , scrollable: true } );
@@ -289,41 +293,47 @@ function CTexpandNotepad( Dlg ){
             if( SavedText != null ){
                 notepadText.text = SavedText ;
             }
-        notepadText.preferredSize = [ 200 , Dlg.children[0].size[1] - 25 ];
+        notepadText.preferredSize = [ 200 , dlg.children[0].size[1] - 25 ];
         notepadText.onActivate = function(){ if( notepadText.text == "You can write your thoughts here..." ){ notepadText.text = "" ; } };
         notepadText.onChange = function(){ CTsaveString( "CTboxSave" , "Notepad" , notepadText.text ) };
     } else {
-        Dlg.remove( Dlg.children[1] );
+        dlg.remove( dlg.children[1] );
     }
-    Dlg.layout.layout(true)
+    dlg.layout.layout( true );
     
 }
 /**
  * Opens the CTbox options Panel.
+ * @param { object } dlg CTbox Panel
  */
-function CTboxOptions(){
+function CTboxOptions( dlg ){
 
     var CTboxOptnsDlg = new Window( "dialog" , undefined , undefined , { borderless : true } );
-    CTboxOptnsDlg.spacing = 2 ;
-        var textPanel = CTboxOptnsDlg.add( "panel" , undefined , "Generate id : " );
-        textPanel.margins = [ 5 , 10 , 5 , 0 ];
-        textPanel.alignChildren = "fill" ;
-        textPanel.spacing = 0 ;
-        textPanel.preferredSize = [ 180 , -1 ];
-            var rimIdOptns = textPanel.add( "checkbox" , undefined , " - for the Rims." );
-            var gradientIdOptns = textPanel.add( "checkbox" , undefined , " - for the Gradients." );
-            var castShadowIdOptns = textPanel.add( "checkbox" , undefined , " - for the Cast Shadows." );
+        CTboxOptnsDlg.spacing = 2 ;
+        var idOptPanel = CTboxOptnsDlg.add( "panel" , undefined , "Generate id : " );
+            idOptPanel.margins = [ 5 , 10 , 5 , 0 ];
+            idOptPanel.alignChildren = "fill" ;
+            idOptPanel.spacing = 0 ;
+            idOptPanel.preferredSize = [ 180 , -1 ];
+            var rimIdOptns = idOptPanel.add( "checkbox" , undefined , " - for the Rims." );
+            var gradientIdOptns = idOptPanel.add( "checkbox" , undefined , " - for the Gradients." );
+            var castShadowIdOptns = idOptPanel.add( "checkbox" , undefined , " - for the Cast Shadows." );
+        var updateBtnOpnPanel = CTboxOptnsDlg.add( "Panel" , undefined );
+            updateBtnOpnPanel.alignChildren = "fill" ;
+            updateBtnOpnPanel.margins = [ 5 , 5 , 5 , 0 ];
+            updateBtnOpnPanel.preferredSize = [ 180 , -1 ];
+            var updateBtnOptn = updateBtnOpnPanel.add( "checkbox" , undefined , " - \"Update CTbox\" Button." );
         var btnsRow = CTboxOptnsDlg.add( "group" );
-        btnsRow.orientation = "row" ;
-        btnsRow.alignChildren = "center" ;
-        btnsRow.spacing = 0 ;
-        var btnSize = [ 60 , 20 ];
+            btnsRow.orientation = "row" ;
+            btnsRow.alignChildren = "center" ;
+            btnsRow.spacing = 0 ;
+            var btnSize = [ 60 , 20 ];
             var btnA = btnsRow.add( "button" , undefined , "Ok" );
-            btnA.size = btnSize ;
+                btnA.size = btnSize ;
             var btnB = btnsRow.add( "button" , undefined , "Default" );
-            btnB.size = btnSize ;
+                btnB.size = btnSize ;
             var btnC = btnsRow.add( "button" , undefined , "Cancel" );
-            btnC.size = btnSize ;
+                btnC.size = btnSize ;
     //Updating the UI with saved values.
     var savedRimIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "RimLightId" ) );
     if( savedRimIdOptns == null ){ savedRimIdOptns = true };
@@ -334,9 +344,12 @@ function CTboxOptions(){
     var savedCastShadowIdOptns = JSON.parse( CTgetSavedString( "CTboxSave" , "CastShadowId" ) );
     if( savedCastShadowIdOptns == null ){ savedCastShadowIdOptns = true };
     castShadowIdOptns.value = savedCastShadowIdOptns ;
+    var savedUpdateBtnOptn = JSON.parse( CTgetSavedString( "CTboxSave" , "UpdateBtnOptn" ) );
+    if( savedUpdateBtnOptn == null ){ savedUpdateBtnOptn = false };
+    updateBtnOptn.value = savedUpdateBtnOptn ;
     //UI Events.
-    btnA.onClick = function(){ CTsaveString( "CTboxSave" , "RimLightId" , JSON.stringify( rimIdOptns.value ) ); CTsaveString( "CTboxSave" , "GradientId" , JSON.stringify( gradientIdOptns.value ) ); CTsaveString( "CTboxSave" , "CastShadowId" , JSON.stringify( castShadowIdOptns.value ) ); CTboxOptnsDlg.close(); }
-    btnB.onClick = function(){ rimIdOptns.value = true ; gradientIdOptns.value = true ; castShadowIdOptns.value = true };
+    btnA.onClick = function(){ CTsaveString( "CTboxSave" , "RimLightId" , JSON.stringify( rimIdOptns.value ) ); CTsaveString( "CTboxSave" , "GradientId" , JSON.stringify( gradientIdOptns.value ) ); CTsaveString( "CTboxSave" , "CastShadowId" , JSON.stringify( castShadowIdOptns.value ) ); CTsaveString( "CTboxSave" , "UpdateBtnOptn" , JSON.stringify( updateBtnOptn.value ) ); dlg.children[0].children[1].children[2].children[9].visible = updateBtnOptn.value ; dlg.layout.layout( true ); CTboxOptnsDlg.close(); };
+    btnB.onClick = function(){ rimIdOptns.value = true ; gradientIdOptns.value = true ; castShadowIdOptns.value = true ; updateBtnOptn.value = false ;};
     //Showing UI.
     CTboxOptnsDlg.show();
 
