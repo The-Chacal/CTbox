@@ -8,10 +8,15 @@
 function updateCTbox(){
     var scriptFolder = new Folder( "//peps/studioPEP/TEAM SHARE/Sylvain LORENT/ScriptsAE/CTbox" );
     var scriptFiles = scriptFolder.getFiles( "CTbox*" );
-    var targetFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/18.4/Scripts/ScriptUI Panels" );
-    targetFolder.create();
+    var targetFolder = new Folder( Folder.userData.fsName + "/Adobe/After Effects/" + app.version.slice( 0 , 4 ) + "/Scripts/ScriptUI Panels" );
+    if( !targetFolder.exists){ targetFolder.create(); }
     for( var i = 0 ; i < scriptFiles.length ; i++ ){ copyFiles( scriptFiles[i] , targetFolder ); }
 }
+/**
+ * Recursive function copying all the Files and Folder from a Folder.
+ * @param { Object } item Item to Copy
+ * @param { Folder Object } destination Folder to copy in.
+ */
 function copyFiles( item , destination ){
     if( item instanceof Folder ){
         var newFolder = new Folder( destination.fsName + "/" + item.name )
