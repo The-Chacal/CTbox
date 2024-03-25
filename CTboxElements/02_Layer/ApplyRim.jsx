@@ -70,7 +70,7 @@ function applyRim( isOutsideRim ){
             rimLayer.selected = true ;
             layerCleaner( false , false , true );
             rimLayer.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/CharacterRim v4.ffx" ) );
-            rimLayer.effect("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
+            rimLayer.property( "ADBE Effect Parade" ).property("CTbox - Set Matte")(1).setValue( layerSelection[i].index );
             //Adjusting the expressions.
             app.project.autoFixExpressions( "XXX" , layerSelection[i].name );
             app.project.autoFixExpressions( "CTbox - Rim - Settings" , rimSettingsName );
