@@ -75,5 +75,7 @@ function addPaintDriver(){
             refLayer.enabled = false ;
         }
     }
+    //Closing the UndoGroup.
+    app.endUndoGroup();
 
 }
