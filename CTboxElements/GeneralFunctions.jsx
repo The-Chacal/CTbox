@@ -23,10 +23,10 @@ function CTalertDlg( title , messageContent ){
 }
 /**
  * Opens a dialog giving a choice to the user.
- * @param { string } title Name of the Dialog.
- * @param { string } messageContent Message displayed.
- * @param { string } [ messageBtnA = "Oui" ] Text on the first Button.
- * @param { string } [ messageBtnB = "Non" ] Text on the second Button.
+ * @param { string } title - Name of the Dialog.
+ * @param { string } messageContent - Message displayed.
+ * @param { string } [ messageBtnA = "Yes" ] - Text on the first Button.
+ * @param { string } [ messageBtnB = "No" ] - Text on the second Button.
  * @returns { boolean }
  */
 function CTchoiceDlg( title , messageContent , messageBtnA , messageBtnB ){
