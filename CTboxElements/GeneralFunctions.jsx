@@ -263,19 +263,29 @@ function CTversioning( type , isToBeMoved ){
             if( activeRQitem.comp == mainCompItem ){
                 for( var j = 1 ; j <= activeRQitem.outputModules.length ; j++ ){
                     var activeOM = activeRQitem.outputModules[j];
-                    //Creating an array containing each step of the Folder Tree for the export.
-                    var oldExportFolderPath = activeOM.file.fsName.split("\\");
-                    //Removing the name of the export from the path and catching it to get the original extension of the export.
-                    var oldExportExtension = oldExportFolderPath.pop().split(".").pop();
-                    //Checking if the export was set to be "in a subfolder" and, if so, updating also the subfolder.
-                    if( oldExportFolderPath[ oldExportFolderPath.length - 1 ] == oldName ){ oldExportFolderPath[ oldExportFolderPath.length - 1 ] = newName }
-                    //Recreating the path of the export Folder.
-                    oldExportFolderPath = oldExportFolderPath.join( "/");
-                    //For the cases in which the export was supposed to be done in a subfolder we create the needed folder.
-                    var oldExportFolder = new Folder( oldExportFolderPath );
-                    if( !oldExportFolder.exists ){ oldExportFolder.create(); }
-                    //Updating the file path for the export.
-                    activeOM.file = new File( oldExportFolderPath + "/" + newName + "." + oldExportExtension );
+                    var nameRegExp = new RegExp( oldName , "g" );
+                    var new_data = {}
+                    if( activeOM.getSettings(GetSettingsFormat.STRING)["Output File Info"]["Subfolder Path"] == "" ){
+                        new_data = {
+                            "Output File Info":
+                            {
+                                "Base Path": activeOM.getSettings(GetSettingsFormat.STRING)["Output File Info"]["Base Path"] ,
+                                "File Name" : newName ,
+                                "File Template": activeOM.getSettings(GetSettingsFormat.STRING)["Output File Info"]["File Template"].replace( nameRegExp , newName )
+                            }
+                        }
+                    } else {
+                        new_data = {
+                            "Output File Info":
+                            {
+                                "Base Path": activeOM.getSettings(GetSettingsFormat.STRING)["Output File Info"]["Base Path"] ,
+                                "Subfolder Path": newName ,
+                                "File Name" : newName , 
+                                "File Template": activeOM.getSettings(GetSettingsFormat.STRING)["Output File Info"]["File Template"].replace( nameRegExp , newName )
+                            }
+                        }
+                    }
+                    activeOM.setSettings( new_data );
                 }
             }
         }
