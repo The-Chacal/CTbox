@@ -1,10 +1,9 @@
 //****************************************//
-//  Paint Effect Driver Applier
+//  Paint Driver Effect Applier
 //****************************************//
 
-//  Functions adding a separator layer in your active comp.
 /**
- * Changes the collapse transformation status.
+ * Create the setup and apply the effect.
  */
 function addPaintDriver(){
 
