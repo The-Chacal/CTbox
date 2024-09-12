@@ -16,8 +16,9 @@ if ( CTcheckScriptWriting( this ) ){
     //@include "CTboxElements/02_Layer/DepthDisplacement.jsx";
     //@include "CTboxElements/02_Layer/LayerCleaner.jsx";
     //@include "CTboxElements/02_Layer/GetLayerBottom.jsx";
-    //@include "CTboxElements/03_Misc/AddSeparator.jsx";
     //@include "CTboxElements/03_Misc/AddPaintDriver.jsx";
+    //@include "CTboxElements/03_Misc/AddSeparator.jsx";
+    //@include "CTboxElements/03_Misc/AddStabilizer.jsx";
     //@include "CTboxElements/03_Misc/CollapseTransformationManager.jsx";
     //@include "CTboxElements/03_Misc/CompDurationEditor.jsx";
     //@include "CTboxElements/03_Misc/UpdateCTbox.jsx";
@@ -32,7 +33,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.3.1"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.4.0"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Getting the path to the Script on the Computer.
     var scriptFolder = CTgetScriptFolder();
     //Creating the UI
@@ -158,13 +159,12 @@ function CTbuildUI( thisObj ){
                 var B3Btn03 = Block03.add( "button" , undefined , "Pnt. Drv." );
                     B3Btn03.helpTip = "   Add a Paint Effect and the \CTbox - Paint Driver\" to the selected Layer." ;
                     B3Btn03.size = btnsSize ;
-                var B3Btn04 = Block03.add( "button" , undefined , "Add Sep." );
-                    B3Btn04.helpTip = "   Add a Separator in your active Composition above your selected Layer.\n\n   CTRL + Click > Add a named Separator in your active Composition above your selected Layers.\n   MAJ + Click > Add a Separator in your active Composition above your selected Layers and parent the Layers to the Separator.\n   ALT + Click > Add a Separator in your active Composition above each of your selected Layers.\n   ALT + SHIFT + Click > Add a Separator in your active Composition above each of your selected Layers and parent the Layer to its Separator.\n   ALT + SHIFT + CTRL + Click > Add a named Separator in your active Composition above each of your selected Layers and parent the Layer to its Separator." ;
+                var B3Btn04 = Block03.add( "button" , undefined , "Null Stab" );
+                    B3Btn04.helpTip = "   Add a Null in your active Composition. Based on a null created with a 3D camera, this null will allow you to stabilize the 2D shot analysed." ;
                     B3Btn04.size = btnsSize ;
-                var B3Btn05 = Block03.add( "button" , undefined , "" );
-                    B3Btn05.helpTip = "" ;
+                var B3Btn05 = Block03.add( "button" , undefined , "Add Sep." );
+                    B3Btn05.helpTip = "   Add a Separator in your active Composition above your selected Layer.\n\n   CTRL + Click > Add a named Separator in your active Composition above your selected Layers.\n   MAJ + Click > Add a Separator in your active Composition above your selected Layers and parent the Layers to the Separator.\n   ALT + Click > Add a Separator in your active Composition above each of your selected Layers.\n   ALT + SHIFT + Click > Add a Separator in your active Composition above each of your selected Layers and parent the Layer to its Separator.\n   ALT + SHIFT + CTRL + Click > Add a named Separator in your active Composition above each of your selected Layers and parent the Layer to its Separator." ;
                     B3Btn05.size = btnsSize ;
-                    B3Btn05.visible = false ;
                 var B3Btn06 = Block03.add( "button" , undefined , "" );
                     B3Btn06.helpTip = "" ;
                     B3Btn06.size = btnsSize ;
@@ -243,7 +243,8 @@ function CTbuildUI( thisObj ){
     B3Btn01.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ compDurationChoice(); } else { compDurationEditorOptions(); } };
     B3Btn02.onClick = collapseTransformationManager ;
     B3Btn03.onClick = addPaintDriver ;
-    B3Btn04.onClick = addSeparator ;
+    B3Btn04.onClick = addStabilizer ;
+    B3Btn05.onClick = addSeparator ;
     B3Btn10.onClick = updateCTbox ;
     //UI events for Versionning Block.
     BXBtn01.onClick = function(){ var modifiers = CTmodifiersStatuses(); if( !modifiers.altState ){ CTversioning( "X.0" , true ); } else { CTversioning( "X.0" , false ); } };
