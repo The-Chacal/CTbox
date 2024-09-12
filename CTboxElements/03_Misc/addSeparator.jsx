@@ -4,7 +4,7 @@
 
 //  Functions adding a separator layer in your active comp.
 /**
- * Changes the collapse transformation status.
+ * Create a separator according to the shortcuts pressed.
  */
 function addSeparator(){
 
