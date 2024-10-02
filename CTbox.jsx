@@ -33,7 +33,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.4.0"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.4.1"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Getting the path to the Script on the Computer.
     var scriptFolder = CTgetScriptFolder();
     //Creating the UI
