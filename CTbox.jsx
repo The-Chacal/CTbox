@@ -194,10 +194,10 @@ function CTbuildUI( thisObj ){
                 versionBlock.orientation = "row";
                 versionBlock.spacing = 1 ;
                 var BXBtn01 = versionBlock.add( "button" , undefined , "vX.0" );
-                    BXBtn01.helpTip = "   Increment the first number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name.\n   ALT + Click > The AEP file won't be moved in a \"∞ AEP Older Versions ∞\" Folder." ;
+                    BXBtn01.helpTip = "   Increment the first number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name.\n   ALT + Click > The AEP file won't be moved in a \"XXx- AEP Older Versions -xXX\" Folder." ;
                     BXBtn01.size = [ btnsSize[0] / 2 , btnsSize[1] ];
                 var BXBtn02 = versionBlock.add( "button" , undefined , "v0.X" );
-                    BXBtn02.helpTip = "   Increment the second number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name.\n   ALT + Click > The AEP file won't be moved in a \"∞ AEP Older Versions ∞\" Folder." ;
+                    BXBtn02.helpTip = "   Increment the second number of the version of the file.\n   For this script to work, your main Composition has to be named exactly as the aep file and be at the root of the \"Project\" panel. The version number has to be at the end of the name.\n   ALT + Click > The AEP file won't be moved in a \"XXx- AEP Older Versions -xXX\" Folder." ;
                     BXBtn02.size = [ btnsSize[0] / 2 , btnsSize[1] ];
             var CTboxVersionBlock = BlockXX.add( "group" );
                 CTboxVersionBlock.margins = [ 1 , 0 , 1 , 0 ];
