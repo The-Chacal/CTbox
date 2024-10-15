@@ -37,12 +37,16 @@ if( stepSlider > 1 ){\
     if( stepSlider.numKeys > 1 )\
     {\
         var stepSliderNearestKey = stepSlider.nearestKey( time );\
-        if( time < stepSliderNearestKey.time )\
+        if( time < stepSliderNearestKey.time && stepSliderNearestKey.index > 1 )\
         {\
             stepSliderNearestKey = stepSlider.key( stepSliderNearestKey.index - 1 );\
         }\
         currentStep = stepSliderNearestKey ;\
-        delta = framesToTime( timeToFrames( time - stepSliderNearestKey.time ) % currentStep );\
+        if( stepSliderNearestKey.index > 1 ){\
+			delta = framesToTime( timeToFrames( time - stepSliderNearestKey.time ) % currentStep );\
+		} else {\
+			delta = framesToTime( timeToFrames( time - inPoint ) % currentStep );\
+		}\
     } else {\
         delta = framesToTime( timeToFrames( time - inPoint ) % currentStep );\
     }\
