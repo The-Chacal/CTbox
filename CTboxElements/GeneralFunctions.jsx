@@ -58,10 +58,28 @@ function CTchoiceDlg( title , messageContent , messageBtnA , messageBtnB ){
 }
 //========== CTbox Utilities ==========
 /**
+ * @param { array } arrayToParse An Array in which search for the Item.
+ * @param { string | number | object } itemToFind Item to search for.
+ * @returns { number? } The Index of the Item in the Array or Null.
+ */
+function DropdownlistIndexOf( arrayToParse , itemToFind ){
+
+    var index = null ;
+    if( arrayToParse.length > 0 ){
+        for( var i = 0 ; i < arrayToParse.length ; i++ ){
+            if( arrayToParse[i].text == itemToFind ){
+                index = i ;
+                break ;
+            }
+        }
+    }
+    return index ;
+}
+/**
  * Checks if a string contains a number and return it as a number.
  * @param { string } stringToTreat The Input String.
  * @param { boolean } returnInteger Does the user wants an integer or a floating number.
- * @returns { number? } The number found in the String or null.
+ * @returns { number? } The Number found in the String or Null.
  */
 function CTcleanNumberString( stringToTreat , returnInteger ){
 
