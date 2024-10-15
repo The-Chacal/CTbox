@@ -195,6 +195,10 @@ function getAnimDetectionOptions(){
             var btnB = btnsRow.add( "button" , undefined , "Cancel" );
             btnB.size = btnSize ;
     //Updating the UI with saved values.
+    var savedPresetName = CTgetSavedString( "CTboxSave" , "PresetName" );
+    if( savedPresetName == null ){ savedPresetName = "None" };
+    savedPresetName = DropdownlistIndexOf( presetSelector.items , savedPresetName );
+    presetSelector.selection = presetSelector.items[ savedPresetName ];
     var savedPrecisionDegree = CTgetSavedString( "CTboxSave" , "PrecisionDegree" );
     if( savedPrecisionDegree == null ){ savedPrecisionDegree = 1 };
     precisionValue.text = savedPrecisionDegree ;
@@ -209,7 +213,7 @@ function getAnimDetectionOptions(){
     precisionSlider.onChanging = function(){ precisionValue.text = Math.round( precisionSlider.value ); };
     toleranceValue.onChange = function(){ toleranceSlider.value = toleranceValue.text };
     toleranceSlider.onChanging = function(){ toleranceValue.text = Math.round( toleranceSlider.value * 10 ) /10 ; };
-    btnA.onClick = function(){ var precisionParameter = CTcleanNumberString( precisionValue.text , false ); var toleranceParameter = CTcleanNumberString( toleranceValue.text , false ); if(  precisionParameter != null && toleranceParameter != null ){ { CTsaveString( "CTboxSave" , "PrecisionDegree" , precisionValue.text ); CTsaveString( "CTboxSave" , "ToleranceDegree" , toleranceValue.text ); animDetectionDlg.close(); };};};
+    btnA.onClick = function(){ var precisionParameter = CTcleanNumberString( precisionValue.text , false ); var toleranceParameter = CTcleanNumberString( toleranceValue.text , false ); if(  precisionParameter != null && toleranceParameter != null ){ { CTsaveString( "CTboxSave" , "PresetName" , presetSelector.selection.text ); CTsaveString( "CTboxSave" , "PrecisionDegree" , precisionValue.text ); CTsaveString( "CTboxSave" , "ToleranceDegree" , toleranceValue.text ); animDetectionDlg.close(); };};};
     //Showing UI
     animDetectionDlg.show();
 }
