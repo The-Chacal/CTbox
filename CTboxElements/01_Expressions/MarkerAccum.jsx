@@ -22,34 +22,44 @@ function markerAccum(){
                 if( markerAccumSlider == null ){
                     markerAccumSlider = propertyParentLayer.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
                     currentProperty = CTgetProperty( propertiesToTreat[i] );
-                    markerAccumSlider.name = currentProperty.name + " - MarkAccumAmp"
+                    markerAccumSlider.name = currentProperty.name + " - MarkAccumAmp" ;
                     markerAccumSlider.property(1).setValue( 50 );
                 }
                 //Updating the Expression adding our variable.
+                var resultValue = "" ;
+                if( currentProperty.propertyValueType == PropertyValueType.TwoD || currentProperty.propertyValueType == PropertyValueType.TwoD_SPATIAL ){
+                    resultValue = "\n    result = [ result , result ]" ;
+                } else if( currentProperty.propertyValueType == PropertyValueType.ThreeD || currentProperty.propertyValueType == PropertyValueType.ThreeD_SPATIAL ){
+                    resultValue = "\n    result = [ result , result , result ]" ;
+                }
                 var newExpression = "//Marker Accumulator Expression.\
-                //---------- Links ----------\
-var amp = effect(\"Rotation - MarkAccumAmp\")(1);\
+//---------- Links ----------\
+var amp = effect(\"" + markerAccumSlider.name + "\")(1);\
 \
 //---------- Code ----------\
 var result = value ;\
 if( thisLayer.marker.numKeys > 0 )\
 {\
-    var markerNb = 0 ;\
-    if( time < thisLayer.marker.nearestKey( time ).time && thisLayer.marker.nearestKey( time ).index != 1 )\
-    {\
-        markerNb = thisLayer.marker.nearestKey( time ).index - 2 ;\
-    } else {\
-        markerNb = thisLayer.marker.nearestKey( time ).index - 1 ;\
-    }\
-    //Final Variable to be used where you want it.\
-    result = markerNb * amp ;\
+	var markerNb = 0 ;\
+	var currentMarker = thisLayer.marker.nearestKey( time );\
+	if( time < currentMarker.time && currentMarker.index > 1 ){\
+		currentMarker = thisLayer.marker.key( currentMarker.index - 1 );\
+	}\
+	if( time < currentMarker.time ){\
+		markerNb = 0 ;\
+	} else if ( thisLayer.marker.key(1).time <= inPoint ){\
+		markerNb = currentMarker.index - 1 ;\
+	} else {\
+		markerNb = currentMarker.index ;\
+	}\
+    result = markerNb * amp ;" + resultValue + "\
 }\
 \
 //---------- Result----------\
-result";
+result" ;
                 currentProperty.expression = newExpression ;
                 //Closing the UndoGroup.
-                app.endUndoGroup() ;
+                app.endUndoGroup();
             }
         }
         CTalertDlg( "I'm Done" , "   I've finished modifying your expressions" );
