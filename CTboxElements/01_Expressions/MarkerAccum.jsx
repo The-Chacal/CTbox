@@ -31,6 +31,9 @@ function markerAccum(){
                     resultValue = "\n    result = [ result , result ]" ;
                 } else if( currentProperty.propertyValueType == PropertyValueType.ThreeD || currentProperty.propertyValueType == PropertyValueType.ThreeD_SPATIAL ){
                     resultValue = "\n    result = [ result , result , result ]" ;
+                } else {
+                    CTalertDlg( "Alert!" , "   I can't work on this kind of property.\n\n   Maybe you misscliked, maybe I do not know how to do it?!" );
+                    return ;
                 }
                 var newExpression = "//Marker Accumulator Expression.\
 //---------- Links ----------\
