@@ -33,7 +33,7 @@ if ( CTcheckScriptWriting( this ) ){
  */
 function CTbuildUI( thisObj ){
     
-    var CTboxVersion = "CTbox v1.5.2"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
+    var CTboxVersion = "CTbox v1.6.0"//x.y.z - x > major change | y > addition of a fonctionnality | z > debug.
     //Getting the path to the Script on the Computer.
     var scriptFolder = CTgetScriptFolder();
     //Creating the UI
@@ -115,7 +115,7 @@ function CTbuildUI( thisObj ){
                     B2Btn01.helpTip = "   Locate the lowest alpha point on the selected Layer\n   This script adds a Point Effect to the Layer.\n   CTRL + Click > The analysis is done over the Work Area.\n   CTRL + MAJ + Click > The analysis is done on the current Time only.\n   ALT + Click > \"Get Lowest Layer Point\" Options.";
                     B2Btn01.size = btnsSize ;
                 var B2Btn02 = Block02.add( "button" , undefined , "Det. Anim." );
-                    B2Btn02.helpTip = "   Analyse the content of a footage and see if it \"moves\".\n   This script adds Markers to the layer\n   CTRL + Click > The analysis is done over the Work Area.\n   CTRL + MAJ + Click > The analysis is done on the current Time only.\n   ALT + Click > \"Animation Detector\" Options." ;
+                    B2Btn02.helpTip = "   Analyse the content of a footage and see if it \"moves\".\n   This script adds Markers to the layer\n   CTRL + Click > The analysis is done over the Work Area.\n   CTRL + MAJ + Click > The analysis is done for the current frame only.\n   ALT + Click > \"Animation Detector\" Options." ;
                     B2Btn02.size = btnsSize;
                 var B2Btn03 = Block02.add( "button" , undefined , "Add Grad." );
                     B2Btn03.helpTip = "   Create a Gradient in Multiply Mode.\n   CTRL + Click > Invert the ID option setting for this click." ;
@@ -269,10 +269,10 @@ function CTbuildUI( thisObj ){
  */
 function CTcheckScriptWriting( thisObj ){
 
-    if ( app.preferences.getPrefAsLong("Main Pref Section","Pref_SCRIPTING_FILE_NETWORK_SECURITY") != 1 ){
+    if ( app.preferences.getPrefAsLong( "Main Pref Section","Pref_SCRIPTING_FILE_NETWORK_SECURITY" ) != 1 ){
         var BugDlg = thisObj ;
         var BugPanel = BugDlg.add( "panel" , undefined , "Small Problem : " );
-        BugPanel.add( "StaticText" , undefined ,"You need to authorize the scripts to write files and access network in the Preferences.\n\n   You need to close this, make the change, then relaunch the Script." , { multiline: true } );
+        BugPanel.add( "StaticText" , undefined , "You need to authorize the scripts to write files and access network in the Preferences.\n\n   You need to close this, make the change, then relaunch the Script." , { multiline: true } );
         thisObj.layout.layout( true );
         return false ;
     } else {

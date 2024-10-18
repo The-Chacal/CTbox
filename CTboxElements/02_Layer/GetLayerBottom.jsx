@@ -1,7 +1,6 @@
 //****************************************//
 //   Layer Bottom Detector
 //****************************************//
-
 /**
  * Adds a Point effect giving the lowest point of the layer's content trough time.
  * @param { boolean } promptEndAlert Announces the end of its work.
@@ -16,8 +15,8 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
     var modifiers = CTmodifiersStatuses() ;
     //Starting the true work.
     var layerSelection = CTcheckSelectedLayers() ;
-    var layersToAnalyse = []
     if( layerSelection.length > 0 ){
+        var layersToAnalyse = []
         for( var i = 0 ; i < layerSelection.length ; i++ ){
             //Creating an object to store layers properties.
             var layer = new Object();
@@ -28,12 +27,9 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             layer.name = layerSelection[i].name ;
             layer.inPoint = layerSelection[i].inPoint ;
             layer.outPoint = layerSelection[i].outPoint ;
-            //Saving the start and end time of the layer.
-            var layerInPoint = layerSelection[i].inPoint ;
-            var layerOutPoint = layerSelection[i].outPoint ;
             //Creating variables for the start and end of the analysis depending of the shortcuts.
-            var analysisStartTime = layerInPoint ;
-            var analysisEndTime = layerOutPoint ;
+            var analysisStartTime = layer.inPoint ;
+            var analysisEndTime = layer.outPoint ;
             var activeItem = app.project.activeItem ;
             if( modifiers.ctrlState && modifiers.majState ){
                 var currentTime = activeItem.time ;
@@ -67,7 +63,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             layer.hasEffectActive = false ;
             layer.existingLowestPoint = false ;
             layer.lowestPointKeys = [];
-            //Check if the Content lowest point has already been detected or not.
+            //Check if the Content Lowest Point has already been detected or not.
             if( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ) != null ){
                 layer.existingLowestPoint = true ;
                 layer.lowestPointKeys = CTsavePropertyKeys( layerSelection[i].property("ADBE Effect Parade").property( "CTbox - Content Lowest Point" ).property( 2 ) );
@@ -84,7 +80,7 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
             //Storing the layer object in the array.
             layersToAnalyse.push( layer );
         }
-        //Opening the dialog allowing the user to chooser whether to continue or abort an analyse.
+        //Opening the dialog allowing the user to choose whether to continue or abort an analyse.
         layersToAnalyse = layerAnalysisChoiceDialog( layersToAnalyse );
         //Analysing the layers selected.
         if( layersToAnalyse.length > 0 ){
@@ -105,179 +101,123 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
                     //Setting the in and out Points of the layer for the analysis.
                     layersToAnalyse[i].object.inPoint = layersToAnalyse[i].analysisStartTime ;
                     layersToAnalyse[i].object.outPoint = layersToAnalyse[i].analysisEndTime ;
-                    //Adding sliders with expression to get the final point.
+                    //Adding a Slider with expression to get the lowest Y in with alpha.
                     var Yslider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
-                    Yslider.name = "DetectedY";
-                    Yslider.property(1).expression = "var originalStep = " + verticalOriginalStep + " ;\
-var H = thisLayer.height - 1;\
-var Y = searchFromHeight( H , originalStep , H );\
-\
-function searchFromHeight( searchedY , Step , StartY ){\
-\
-    for( var i = StartY + .5 ; i >= 0 ; i -= Step )\
-    {\
-        var Alpha = thisLayer.sampleImage( [ thisLayer.width / 2 , i ] , [ thisLayer.width / 2 , .5 ] , true )[3];\
-        if( Alpha != 0 && i == thisLayer.height - .5)\
-        {\
-            searchedY = i + .5 ;\
-            break ;\
-        } else if( Alpha != 0 ){\
-            searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , i - .5 + Math.floor( Step / 2 ) , 1 );\
-            break ;\
-        }\
-    }\
-    return searchedY ;\
-\
+                    Yslider.name = "BottomY" ;
+                    Yslider.property(1).expression = "//---- Code ----\
+const originalStep = " + verticalOriginalStep + " ;\
+var bottomY = thisLayer.height ;\
+var step = originalStep ;\
+var alpha = 0 ;\
+for( var i = bottomY - 1 ; i >= 0 ; i -= parseInt( step ) ){\
+	alpha = thisLayer.sampleImage( [ thisLayer.width / 2 , i ] , [ thisLayer.width / 2 , .5 ] , true )[3].toFixed(2);\
+	if( i == bottomY - 1 && alpha > 0 ){\
+		break ;\
+	}\
+	if( step == -1 && alpha == 0 ){\
+		bottomY = i ;\
+		break ;\
+	} else if( step == 1 && alpha > 0 ){\
+		bottomY = i + 1 ;\
+		break ;\
+	} else if( step > 0 && alpha > 0 ){\
+		step = ( step * -.5 ).toFixed(0);\
+	} else if( step < 0 && alpha == 0 ){\
+		step = ( step * -.5 ).toFixed(0);\
+	}\
 }\
-//direction : 0 to Top, 1 to Bottom.\
-function preciseY( searchedY , Step , StartY, direction ){\
-\
-    var Alpha = thisLayer.sampleImage( [ thisLayer.width / 2 , StartY + .5 ] , [ thisLayer.width / 2 , .5 ] , true )[3];\
-    if( Step == 1 ){\
-        if( Alpha == 0 )\
-        {\
-            searchedY = StartY - Step ;\
-            return searchedY ;\
-        } else if( direction = 1 ){\
-            searchedY = StartY + Step ;\
-            return searchedY ;\
-        } else {\
-            searchedY = StartY ;\
-            return searchedY ;\
-        }\
-    } else if( Alpha == 0 ){\
-        searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , StartY - Math.floor( Step / 2 ) , 0 );\
-        return searchedY ;\
-    } else {\
-        searchedY = preciseY( searchedY , Math.floor( Step / 2 ) , StartY + Math.floor( Step / 2 ) , 1 );\
-        return searchedY ;\
-    }\
-\
-}\
-\
-Y";
+//---- Result ----\
+bottomY" ;
+                    //Converting the expression to keys.
+                    Yslider.property(1).selected = true ;
+                    app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    //Adding a Slider with expression to get the leftmostpoint with alpha.
                     var XleftSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
-                    XleftSlider.name = "DetectedXleft";
-                    XleftSlider.property(1).expression = "var originalStep = " + horizontalOriginalStep + " ;\
-var originalHeight = " + horizontalScanHeight + " ;\
-var W = thisLayer.width - 1 ;\
-var Y = effect(\"DetectedY\")(1);\
-var X = searchFromX0( 0 , Y , originalStep , W );\
-\
-function searchFromX0( searchedX , Y ,  Step , EndX ){\
-\
-    for( var i = 0 + .5 ; i <= EndX - .5 ; i += Step )\
-    {\
-        var Alpha = thisLayer.sampleImage( [ i , Y - 25 ] , [ .5 , 25 ] , true )[3];\
-        if( Alpha != 0 && i == .5)\
-        {\
-            searchedX = 0 ;\
-            break ;\
-        } else if( Alpha != 0 ){\
-            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , i - .5 - Math.floor( Step / 2 ) , 0 );\
-            break ;\
-        }\
-    }\
-    return searchedX ;\
-\
+                    XleftSlider.name = "leftX" ;
+                    XleftSlider.property(1).expression = "//---- Code ----\
+const originalStep = " + horizontalOriginalStep + " ;\
+const locatorHeight = " + horizontalScanHeight + " ;\
+var leftX = 0 ;\
+var step = originalStep ;\
+var alpha = 0 ;\
+for( var i = leftX ; i < thisLayer.width ; i += parseInt( step ) ){\
+	alpha = thisLayer.sampleImage( [ i , effect( \"BottomY\" )(1) - locatorHeight / 2 ] , [ .5 , locatorHeight / 2 ] , true )[3].toFixed(2);\
+		if( i == leftX && alpha > 0 ){\
+		break ;\
+	}\
+	if( step == -1 && alpha == 0 ){\
+		leftX = i + 1 ;\
+		break ;\
+	} else if( step == 1 && alpha > 0 ){ \
+		leftX = i ;\
+		break ;\
+	} else if( step > 0 && alpha > 0 ){\
+		step = ( step * -.5 ).toFixed(0);\
+	} else if( step < 0 && alpha == 0 ){\
+		step = ( step * -.5 ).toFixed(0);\
+	}\
 }\
-//direction : 0 to Left, 1 to Right.\
-function preciseX( searchedX , Y , Step , StartX, direction ){\
-\
-    var Alpha = thisLayer.sampleImage( [ StartX + .5 , Y - originalHeight ] , [ .5 , originalHeight ] , true )[3];\
-    if( Step == 1 ){\
-        if( Alpha == 0 )\
-        {\
-            searchedX = StartX + Step ;\
-            return searchedX ;\
-        } else if( direction = 1 ){\
-            searchedX = StartX - Step ;\
-            return searchedX ;\
-        } else {\
-            searchedX = StartX ;\
-            return searchedX ;\
-        }\
-    } else if( Alpha == 0 ){\
-        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX + Math.floor( Step / 2 ) , 1 );\
-        return searchedX ;\
-    } else {\
-        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX - Math.floor( Step / 2 ) , 0 );\
-        return searchedX ;\
-    }\
-\
-}\
-\
-X";
+//---- Result ----\
+leftX" ;
+                    //Converting the expression to keys.
+                    XleftSlider.property(1).selected = true ;
+                    app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    //Adding a Slider with expression to get the rightmost point with alpha.
                     var XrightSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
-                    XrightSlider.name = "DetectedXright";
-                    XrightSlider.property(1).expression = "var originalStep = " + horizontalOriginalStep + " ;\
-var originalHeight = " + horizontalScanHeight + " ;\
-var W = thisLayer.width - 1 ;\
-var Y = effect(\"DetectedY\")(1);\
-var X = searchFromWidth( W , Y , originalStep , W );\
-\
-function searchFromWidth( searchedX , Y ,  Step , StartX ){\
-\
-    for( var i = StartX + .5 ; i >= 0 ; i -= Step )\
-    {\
-        var Alpha = thisLayer.sampleImage( [ i , Y - originalHeight ] , [ .5 , originalHeight ] , true )[3];\
-        if( Alpha != 0 && i == thisLayer.width - .5)\
-        {\
-            searchedX = i + .5 ;\
-            break ;\
-        } else if( Alpha != 0 ){\
-            searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , i - .5 + Math.floor( Step / 2 ) , 1 );\
-            break ;\
-        }\
-    }\
-    return searchedX ;\
-\
+                    XrightSlider.name = "rightX" ;
+                    XrightSlider.property(1).expression = "//---- Code ----\
+const originalStep = " + horizontalOriginalStep + " ;\
+const locatorHeight = " + horizontalScanHeight + " ;\
+var rightX = thisLayer.height ;\
+var step = originalStep ;\
+var alpha = 0 ;\
+for( var i = rightX - 1 ; i >= 0 ; i -= parseInt( step ) ){\
+	alpha = thisLayer.sampleImage( [ i , effect( \"BottomY\" )(1) - locatorHeight / 2 ] , [ .5 , locatorHeight / 2 ] , true )[3].toFixed(2);\
+	if( i == rightX - 1 && alpha > 0 ){\
+		break ;\
+	}\
+	if( step == -1 && alpha == 0 ){\
+		rightX = i ;\
+		break ;\
+	} else if( step == 1 && alpha > 0 ){\
+		rightX = i + 1 ;\
+		break ;\
+	} else if( step > 0 && alpha > 0 ){\
+		step = ( step * -.5 ).toFixed(0);\
+	} else if( step < 0 && alpha == 0 ){\
+		step = ( step * -.5 ).toFixed(0);\
+	}\
 }\
-//direction : 0 to Left, 1 to Right.\
-function preciseX( searchedX , Y , Step , StartX, direction ){\
-\
-    var Alpha = thisLayer.sampleImage( [ StartX + .5 , Y - 20 ] , [ .5 , 20 ] , true )[3];\
-    if( Step == 1 ){\
-        if( Alpha == 0 )\
-        {\
-            searchedX = StartX - Step ;\
-            return searchedX ;\
-        } else if( direction = 1 ){\
-            searchedX = StartX + Step ;\
-            return searchedX ;\
-        } else {\
-            searchedX = StartX ;\
-            return searchedX ;\
-        }\
-    } else if( Alpha == 0 ){\
-        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX - Math.floor( Step / 2 ) , 0 );\
-        return searchedX ;\
-    } else {\
-        searchedX = preciseX( searchedX , Y , Math.floor( Step / 2 ) , StartX + Math.floor( Step / 2 ) , 1 );\
-        return searchedX ;\
-    }\
-\
-}\
-\
-X";
+//---- Result ----\
+rightX" ;
+                    //Converting the expression to keys.
+                    XrightSlider.property(1).selected = true ;
+                    app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
                     //Applying the final preset.
                     if( !layersToAnalyse[i].existingLowestPoint ){ layersToAnalyse[i].object.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
                     var lowestPoint = layersToAnalyse[i].object.property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
-                    lowestPoint.property(2).expression = "//---------- Links ----------\
-var DetectedY = effect(\"DetectedY\")(1);\
-var DetectedXleft = effect(\"DetectedXleft\")(1);\
-var DetectedXright = effect(\"DetectedXright\")(1);\
+                    lowestPoint.property(2).expression = "//---- Links ----\
+var BottomY = effect( \"BottomY\" )(1);\
+var leftX = effect( \"leftX\" )(1);\
+var rightX = effect( \"rightX\" )(1);\
 \
-//---------- Code ----------\
-var X = ( DetectedXleft + DetectedXright ) / 2 ;\
-var Y = DetectedY ;\
+//---- Code ----\
+var X = ( leftX + rightX ) / 2 ;\
+var Y = BottomY ;\
 \
-//---------- End ----------\
+//---- Result ----\
 [ X , Y ]";
+                    //Converting the expression to keys.
                     lowestPoint.property(2).selected = true ;
                     app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    //PArsing the keys to put them in hold mode and remove the keys that have the same value as the previous one.
                     for( var j = 1 ; j <= lowestPoint.property(2).numKeys ; j++ )
                     {
+                        if( j > 1 && JSON.stringify( lowestPoint.property(2).keyValue(j) ) == JSON.stringify( lowestPoint.property(2).keyValue( j - 1 ) ) ){
+                            lowestPoint.property(2).removeKey(j);
+                            j-- ;
+                            continue ;
+                        }
                         lowestPoint.property(2).setInterpolationTypeAtKey( j , KeyframeInterpolationType.HOLD , KeyframeInterpolationType.HOLD );
                     }
                     if( layersToAnalyse[i].existingLowestPoint && layersToAnalyse[i].lowestPointKeys.length > 0 ){
@@ -292,9 +232,9 @@ var Y = DetectedY ;\
                     //Removing the expression of the final point.
                     lowestPoint.property(2).expression = "" ;
                     //Removing the now useless Sliders with heavy expressions.
-                    layersToAnalyse[i].object.property("ADBE Effect Parade").property( "DetectedY" ).remove();
-                    layersToAnalyse[i].object.property("ADBE Effect Parade").property( "DetectedXleft" ).remove();
-                    layersToAnalyse[i].object.property("ADBE Effect Parade").property( "DetectedXright" ).remove();
+                    layersToAnalyse[i].object.property("ADBE Effect Parade").property( "BottomY" ).remove();
+                    layersToAnalyse[i].object.property("ADBE Effect Parade").property( "leftX" ).remove();
+                    layersToAnalyse[i].object.property("ADBE Effect Parade").property( "rightX" ).remove();
                     //Restoring the in and out Points of the layer.
                     layersToAnalyse[i].object.inPoint = layersToAnalyse[i].inPoint ;
                     layersToAnalyse[i].object.outPoint = layersToAnalyse[i].outPoint ;
