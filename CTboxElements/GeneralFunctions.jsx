@@ -372,7 +372,7 @@ function CTgetScriptFolder(){
 }
 /**
  * Returns an array containing the key objects of a property
- * @param { object } property The property object you want to say the keys of.
+ * @param { object } property The property object you want to save the keys from.
  * @returns { array } An array containing all of the keys object of the selected property.
  */
 function CTsavePropertyKeys( property ){
@@ -475,7 +475,7 @@ function layerAnalysisChoiceDialog( layers ){
             layerNotDiscard.enabled = false ;
         }
     }
-    //Calculating layout to know the height of the window.
+    //Calculating layout to be able to know the height of the window.
     dlg.layout.layout( true );
     //Adding a scrollbar
     if( dlg.group.size[1] > 600 ){
