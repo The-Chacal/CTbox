@@ -96,11 +96,15 @@ function getLayerBottom( promptEndAlert , hasUndoGroup ){
                     promptEndAlert = true ;
                     //Opening the UndoGroup.
                     if( hasUndoGroup ){ app.beginUndoGroup( "Lowest Point Detection" ); }
+                    clearOutput();
+                    writeLn( "Getting the Lowest Point for the layer : \"" + layerSelection[i].name + "\".");
+                    writeLn( "Step 1 - Setting up the comp.");
                     //Selecting the layer to work on.
                     layersToAnalyse[i].object.selected = true ;
                     //Setting the in and out Points of the layer for the analysis.
                     layersToAnalyse[i].object.inPoint = layersToAnalyse[i].analysisStartTime ;
                     layersToAnalyse[i].object.outPoint = layersToAnalyse[i].analysisEndTime ;
+                    writeLn( "Step 2 - Adding Y slider");
                     //Adding a Slider with expression to get the lowest Y in with alpha.
                     var Yslider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
                     Yslider.name = "BottomY" ;
@@ -131,6 +135,7 @@ bottomY" ;
                     //Converting the expression to keys.
                     Yslider.property(1).selected = true ;
                     app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    writeLn( "Step 3 - Adding leftX slider.");
                     //Adding a Slider with expression to get the leftmostpoint with alpha.
                     var XleftSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
                     XleftSlider.name = "leftX" ;
@@ -162,6 +167,7 @@ leftX" ;
                     //Converting the expression to keys.
                     XleftSlider.property(1).selected = true ;
                     app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    writeLn( "Step 4 - Adding rightX slider.");
                     //Adding a Slider with expression to get the rightmost point with alpha.
                     var XrightSlider = layersToAnalyse[i].object.property("ADBE Effect Parade").addProperty( "ADBE Slider Control" );
                     XrightSlider.name = "rightX" ;
@@ -193,6 +199,7 @@ rightX" ;
                     //Converting the expression to keys.
                     XrightSlider.property(1).selected = true ;
                     app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    writeLn( "Step 5 - Adding final preset.");
                     //Applying the final preset.
                     if( !layersToAnalyse[i].existingLowestPoint ){ layersToAnalyse[i].object.applyPreset( new File( scriptFolder.fsName + "/CTboxElements/06_PseudoEffects/LayerLowestPoint v1.ffx" ) ); }
                     var lowestPoint = layersToAnalyse[i].object.property("ADBE Effect Parade").property("CTbox - Content Lowest Point");
@@ -210,6 +217,7 @@ var Y = BottomY ;\
                     //Converting the expression to keys.
                     lowestPoint.property(2).selected = true ;
                     app.executeCommand( 2639 ); //Execute the command "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                    writeLn( "Step 6 - Cleaning the keys.");
                     //PArsing the keys to put them in hold mode and remove the keys that have the same value as the previous one.
                     for( var j = 1 ; j <= lowestPoint.property(2).numKeys ; j++ )
                     {
@@ -228,6 +236,7 @@ var Y = BottomY ;\
                             }
                         }
                     }
+                    writeLn( "Step 7 - Cleaning the project.");
                     lowestPoint.property(2).selected = false ;
                     //Removing the expression of the final point.
                     lowestPoint.property(2).expression = "" ;
@@ -240,6 +249,7 @@ var Y = BottomY ;\
                     layersToAnalyse[i].object.outPoint = layersToAnalyse[i].outPoint ;
                     //Unselecting the active layer.
                     layersToAnalyse[i].selected = false ;
+                    writeLn( "finished" )
                     //Closing the UndoGroup
                     if( hasUndoGroup ){ app.endUndoGroup(); }
                 }
