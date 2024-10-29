@@ -220,7 +220,7 @@ function getAnimDetectionOptions(){
     toleranceValue.text = savedToleranceDegree ;
     toleranceSlider.value = savedToleranceDegree ;
     //UI Events
-    presetSelector.onChange = function(){ if( presetSelector.selection.text == "Anim 2D/3D"){ precisionValue.text = 1 , precisionSlider.value = 1 , toleranceValue.text = 0 , toleranceSlider.value = 0 } else if( presetSelector.selection.text == "Stopmotion"){ precisionValue.text = 4 , precisionSlider.value = 4 , toleranceValue.text = 1 , toleranceSlider.value = 1 } };
+    presetSelector.onChange = function(){ if( presetSelector.selection.text == "Anim 2D/3D"){ precisionValue.text = 1 , precisionSlider.value = 1 , toleranceValue.text = 0 , toleranceSlider.value = 0 } else if( presetSelector.selection.text == "Stopmotion"){ precisionValue.text = 8 , precisionSlider.value = 8 , toleranceValue.text = 1 , toleranceSlider.value = 1 } };
     precisionValue.onChange = function(){ precisionSlider.value = precisionValue.text };
     precisionSlider.onChanging = function(){ precisionValue.text = Math.round( precisionSlider.value ); };
     toleranceValue.onChange = function(){ toleranceSlider.value = toleranceValue.text };
