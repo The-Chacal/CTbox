@@ -97,48 +97,60 @@ function detectAnimation(){
                     //Setting the in and out Points of the layer for the analysis.
                     layersToAnalyse[i].object.inPoint = layersToAnalyse[i].analysisStartTime ;
                     layersToAnalyse[i].object.outPoint = layersToAnalyse[i].analysisEndTime ;
-                    //Adding the expression detecting the movement
-                    var changeDetector = layersToAnalyse[i].object.property( "ADBE Effect Parade" ).addProperty( "ADBE Slider Control" );
-                    changeDetector.name = "LayerColorControl" ;
-                    changeDetector = changeDetector.property(1);
-                    changeDetector.expression = "var Precision = Math.pow( 2 , " + precisionDegree + " );\
-var Tolerance = " + toleranceDegree + ";\
-var Setting = [thisLayer.width / Precision , thisLayer.height / Precision ];\
-var AverageDelta = 0;\
-for( var y = Setting[1] ; y < thisLayer.height ; y += 2 * Setting[1] )\
-{\
-    for( var x = Setting[0] ; x < thisLayer.width ; x += 2 * Setting[0] )\
-    {\
-        var ColorA = thisLayer.sampleImage( [ x , y ] , Setting , postEffect = true , time );\
-        var ColorB = thisLayer.sampleImage( [ x , y ] , Setting , postEffect = true , time - thisComp.frameDuration );\
-        var DeltaAB = 0 ;\
-        for( var i = 0 ; i < 4 ; i++ )\
-        {\
-            DeltaAB += Math.max( 0 , Math.abs( ColorA[i] - ColorB[i] ) * 100 - Tolerance );\
-        }\
-        AverageDelta = ( AverageDelta + DeltaAB / 4 );\
-    }\
-}\
-if( AverageDelta == 0 )\
-{ 0; } else { 1; }";
-                    changeDetector.selected = true ;
-                    app.executeCommand( 2639 ); //Execute the commande "Animation > Keyframe Assistant > Convert Expression to Keyframes".
-                    changeDetector.selected = false ;
-                    changeDetector.expression = "" ;
+                    //Adding sliders to do the real analysis.
+                    var nbOfSliders = Math.pow( precisionDegree , 2 );
+                    var analysisSliders = [] ;
+                    for( var j = 0 ; j < nbOfSliders ; j++ ){
+                        var x = Math.floor( j / precisionDegree );
+                        var y = j % precisionDegree ;
+                        var changeDetector = layersToAnalyse[i].object.property( "ADBE Effect Parade" ).addProperty( "ADBE Color Control" );
+                        changeDetector.name = "x" + x + "y" + y ;
+                        changeDetector = changeDetector.property(1);
+                        changeDetector.expression = "//---- Links ----\
+var layerToAnalyse = thisLayer ;\
+var precisionDegree = " + precisionDegree + " ;\
+\
+//---- Code ----\
+var xNb = thisProperty.propertyGroup().name.slice( 1 , thisProperty.propertyGroup().name.search( \"y\" ) );\
+var yNb = thisProperty.propertyGroup().name.slice( thisProperty.propertyGroup().name.search( \"y\" ) + 1 , thisProperty.propertyGroup().name.length );\
+var xStep = layerToAnalyse.width / precisionDegree ;\
+var yStep = layerToAnalyse.height / precisionDegree ;\
+var x = xStep / 2 + xNb * xStep ;\
+var y = yStep / 2 + yNb * yStep ;\
+var averageColor = layerToAnalyse.sampleImage( [ x , y ] , [ xStep / 2 , yStep / 2 ] , true );\
+\
+//---- Result ----\
+averageColor" ;
+                        changeDetector.selected = true ;
+                        app.executeCommand( 2639 ); //Execute the commande "Animation > Keyframe Assistant > Convert Expression to Keyframes".
+                        changeDetector.selected = false ;
+                        analysisSliders.push( changeDetector );
+                    }
                     if( layersToAnalyse[i].existingAnimDetection ){
                         for( j = 1 ; j <= layersToAnalyse[i].object.property( "ADBE Marker" ).numKeys ; j++ ){
-                            if( layersToAnalyse[i].object.property( "ADBE Marker" ).keyTime( j ) >= layersToAnalyse[i].analysisStartTime && layersToAnalyse[i].object.property( "ADBE Marker" ).keyTime( j ).toFixed(2) < layersToAnalyse[i].analysisEndTime.toFixed(2) ){
+                            if( layersToAnalyse[i].object.property( "ADBE Marker" ).keyTime( j ).toFixed(2) >= layersToAnalyse[i].analysisStartTime && layersToAnalyse[i].object.property( "ADBE Marker" ).keyTime( j ).toFixed(2) < layersToAnalyse[i].analysisEndTime.toFixed(2) ){
                                 layersToAnalyse[i].object.property( "ADBE Marker" ).removeKey( j );
                                 j -= 1 ;
                             }
                         }
                     }
-                    for( j = 1 ; j <= changeDetector.numKeys ; j ++ ){
-                        if( ( changeDetector.keyTime( j ) == layersToAnalyse[i].inPoint && changeDetector.keyValue( j ) == 1 ) || changeDetector.keyValue( j ) == 1 ){
-                            layersToAnalyse[i].object.property( "ADBE Marker" ).addKey( changeDetector.keyTime( j ) );
+                    for( j = analysisStartTime ; j < analysisEndTime ; j += app.project.activeItem.frameDuration ){
+                        for( var k = 0 ; k < nbOfSliders ; k++ ){
+                            var isDifferent = false ;
+                            var currentSlider = layersToAnalyse[i].object.property( "ADBE Effect Parade" ).property( "x" + Math.floor( k / precisionDegree ) + "y" + k % precisionDegree ).property(1);
+                            for( var l = 0 ; l < 4 ; l++ ){
+                                if( j == layersToAnalyse[i].inPoint || Math.abs( currentSlider.keyValue( currentSlider.nearestKeyIndex(j) )[l] - currentSlider.keyValue( currentSlider.nearestKeyIndex( j -  app.project.activeItem.frameDuration ) )[l] ) * 100 - toleranceDegree > 0 ){
+                                    layersToAnalyse[i].object.property( "ADBE Marker").addKey(j);
+                                    isDifferent = true ;
+                                    break ;
+                                }
+                            }
+                            if( isDifferent ){ break ; };
                         }
                     }
-                    changeDetector.parentProperty.remove();
+                    for( j = 0 ; j < nbOfSliders ; j++ ){
+                        layersToAnalyse[i].object.property( "ADBE Effect Parade" ).property( "x" + Math.floor( j / precisionDegree ) + "y" + j % precisionDegree ).remove();
+                    }
                     //Restoring the in and out Points of the layer.
                     layersToAnalyse[i].object.inPoint = layersToAnalyse[i].inPoint ;
                     layersToAnalyse[i].object.outPoint = layersToAnalyse[i].outPoint ;
