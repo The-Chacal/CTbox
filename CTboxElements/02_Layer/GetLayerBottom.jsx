@@ -174,7 +174,7 @@ leftX" ;
                     XrightSlider.property(1).expression = "//---- Code ----\
 const originalStep = " + horizontalOriginalStep + " ;\
 const locatorHeight = " + horizontalScanHeight + " ;\
-var rightX = thisLayer.height ;\
+var rightX = thisLayer.width ;\
 var step = originalStep ;\
 var alpha = 0 ;\
 for( var i = rightX - 1 ; i >= 0 ; i -= parseInt( step ) ){\
